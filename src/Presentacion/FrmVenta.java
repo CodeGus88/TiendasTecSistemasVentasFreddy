@@ -271,7 +271,7 @@ public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterf
         chkCambiarNumero.setEnabled(false);
         chkCambiarNumero.setSelected(false);
 
-        txtNombreCliente.setText(null);
+        txtNombreGarzon1.setText(null);
         txtTotalVenta.setText("0.0");
         txtDescuento.setText("0.0");
         txtSubTotal.setText("0.0");
@@ -369,7 +369,7 @@ public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterf
             rs = oCliente.listarClientePorParametro("id", "1");
             while (rs.next()) {
                 lblIdCliente.setText(rs.getString(1));
-                txtNombreCliente.setText(rs.getString(2));
+                txtNombreGarzon1.setText(rs.getString(2));
                 break;
             }
 
@@ -434,13 +434,17 @@ public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterf
         jPanel1 = new javax.swing.JPanel();
         jLabel1 = new javax.swing.JLabel();
         btnBuscarCliente = new javax.swing.JButton();
-        txtNombreCliente = new javax.swing.JTextField();
+        txtNombreGarzon1 = new javax.swing.JTextField();
         btnAgregarCliente = new javax.swing.JButton();
         jLabel13 = new javax.swing.JLabel();
         cboTipoDocumento = new javax.swing.JComboBox();
         jLabel2 = new javax.swing.JLabel();
         txtFecha = new com.toedter.calendar.JDateChooser();
         lblIdCliente = new javax.swing.JLabel();
+        txtNombreCliente1 = new javax.swing.JTextField();
+        btnBuscarCliente1 = new javax.swing.JButton();
+        btnAgregarCliente1 = new javax.swing.JButton();
+        jLabel10 = new javax.swing.JLabel();
         jPanel10 = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
@@ -500,7 +504,9 @@ public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterf
         panelMenu.setOpaque(false);
 
         jPanel5.setBackground(new java.awt.Color(34, 81, 249));
+        jPanel5.setMinimumSize(new java.awt.Dimension(530, 320));
         jPanel5.setOpaque(false);
+        jPanel5.setPreferredSize(new java.awt.Dimension(530, 320));
         jPanel5.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jPanel3.setBackground(new java.awt.Color(208, 218, 247));
@@ -599,7 +605,7 @@ public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterf
         jPanel3.add(jPanel6);
         jPanel6.setBounds(310, 13, 200, 50);
 
-        jPanel5.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 180, 530, 70));
+        jPanel5.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 240, 530, 70));
         jPanel3.getAccessibleContext().setAccessibleName("Proceso");
 
         jPanel2.setBackground(new java.awt.Color(208, 218, 247));
@@ -670,7 +676,7 @@ public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterf
         jPanel2.add(jLabel23, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 50, 50, 20));
         jPanel2.add(txtCostoProducto, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 80, 90, 20));
 
-        jPanel5.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 80, 530, 100));
+        jPanel5.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 140, 530, 100));
 
         jPanel1.setBackground(new java.awt.Color(208, 218, 247));
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Datos de la venta", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 0, 12), new java.awt.Color(255, 255, 255))); // NOI18N
@@ -680,8 +686,8 @@ public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterf
 
         jLabel1.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel1.setText("Cliente:");
-        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 15, 200, 20));
+        jLabel1.setText("Garzón 2:");
+        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 20, 200, 20));
 
         btnBuscarCliente.setForeground(new java.awt.Color(255, 255, 255));
         btnBuscarCliente.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/Buscar_p.png"))); // NOI18N
@@ -694,12 +700,12 @@ public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterf
                 btnBuscarClienteActionPerformed(evt);
             }
         });
-        jPanel1.add(btnBuscarCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 40, 25, 30));
+        jPanel1.add(btnBuscarCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 40, 25, 30));
 
-        txtNombreCliente.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        txtNombreCliente.setEnabled(false);
-        txtNombreCliente.setSelectionColor(new java.awt.Color(255, 0, 255));
-        jPanel1.add(txtNombreCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 40, 200, 30));
+        txtNombreGarzon1.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        txtNombreGarzon1.setEnabled(false);
+        txtNombreGarzon1.setSelectionColor(new java.awt.Color(255, 0, 255));
+        jPanel1.add(txtNombreGarzon1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 40, 180, 30));
 
         btnAgregarCliente.setForeground(new java.awt.Color(255, 255, 255));
         btnAgregarCliente.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/Agregar_p1.png"))); // NOI18N
@@ -721,29 +727,76 @@ public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterf
                 btnAgregarClienteKeyReleased(evt);
             }
         });
-        jPanel1.add(btnAgregarCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(240, 40, 25, 30));
+        jPanel1.add(btnAgregarCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 40, 25, 30));
 
         jLabel13.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jLabel13.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel13.setText("Documento:");
-        jPanel1.add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 15, 130, 20));
+        jLabel13.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel13.setText("Documento: ");
+        jPanel1.add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 90, 90, 30));
 
         cboTipoDocumento.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         cboTipoDocumento.setForeground(Design.CONTENT_TEXT);
         cboTipoDocumento.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         cboTipoDocumento.setAutoscrolls(true);
-        jPanel1.add(cboTipoDocumento, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 40, 130, 30));
+        jPanel1.add(cboTipoDocumento, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 90, 170, 30));
 
         jLabel2.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel2.setText("Fecha:");
-        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 15, 100, 20));
+        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel2.setText("Fecha: ");
+        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 90, 90, 30));
 
         txtFecha.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        jPanel1.add(txtFecha, new org.netbeans.lib.awtextra.AbsoluteConstraints(420, 40, 100, 30));
+        jPanel1.add(txtFecha, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 90, 160, 30));
         jPanel1.add(lblIdCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 20, 20, 20));
 
-        jPanel5.add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 530, 80));
+        txtNombreCliente1.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        txtNombreCliente1.setEnabled(false);
+        txtNombreCliente1.setSelectionColor(new java.awt.Color(255, 0, 255));
+        jPanel1.add(txtNombreCliente1, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 40, 180, 30));
+
+        btnBuscarCliente1.setForeground(new java.awt.Color(255, 255, 255));
+        btnBuscarCliente1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/Buscar_p.png"))); // NOI18N
+        btnBuscarCliente1.setAlignmentY(1.0F);
+        btnBuscarCliente1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
+        btnBuscarCliente1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnBuscarCliente1.setOpaque(false);
+        btnBuscarCliente1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnBuscarCliente1ActionPerformed(evt);
+            }
+        });
+        jPanel1.add(btnBuscarCliente1, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 40, 25, 30));
+
+        btnAgregarCliente1.setForeground(new java.awt.Color(255, 255, 255));
+        btnAgregarCliente1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/Agregar_p1.png"))); // NOI18N
+        btnAgregarCliente1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
+        btnAgregarCliente1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnAgregarCliente1.setOpaque(false);
+        btnAgregarCliente1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                btnAgregarCliente1MouseClicked(evt);
+            }
+        });
+        btnAgregarCliente1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnAgregarCliente1ActionPerformed(evt);
+            }
+        });
+        btnAgregarCliente1.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                btnAgregarCliente1KeyReleased(evt);
+            }
+        });
+        jPanel1.add(btnAgregarCliente1, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 40, 25, 30));
+
+        jLabel10.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        jLabel10.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel10.setText("Garzón 1:");
+        jPanel1.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 20, 200, 20));
+
+        jPanel5.add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 530, 130));
 
         panelMenu.add(jPanel5);
 
@@ -1398,6 +1451,22 @@ public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterf
     private void btnAgregarClienteKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_btnAgregarClienteKeyReleased
         // TODO add your handling code here:
     }//GEN-LAST:event_btnAgregarClienteKeyReleased
+
+    private void btnBuscarCliente1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarCliente1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnBuscarCliente1ActionPerformed
+
+    private void btnAgregarCliente1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnAgregarCliente1MouseClicked
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnAgregarCliente1MouseClicked
+
+    private void btnAgregarCliente1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarCliente1ActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnAgregarCliente1ActionPerformed
+
+    private void btnAgregarCliente1KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_btnAgregarCliente1KeyReleased
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnAgregarCliente1KeyReleased
     void obtenerUltimoIdVenta() {
         try {
             ClsVenta oVenta = new ClsVenta();
@@ -1457,8 +1526,10 @@ public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterf
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnAgregarCliente;
+    private javax.swing.JButton btnAgregarCliente1;
     private javax.swing.JButton btnAgregarProducto;
     private javax.swing.JButton btnBuscarCliente;
+    private javax.swing.JButton btnBuscarCliente1;
     private javax.swing.JButton btnBuscarProducto;
     private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnEliminarProducto;
@@ -1472,6 +1543,7 @@ public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterf
     private javax.swing.JCheckBox chkCambiarNumero;
     private javax.swing.JPanel footer;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
@@ -1514,7 +1586,8 @@ public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterf
     private com.toedter.calendar.JDateChooser txtFecha;
     private javax.swing.JTextField txtIGV;
     private javax.swing.JTextField txtImporte;
-    public static javax.swing.JTextField txtNombreCliente;
+    public static javax.swing.JTextField txtNombreCliente1;
+    public static javax.swing.JTextField txtNombreGarzon1;
     public static javax.swing.JTextField txtNombreProducto;
     private javax.swing.JTextField txtNumero;
     public static javax.swing.JTextField txtPrecioProducto;
@@ -1538,7 +1611,7 @@ public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterf
                     + "Teféfono: " + client.getStrTelefonoCliente()
                     ,"Mensaje del Sistema",1);
         lblIdCliente.setText(client.getStrIdCliente());
-        txtNombreCliente.setText(client.getStrNombreCliente());
+        txtNombreGarzon1.setText(client.getStrNombreCliente());
         }else{
             Toast.makeText(Toast.UNSUCCESS, "Ocurrio un error al guardar el cliente, intente nuevamente", Toast.LENGTH_MICRO).show();
         }
@@ -1548,7 +1621,7 @@ public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterf
     public void loadClient(ClsEntidadCliente client) {
         if(eFormState.equals(EFormState.ENABLE)){
             Presentacion.FrmVenta.lblIdCliente.setText(client.getStrIdCliente());
-            Presentacion.FrmVenta.txtNombreCliente.setText(client.getStrNombreCliente());
+            Presentacion.FrmVenta.txtNombreGarzon1.setText(client.getStrNombreCliente());
             Toast.makeText(Toast.SUCCESS, "Se cambió el cliente", Toast.LENGTH_MICRO).show();
         }else{
             Toast.makeText(Toast.UNSUCCESS, "Formulario inactivo, no se cambió el cliente", Toast.LENGTH_MICRO).show();
@@ -1566,6 +1639,8 @@ public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterf
             txtCostoProducto.setText(product.getStrPrecioCostoProducto());  // producto.preciocosto 
             txtPrecioProducto.setText(product.getStrPrecioVentaProducto()); // producto.precioVenta
             Toast.makeText(Toast.SUCCESS, "Se agregó el producto", Toast.LENGTH_MICRO).show();
+            txtCantidadProducto.setText("1");
+            CalcularTotal();
         }else{
             Toast.makeText(Toast.UNSUCCESS, "Fornulario inactivo, no se agregó el producto", Toast.LENGTH_MICRO).show();
         }
