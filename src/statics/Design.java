@@ -17,11 +17,9 @@ public class Design {
     public static final Color COLOR_ACCENT = new Color(244, 113, 0);
     public static final Color COLOR_SECONDARY = new Color(244, 255, 129);
    
-    
-    
     // Text color
     public static final Color APP_TEXT = new Color(255, 255, 255);
-    public static final Color CONTENT_TEXT = new Color(0, 0, 0);
+    public static final Color CONTENT_TEXT = Color.DARK_GRAY;
     
     
     // Buttons 

@@ -70,7 +70,7 @@ public class FrmBuscarCliente extends javax.swing.JInternalFrame implements Fram
         this.getContentPane().setBackground(Design.COLOR_PRIMARY_DARK);
         jPanel6.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         btnSalir.setBackground(Design.COLOR_ACCENT);
-        
+        btnSalir.setBorder(Design.BORDER_BUTTON);
         // place holder
         new TextPrompt("Buscar...", txtBusqueda);
     }
@@ -186,6 +186,8 @@ public class FrmBuscarCliente extends javax.swing.JInternalFrame implements Fram
     private void initComponents() {
 
         buttonGroup1 = new javax.swing.ButtonGroup();
+        jPanel6 = new javax.swing.JPanel();
+        jPanel4 = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
         jPanel2 = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
@@ -195,16 +197,29 @@ public class FrmBuscarCliente extends javax.swing.JInternalFrame implements Fram
         rbtnDni = new javax.swing.JRadioButton();
         txtBusqueda = new javax.swing.JTextField();
         btnSalir = new javax.swing.JButton();
-        jPanel6 = new javax.swing.JPanel();
-        jPanel4 = new javax.swing.JPanel();
         jPanel5 = new javax.swing.JPanel();
         jScrollPane5 = new javax.swing.JScrollPane();
         tblCliente = new javax.swing.JTable();
         lblEstado = new javax.swing.JLabel();
 
-        jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createTitledBorder(null, "", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 11), new java.awt.Color(255, 255, 255)), "", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 11), new java.awt.Color(255, 255, 255)), "Criterio de búsqueda", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 11), new java.awt.Color(255, 255, 255))); // NOI18N
+        setBackground(new java.awt.Color(255, 255, 255));
+        setClosable(true);
+        setIconifiable(true);
+        setMaximizable(true);
+        setResizable(true);
+        setTitle("Consultar Clientes");
+        setMinimumSize(new java.awt.Dimension(836, 400));
+        setPreferredSize(new java.awt.Dimension(836, 400));
+        getContentPane().setLayout(new java.awt.GridLayout(1, 0));
+
+        jPanel6.setOpaque(false);
+        jPanel6.setLayout(new java.awt.BorderLayout(5, 5));
+
+        jPanel4.setOpaque(false);
+        jPanel4.setLayout(new java.awt.BorderLayout());
+
+        jPanel3.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createTitledBorder(null, "", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 0, 11), new java.awt.Color(255, 255, 255)), "", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 0, 11), new java.awt.Color(255, 255, 255)), "Criterio de búsqueda", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 0, 11), new java.awt.Color(255, 255, 255))); // NOI18N
         jPanel3.setForeground(new java.awt.Color(255, 255, 255));
-        jPanel3.setMinimumSize(new java.awt.Dimension(415, 85));
         jPanel3.setOpaque(false);
         jPanel3.setLayout(new java.awt.GridLayout(2, 1, 5, 5));
 
@@ -236,22 +251,12 @@ public class FrmBuscarCliente extends javax.swing.JInternalFrame implements Fram
                 rbtnNombreStateChanged(evt);
             }
         });
-        rbtnNombre.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                rbtnNombreActionPerformed(evt);
-            }
-        });
         jPanel1.add(rbtnNombre);
 
         rbtnRuc.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         rbtnRuc.setForeground(new java.awt.Color(255, 255, 255));
         rbtnRuc.setText("NIT");
         rbtnRuc.setOpaque(false);
-        rbtnRuc.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                rbtnRucActionPerformed(evt);
-            }
-        });
         jPanel1.add(rbtnRuc);
 
         rbtnDni.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
@@ -284,6 +289,8 @@ public class FrmBuscarCliente extends javax.swing.JInternalFrame implements Fram
         });
         jPanel3.add(txtBusqueda);
 
+        jPanel4.add(jPanel3, java.awt.BorderLayout.LINE_START);
+
         btnSalir.setForeground(new java.awt.Color(255, 255, 255));
         btnSalir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/door_in.png"))); // NOI18N
         btnSalir.setText("Salir");
@@ -294,23 +301,8 @@ public class FrmBuscarCliente extends javax.swing.JInternalFrame implements Fram
                 btnSalirActionPerformed(evt);
             }
         });
+        jPanel4.add(btnSalir, java.awt.BorderLayout.LINE_END);
 
-        setBackground(new java.awt.Color(255, 255, 255));
-        setClosable(true);
-        setIconifiable(true);
-        setMaximizable(true);
-        setResizable(true);
-        setTitle("Elegir garzón ");
-        setMinimumSize(new java.awt.Dimension(436, 200));
-        setPreferredSize(new java.awt.Dimension(836, 300));
-        getContentPane().setLayout(new java.awt.GridLayout(1, 0));
-
-        jPanel6.setMinimumSize(new java.awt.Dimension(280, 135));
-        jPanel6.setOpaque(false);
-        jPanel6.setLayout(new java.awt.BorderLayout(5, 5));
-
-        jPanel4.setOpaque(false);
-        jPanel4.setLayout(new java.awt.BorderLayout());
         jPanel6.add(jPanel4, java.awt.BorderLayout.PAGE_START);
 
         jPanel5.setLayout(new java.awt.GridLayout(1, 0));
@@ -345,9 +337,6 @@ public class FrmBuscarCliente extends javax.swing.JInternalFrame implements Fram
         jPanel6.add(lblEstado, java.awt.BorderLayout.PAGE_END);
 
         getContentPane().add(jPanel6);
-
-        getAccessibleContext().setAccessibleName("Buscar Garzones ");
-        getAccessibleContext().setAccessibleDescription("");
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -398,14 +387,6 @@ public class FrmBuscarCliente extends javax.swing.JInternalFrame implements Fram
     private void txtBusquedaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBusquedaActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtBusquedaActionPerformed
-
-    private void rbtnNombreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbtnNombreActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_rbtnNombreActionPerformed
-
-    private void rbtnRucActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbtnRucActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_rbtnRucActionPerformed
     
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnSalir;

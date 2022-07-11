@@ -73,7 +73,7 @@ public class FrmBuscarProducto extends javax.swing.JInternalFrame implements Fra
         getContentPane().setBackground(Design.COLOR_PRIMARY_DARK);
         jPanel4.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
         btnSalir.setBackground(Design.COLOR_ACCENT);
-        
+        btnSalir.setBorder(Design.BORDER_BUTTON);
         // Place holder
         new TextPrompt("Buscar...", txtBusqueda);
     }
@@ -196,26 +196,40 @@ public class FrmBuscarProducto extends javax.swing.JInternalFrame implements Fra
     private void initComponents() {
 
         buttonGroup1 = new javax.swing.ButtonGroup();
+        jPanel4 = new javax.swing.JPanel();
+        jPanel2 = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
         jPanel5 = new javax.swing.JPanel();
         rbtnCodigo = new javax.swing.JRadioButton();
         rbtnNombre = new javax.swing.JRadioButton();
         rbtnDescripcion = new javax.swing.JRadioButton();
         txtBusqueda = new javax.swing.JTextField();
+        jLabelImage = new javax.swing.JLabel();
         btnSalir = new javax.swing.JButton();
-        jPanel4 = new javax.swing.JPanel();
-        jPanel2 = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
         jScrollPane2 = new javax.swing.JScrollPane();
         tblProducto = new javax.swing.JTable();
-        jLabelImage = new javax.swing.JLabel();
         lblEstado = new javax.swing.JLabel();
+
+        setBackground(new java.awt.Color(255, 255, 255));
+        setClosable(true);
+        setIconifiable(true);
+        setMaximizable(true);
+        setResizable(true);
+        setTitle("Consultar Productos");
+        getContentPane().setLayout(new java.awt.GridLayout(1, 0));
+
+        jPanel4.setOpaque(false);
+        jPanel4.setLayout(new java.awt.BorderLayout(5, 5));
+
+        jPanel2.setOpaque(false);
+        jPanel2.setLayout(new java.awt.BorderLayout(5, 5));
 
         jPanel1.setOpaque(false);
         jPanel1.setPreferredSize(new java.awt.Dimension(150, 100));
         jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jPanel5.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Criterio de búsqueda", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 0, 11), new java.awt.Color(255, 255, 255))); // NOI18N
+        jPanel5.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Criterio de búsqueda", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 0, 11), new java.awt.Color(255, 255, 255))); // NOI18N
         jPanel5.setOpaque(false);
         jPanel5.setLayout(null);
 
@@ -266,7 +280,16 @@ public class FrmBuscarProducto extends javax.swing.JInternalFrame implements Fra
         jPanel5.add(txtBusqueda);
         txtBusqueda.setBounds(20, 50, 450, 30);
 
-        jPanel1.add(jPanel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 0, 0, 10));
+        jPanel1.add(jPanel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 0, 490, 90));
+
+        jLabelImage.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
+        jLabelImage.setMaximumSize(new java.awt.Dimension(90, 90));
+        jLabelImage.setMinimumSize(new java.awt.Dimension(90, 90));
+        jLabelImage.setOpaque(true);
+        jLabelImage.setPreferredSize(new java.awt.Dimension(90, 90));
+        jPanel1.add(jLabelImage, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 0, 120, 100));
+
+        jPanel2.add(jPanel1, java.awt.BorderLayout.CENTER);
 
         btnSalir.setForeground(new java.awt.Color(255, 255, 255));
         btnSalir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/door_in.png"))); // NOI18N
@@ -278,21 +301,8 @@ public class FrmBuscarProducto extends javax.swing.JInternalFrame implements Fra
                 btnSalirActionPerformed(evt);
             }
         });
-        jPanel1.add(btnSalir, new org.netbeans.lib.awtextra.AbsoluteConstraints(570, 90, -1, 0));
+        jPanel2.add(btnSalir, java.awt.BorderLayout.LINE_END);
 
-        setBackground(new java.awt.Color(255, 255, 255));
-        setClosable(true);
-        setIconifiable(true);
-        setMaximizable(true);
-        setResizable(true);
-        setTitle("Consultar Productos");
-        getContentPane().setLayout(new java.awt.GridLayout(1, 0));
-
-        jPanel4.setOpaque(false);
-        jPanel4.setLayout(new java.awt.BorderLayout(5, 5));
-
-        jPanel2.setOpaque(false);
-        jPanel2.setLayout(new java.awt.BorderLayout(5, 5));
         jPanel4.add(jPanel2, java.awt.BorderLayout.PAGE_START);
 
         jPanel3.setLayout(new java.awt.GridLayout(1, 0));
@@ -325,13 +335,6 @@ public class FrmBuscarProducto extends javax.swing.JInternalFrame implements Fra
         jScrollPane2.setViewportView(tblProducto);
 
         jPanel3.add(jScrollPane2);
-
-        jLabelImage.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
-        jLabelImage.setMaximumSize(new java.awt.Dimension(90, 90));
-        jLabelImage.setMinimumSize(new java.awt.Dimension(90, 90));
-        jLabelImage.setOpaque(true);
-        jLabelImage.setPreferredSize(new java.awt.Dimension(90, 90));
-        jPanel3.add(jLabelImage);
 
         jPanel4.add(jPanel3, java.awt.BorderLayout.CENTER);
 

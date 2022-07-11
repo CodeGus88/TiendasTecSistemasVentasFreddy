@@ -227,13 +227,13 @@ public class FrmLogin extends javax.swing.JFrame {
         jLabel6.setFont(new java.awt.Font("Arial", 1, 120)); // NOI18N
         jLabel6.setForeground(new java.awt.Color(255, 255, 255));
         jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel6.setText("Casa de ");
+        jLabel6.setText("Tiendas");
         jPanel3.add(jLabel6);
 
         jLabel5.setFont(new java.awt.Font("Arial", 1, 120)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(255, 153, 0));
         jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        jLabel5.setText("SENET");
+        jLabel5.setText("TEC");
         jPanel3.add(jLabel5);
 
         panelLeft.add(jPanel3);
@@ -250,7 +250,7 @@ public class FrmLogin extends javax.swing.JFrame {
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel1.setText("ACCESO AL SISTEMA");
         jPanel1.add(jLabel1);
-        jLabel1.setBounds(0, 20, 550, 28);
+        jLabel1.setBounds(0, 20, 550, 29);
 
         jPanel4.setLayout(new java.awt.GridLayout(4, 3, 5, 5));
 

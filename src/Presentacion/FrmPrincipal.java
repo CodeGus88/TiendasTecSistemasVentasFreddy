@@ -151,10 +151,10 @@ public class FrmPrincipal extends javax.swing.JFrame implements FrameState {
         jLabel3 = new javax.swing.JLabel();
         mbtnVenta = new javax.swing.JButton();
         jLabel4 = new javax.swing.JLabel();
+        mbtnCaja = new javax.swing.JButton();
         jLabel6 = new javax.swing.JLabel();
         mbtnEstado = new javax.swing.JButton();
         Escritorio = new javax.swing.JDesktopPane();
-        mbtnCaja = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
         mProducto = new javax.swing.JMenuItem();
@@ -162,6 +162,12 @@ public class FrmPrincipal extends javax.swing.JFrame implements FrameState {
         mnuRegistro = new javax.swing.JMenu();
         mCompra = new javax.swing.JMenuItem();
         mProveedor = new javax.swing.JMenuItem();
+        mnuOperaciones = new javax.swing.JMenu();
+        mVenta = new javax.swing.JMenuItem();
+        jMenuItem4 = new javax.swing.JMenuItem();
+        jMenuItem9 = new javax.swing.JMenuItem();
+        mEstado = new javax.swing.JMenuItem();
+        mCliente = new javax.swing.JMenuItem();
         mnuInformes = new javax.swing.JMenu();
         mVentare = new javax.swing.JMenuItem();
         jMenuItem6 = new javax.swing.JMenuItem();
@@ -172,6 +178,11 @@ public class FrmPrincipal extends javax.swing.JFrame implements FrameState {
         mComprade = new javax.swing.JMenuItem();
         jMenuItem2 = new javax.swing.JMenuItem();
         jMenuItem3 = new javax.swing.JMenuItem();
+        mnuHerramientas = new javax.swing.JMenu();
+        mCambiarpass = new javax.swing.JMenuItem();
+        mCalculadora = new javax.swing.JMenuItem();
+        mRespaldar = new javax.swing.JMenuItem();
+        mRestaurar = new javax.swing.JMenuItem();
         mnuAnulaciones = new javax.swing.JMenu();
         mAnularv = new javax.swing.JMenuItem();
         jMenuItem7 = new javax.swing.JMenuItem();
@@ -187,17 +198,6 @@ public class FrmPrincipal extends javax.swing.JFrame implements FrameState {
         JMIniciarSesion = new javax.swing.JMenuItem();
         JMCerrarSesion = new javax.swing.JMenuItem();
         JMSalir = new javax.swing.JMenuItem();
-        mnuOperaciones = new javax.swing.JMenu();
-        mVenta = new javax.swing.JMenuItem();
-        jMenuItem4 = new javax.swing.JMenuItem();
-        jMenuItem9 = new javax.swing.JMenuItem();
-        mEstado = new javax.swing.JMenuItem();
-        mCliente = new javax.swing.JMenuItem();
-        mnuHerramientas = new javax.swing.JMenu();
-        mCambiarpass = new javax.swing.JMenuItem();
-        mCalculadora = new javax.swing.JMenuItem();
-        mRespaldar = new javax.swing.JMenuItem();
-        mRestaurar = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Punto de Venta TiendasTec");
@@ -315,6 +315,18 @@ public class FrmPrincipal extends javax.swing.JFrame implements FrameState {
         jLabel4.setText("   ");
         TBPrincipal.add(jLabel4);
 
+        mbtnCaja.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/dollar_22165.png"))); // NOI18N
+        mbtnCaja.setText("Ver caja");
+        mbtnCaja.setFocusable(false);
+        mbtnCaja.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        mbtnCaja.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        mbtnCaja.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mbtnCajaActionPerformed(evt);
+            }
+        });
+        TBPrincipal.add(mbtnCaja);
+
         jLabel6.setText("   ");
         TBPrincipal.add(jLabel6);
 
@@ -332,25 +344,13 @@ public class FrmPrincipal extends javax.swing.JFrame implements FrameState {
 
         Escritorio.setBackground(new java.awt.Color(204, 255, 153));
 
-        mbtnCaja.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/dollar_22165.png"))); // NOI18N
-        mbtnCaja.setText("Ver caja");
-        mbtnCaja.setFocusable(false);
-        mbtnCaja.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        mbtnCaja.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        mbtnCaja.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mbtnCajaActionPerformed(evt);
-            }
-        });
-        Escritorio.add(mbtnCaja);
-        mbtnCaja.setBounds(0, 0, 730, 75);
-
         jMenuBar1.setBackground(new java.awt.Color(204, 255, 0));
         jMenuBar1.setOpaque(false);
 
         jMenu1.setForeground(new java.awt.Color(255, 255, 255));
         jMenu1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/box_2.png"))); // NOI18N
         jMenu1.setText("Almacén");
+        jMenu1.setOpaque(false);
 
         mProducto.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F2, 0));
         mProducto.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/productos_m.png"))); // NOI18N
@@ -377,6 +377,7 @@ public class FrmPrincipal extends javax.swing.JFrame implements FrameState {
         mnuRegistro.setForeground(new java.awt.Color(255, 255, 255));
         mnuRegistro.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/compras_addd.png"))); // NOI18N
         mnuRegistro.setText("Compras");
+        mnuRegistro.setOpaque(false);
 
         mCompra.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F4, 0));
         mCompra.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/compra_m.png"))); // NOI18N
@@ -400,9 +401,65 @@ public class FrmPrincipal extends javax.swing.JFrame implements FrameState {
 
         jMenuBar1.add(mnuRegistro);
 
+        mnuOperaciones.setForeground(new java.awt.Color(255, 255, 255));
+        mnuOperaciones.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/ventas2_1.png"))); // NOI18N
+        mnuOperaciones.setText("Ventas");
+        mnuOperaciones.setOpaque(false);
+
+        mVenta.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F6, 0));
+        mVenta.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/ventas_m.png"))); // NOI18N
+        mVenta.setText("Venta");
+        mVenta.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mVentaActionPerformed(evt);
+            }
+        });
+        mnuOperaciones.add(mVenta);
+
+        jMenuItem4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/documento.png"))); // NOI18N
+        jMenuItem4.setText("Venta a Crédito");
+        jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem4ActionPerformed(evt);
+            }
+        });
+        mnuOperaciones.add(jMenuItem4);
+
+        jMenuItem9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/importe.png"))); // NOI18N
+        jMenuItem9.setText("Cotización");
+        jMenuItem9.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem9ActionPerformed(evt);
+            }
+        });
+        mnuOperaciones.add(jMenuItem9);
+
+        mEstado.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F7, 0));
+        mEstado.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/estado_m.png"))); // NOI18N
+        mEstado.setText("Verificar Producto");
+        mEstado.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mEstadoActionPerformed(evt);
+            }
+        });
+        mnuOperaciones.add(mEstado);
+
+        mCliente.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F8, 0));
+        mCliente.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/cliente_m.png"))); // NOI18N
+        mCliente.setText("Cliente");
+        mCliente.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mClienteActionPerformed(evt);
+            }
+        });
+        mnuOperaciones.add(mCliente);
+
+        jMenuBar1.add(mnuOperaciones);
+
         mnuInformes.setForeground(new java.awt.Color(255, 255, 255));
         mnuInformes.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/consultas_1.png"))); // NOI18N
         mnuInformes.setText("Reportes");
+        mnuInformes.setOpaque(false);
 
         mVentare.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/ventasrealizadas.png"))); // NOI18N
         mVentare.setText("Ventas Realizadas");
@@ -488,189 +545,10 @@ public class FrmPrincipal extends javax.swing.JFrame implements FrameState {
 
         jMenuBar1.add(mnuInformes);
 
-        mnuAnulaciones.setForeground(new java.awt.Color(255, 255, 255));
-        mnuAnulaciones.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/mantenimiento_1.png"))); // NOI18N
-        mnuAnulaciones.setText("Anular registro");
-
-        mAnularv.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/anular-proceso.png"))); // NOI18N
-        mAnularv.setText("Anular Venta");
-        mAnularv.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mAnularvActionPerformed(evt);
-            }
-        });
-        mnuAnulaciones.add(mAnularv);
-
-        jMenuItem7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/anular-proceso.png"))); // NOI18N
-        jMenuItem7.setText("Anular Venta a Crédito");
-        jMenuItem7.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem7ActionPerformed(evt);
-            }
-        });
-        mnuAnulaciones.add(jMenuItem7);
-
-        mAnularc.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/anular-proceso.png"))); // NOI18N
-        mAnularc.setText("Anular Compra");
-        mAnularc.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mAnularcActionPerformed(evt);
-            }
-        });
-        mnuAnulaciones.add(mAnularc);
-
-        jMenuBar1.add(mnuAnulaciones);
-
-        mnuMantenimiento.setForeground(new java.awt.Color(255, 255, 255));
-        mnuMantenimiento.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/manten.png"))); // NOI18N
-        mnuMantenimiento.setText("Permisos");
-
-        mEmpleado.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/empleados_m.png"))); // NOI18N
-        mEmpleado.setText("Empleado");
-        mEmpleado.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mEmpleadoActionPerformed(evt);
-            }
-        });
-        mnuMantenimiento.add(mEmpleado);
-
-        mTipodoc.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/documento.png"))); // NOI18N
-        mTipodoc.setText("Tipo de Documento");
-        mTipodoc.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mTipodocActionPerformed(evt);
-            }
-        });
-        mnuMantenimiento.add(mTipodoc);
-
-        mTipouser.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/User2.png"))); // NOI18N
-        mTipouser.setText("Tipo de Usuario");
-        mTipouser.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mTipouserActionPerformed(evt);
-            }
-        });
-        mnuMantenimiento.add(mTipouser);
-
-        jMenuBar1.add(mnuMantenimiento);
-
-        mnuAyuda.setForeground(new java.awt.Color(255, 255, 255));
-        mnuAyuda.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/ayuda_1.png"))); // NOI18N
-        mnuAyuda.setText("Soporte");
-
-        jMenuItem1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F1, 0));
-        jMenuItem1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/help.png"))); // NOI18N
-        jMenuItem1.setText("Manual de usuario");
-        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem1ActionPerformed(evt);
-            }
-        });
-        mnuAyuda.add(jMenuItem1);
-
-        jMenuItem5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/Info.png"))); // NOI18N
-        jMenuItem5.setText("Contacto");
-        jMenuItem5.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem5ActionPerformed(evt);
-            }
-        });
-        mnuAyuda.add(jMenuItem5);
-
-        jMenuBar1.add(mnuAyuda);
-
-        mnuArchivo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/archivo_1.png"))); // NOI18N
-        mnuArchivo.setText("Salir");
-
-        JMIniciarSesion.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_I, java.awt.event.InputEvent.CTRL_DOWN_MASK));
-        JMIniciarSesion.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/connect.png"))); // NOI18N
-        JMIniciarSesion.setText("Iniciar sesión");
-        JMIniciarSesion.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                JMIniciarSesionActionPerformed(evt);
-            }
-        });
-        mnuArchivo.add(JMIniciarSesion);
-
-        JMCerrarSesion.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_C, java.awt.event.InputEvent.CTRL_DOWN_MASK));
-        JMCerrarSesion.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/disconnect.png"))); // NOI18N
-        JMCerrarSesion.setText("Cerrar sesión");
-        JMCerrarSesion.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                JMCerrarSesionActionPerformed(evt);
-            }
-        });
-        mnuArchivo.add(JMCerrarSesion);
-
-        JMSalir.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_E, java.awt.event.InputEvent.CTRL_DOWN_MASK));
-        JMSalir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/door_in.png"))); // NOI18N
-        JMSalir.setText("Salir de la aplicación");
-        JMSalir.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                JMSalirActionPerformed(evt);
-            }
-        });
-        mnuArchivo.add(JMSalir);
-
-        jMenuBar1.add(mnuArchivo);
-
-        mnuOperaciones.setForeground(new java.awt.Color(255, 255, 255));
-        mnuOperaciones.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/ventas2_1.png"))); // NOI18N
-        mnuOperaciones.setText("Ventas");
-
-        mVenta.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F6, 0));
-        mVenta.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/ventas_m.png"))); // NOI18N
-        mVenta.setText("Venta");
-        mVenta.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mVentaActionPerformed(evt);
-            }
-        });
-        mnuOperaciones.add(mVenta);
-
-        jMenuItem4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/documento.png"))); // NOI18N
-        jMenuItem4.setText("Venta a Crédito");
-        jMenuItem4.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem4ActionPerformed(evt);
-            }
-        });
-        mnuOperaciones.add(jMenuItem4);
-
-        jMenuItem9.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/importe.png"))); // NOI18N
-        jMenuItem9.setText("Cotización");
-        jMenuItem9.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem9ActionPerformed(evt);
-            }
-        });
-        mnuOperaciones.add(jMenuItem9);
-
-        mEstado.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F7, 0));
-        mEstado.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/estado_m.png"))); // NOI18N
-        mEstado.setText("Verificar Producto");
-        mEstado.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mEstadoActionPerformed(evt);
-            }
-        });
-        mnuOperaciones.add(mEstado);
-
-        mCliente.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F8, 0));
-        mCliente.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/cliente_m.png"))); // NOI18N
-        mCliente.setText("Cliente");
-        mCliente.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mClienteActionPerformed(evt);
-            }
-        });
-        mnuOperaciones.add(mCliente);
-
-        jMenuBar1.add(mnuOperaciones);
-
         mnuHerramientas.setForeground(new java.awt.Color(255, 255, 255));
         mnuHerramientas.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/herramientas_2.png"))); // NOI18N
         mnuHerramientas.setText("Herramientas");
+        mnuHerramientas.setOpaque(false);
 
         mCambiarpass.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/group_key.png"))); // NOI18N
         mCambiarpass.setText("Cambiar contraseña");
@@ -710,6 +588,136 @@ public class FrmPrincipal extends javax.swing.JFrame implements FrameState {
 
         jMenuBar1.add(mnuHerramientas);
 
+        mnuAnulaciones.setForeground(new java.awt.Color(255, 255, 255));
+        mnuAnulaciones.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/mantenimiento_1.png"))); // NOI18N
+        mnuAnulaciones.setText("Anular registro");
+        mnuAnulaciones.setOpaque(false);
+
+        mAnularv.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/anular-proceso.png"))); // NOI18N
+        mAnularv.setText("Anular Venta");
+        mAnularv.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mAnularvActionPerformed(evt);
+            }
+        });
+        mnuAnulaciones.add(mAnularv);
+
+        jMenuItem7.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/anular-proceso.png"))); // NOI18N
+        jMenuItem7.setText("Anular Venta a Crédito");
+        jMenuItem7.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem7ActionPerformed(evt);
+            }
+        });
+        mnuAnulaciones.add(jMenuItem7);
+
+        mAnularc.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/anular-proceso.png"))); // NOI18N
+        mAnularc.setText("Anular Compra");
+        mAnularc.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mAnularcActionPerformed(evt);
+            }
+        });
+        mnuAnulaciones.add(mAnularc);
+
+        jMenuBar1.add(mnuAnulaciones);
+
+        mnuMantenimiento.setForeground(new java.awt.Color(255, 255, 255));
+        mnuMantenimiento.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/manten.png"))); // NOI18N
+        mnuMantenimiento.setText("Permisos");
+        mnuMantenimiento.setOpaque(false);
+
+        mEmpleado.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/empleados_m.png"))); // NOI18N
+        mEmpleado.setText("Empleado");
+        mEmpleado.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mEmpleadoActionPerformed(evt);
+            }
+        });
+        mnuMantenimiento.add(mEmpleado);
+
+        mTipodoc.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/documento.png"))); // NOI18N
+        mTipodoc.setText("Tipo de Documento");
+        mTipodoc.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mTipodocActionPerformed(evt);
+            }
+        });
+        mnuMantenimiento.add(mTipodoc);
+
+        mTipouser.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/User2.png"))); // NOI18N
+        mTipouser.setText("Tipo de Usuario");
+        mTipouser.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                mTipouserActionPerformed(evt);
+            }
+        });
+        mnuMantenimiento.add(mTipouser);
+
+        jMenuBar1.add(mnuMantenimiento);
+
+        mnuAyuda.setForeground(new java.awt.Color(255, 255, 255));
+        mnuAyuda.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/ayuda_1.png"))); // NOI18N
+        mnuAyuda.setText("Soporte");
+        mnuAyuda.setOpaque(false);
+
+        jMenuItem1.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F1, 0));
+        jMenuItem1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/help.png"))); // NOI18N
+        jMenuItem1.setText("Manual de usuario");
+        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem1ActionPerformed(evt);
+            }
+        });
+        mnuAyuda.add(jMenuItem1);
+
+        jMenuItem5.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/Info.png"))); // NOI18N
+        jMenuItem5.setText("Contacto");
+        jMenuItem5.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem5ActionPerformed(evt);
+            }
+        });
+        mnuAyuda.add(jMenuItem5);
+
+        jMenuBar1.add(mnuAyuda);
+
+        mnuArchivo.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/archivo_1.png"))); // NOI18N
+        mnuArchivo.setText("Salir");
+        mnuArchivo.setOpaque(false);
+
+        JMIniciarSesion.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_I, java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        JMIniciarSesion.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/connect.png"))); // NOI18N
+        JMIniciarSesion.setText("Iniciar sesión");
+        JMIniciarSesion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                JMIniciarSesionActionPerformed(evt);
+            }
+        });
+        mnuArchivo.add(JMIniciarSesion);
+
+        JMCerrarSesion.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_C, java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        JMCerrarSesion.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/disconnect.png"))); // NOI18N
+        JMCerrarSesion.setText("Cerrar sesión");
+        JMCerrarSesion.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                JMCerrarSesionActionPerformed(evt);
+            }
+        });
+        mnuArchivo.add(JMCerrarSesion);
+
+        JMSalir.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_E, java.awt.event.InputEvent.CTRL_DOWN_MASK));
+        JMSalir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/door_in.png"))); // NOI18N
+        JMSalir.setText("Salir de la aplicación");
+        JMSalir.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                JMSalirActionPerformed(evt);
+            }
+        });
+        mnuArchivo.add(JMSalir);
+
+        jMenuBar1.add(mnuArchivo);
+
         setJMenuBar(jMenuBar1);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -717,7 +725,7 @@ public class FrmPrincipal extends javax.swing.JFrame implements FrameState {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(TBPrincipal, javax.swing.GroupLayout.PREFERRED_SIZE, 1, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(TBPrincipal, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
@@ -726,7 +734,7 @@ public class FrmPrincipal extends javax.swing.JFrame implements FrameState {
                         .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(lblNombreEmpleado, javax.swing.GroupLayout.PREFERRED_SIZE, 418, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 37, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 9, Short.MAX_VALUE)
                         .addComponent(lblUsuarioEmpleado, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -734,7 +742,7 @@ public class FrmPrincipal extends javax.swing.JFrame implements FrameState {
                         .addComponent(lblTipo, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(29, 29, 29)
                         .addComponent(lblEstado)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 240, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 213, Short.MAX_VALUE)
                         .addComponent(jLabel10)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(lblFecha, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -746,7 +754,7 @@ public class FrmPrincipal extends javax.swing.JFrame implements FrameState {
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(Escritorio)
-                    .addComponent(TBPrincipal, javax.swing.GroupLayout.DEFAULT_SIZE, 776, Short.MAX_VALUE))
+                    .addComponent(TBPrincipal, javax.swing.GroupLayout.DEFAULT_SIZE, 778, Short.MAX_VALUE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE, false)
                     .addComponent(lblTipo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)

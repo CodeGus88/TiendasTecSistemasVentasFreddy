@@ -7,16 +7,20 @@ import Entidad.ClsEntidadProveedor;
 import Negocio.ClsProveedor;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.sql.ResultSet;
 import java.util.ArrayList;
+import java.util.Hashtable;
 import java.util.Iterator;
-import javax.swing.JLabel;
+import javax.swing.BorderFactory;
 import javax.swing.JOptionPane;
-import javax.swing.JTable;
 import javax.swing.SwingConstants;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
+import statics.Design;
+import statics.ScreenUses;
+import statics.TableConfigurator;
 /**
  *
  * @author DAYPER-PERU
@@ -25,7 +29,8 @@ public class FrmBuscarProveedor_Compra extends javax.swing.JInternalFrame {
 
     static ResultSet rs=null;
     DefaultTableModel dtm=new DefaultTableModel();
-
+    private String[] titles = {"ID", "NOMBRE O RAZÓN SOCIAL", "RUC", "DNI", "DIRECCIÓN", "TELÉFONO", "CELULAR", "EMAIL", "Nº CUENTA 1", "Nº CUENTA 2", "ESTADO", "OBSERVACIÓN"};
+    private float[] widths = {5, 25, 7, 7, 25, 7, 7, 18, 10, 10, 6, 15};
     String criterio,busqueda,Total;
     public FrmBuscarProveedor_Compra() {
         initComponents();
@@ -38,21 +43,45 @@ public class FrmBuscarProveedor_Compra extends javax.swing.JInternalFrame {
         actualizarTablaProveedor();
         CrearTablaProveedor();
         //---------------------ANCHO Y ALTO DEL FORM----------------------
-        this.setSize(536, 300);
         CantidadTotal();
+        
+        tableConfigurator();
+        design();
+        panelsContigurator();
+    }
+    
+    private void design(){
+        panelBackgoud.setBackground(Design.COLOR_PRIMARY_DARK);
+        btnSalir.setBackground(Design.COLOR_ACCENT);
+        btnSalir.setBorder(Design.BORDER_BUTTON);
+    }
+    
+    private void panelsContigurator(){
+        panelBackgoud.setBorder(BorderFactory.createEmptyBorder(5,5,5,5));
     }
 
-//-----------------------------------------------------------------------------------------------
-//----------------------------------PANEL - CLIENTE----------------------------------------------
-//-----------------------------------------------------------------------------------------------
+    private void tableConfigurator() {
+        panelBody.addComponentListener(new ComponentAdapter() {
+            public void componentResized(ComponentEvent evt) {
+                Component c = (Component) evt.getSource();
+                for (int i = 0; i < tblProveedor.getColumnCount(); i++) {
+                    tblProveedor.getColumnModel().getColumn(i).setPreferredWidth(ScreenUses.getPinTotal(c.getWidth(), widths[i]));
+                }
+            }
+        });
+    }
+    
     void actualizarTablaProveedor(){
-      String titulos[]={"ID","Nombre o Razón Social","RUC","DNI","Dirección","Teléfono","Celular","Email","Nº Cuenta 1","Nº Cuenta 2","Estado","Observación"};
-              
        ClsProveedor proveedores=new ClsProveedor();
        ArrayList<ClsEntidadProveedor> proveedor=proveedores.listarProveedor();
        Iterator iterator=proveedor.iterator();
-       DefaultTableModel defaultTableModel=new DefaultTableModel(null,titulos);
-       
+//       DefaultTableModel defaultTableModel=new DefaultTableModel(null,titles);
+        DefaultTableModel defaultTableModel = new DefaultTableModel(null, titles) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
        String fila[]=new String[12];
        while(iterator.hasNext()){
            ClsEntidadProveedor Proveedor=new ClsEntidadProveedor();
@@ -74,55 +103,26 @@ public class FrmBuscarProveedor_Compra extends javax.swing.JInternalFrame {
        tblProveedor.setModel(defaultTableModel);
     }
     void CrearTablaProveedor(){
-   //--------------------PRESENTACION DE JTABLE----------------------
-      
-        TableCellRenderer render = new DefaultTableCellRenderer() { 
-
-            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) { 
-                //aqui obtengo el render de la calse superior 
-                JLabel l = (JLabel)super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column); 
-                //Determinar Alineaciones   
-                    if(column==0 || column==2 || column==3 || column==5 || column==6 || column==8 || column==9 || column==10){
-                        l.setHorizontalAlignment(SwingConstants.CENTER); 
-                    }else{
-                        l.setHorizontalAlignment(SwingConstants.LEFT);
-                    }
-
-                //Colores en Jtable        
-                if (isSelected) {
-                    l.setBackground(new Color(203, 159, 41));
-                    //l.setBackground(new Color(168, 198, 238));
-                    l.setForeground(Color.WHITE); 
-                }else{
-                    l.setForeground(Color.BLACK);
-                    if (row % 2 == 0) {
-                        l.setBackground(Color.WHITE);
-                    } else {
-                        //l.setBackground(new Color(232, 232, 232));
-                        l.setBackground(new Color(254, 227, 152));
-                    }
-                }      
-                return l; 
-            } 
-        }; 
-        
         //Agregar Render
         for (int i=0;i<tblProveedor.getColumnCount();i++){
+            Hashtable<Integer, Integer> hash = new Hashtable<>();
+//            hash.put(0, 2, 35, 6, 89, 10, i)
+            hash.put(0, SwingConstants.CENTER);
+            hash.put(1, SwingConstants.CENTER);
+            hash.put(2, SwingConstants.CENTER);
+            hash.put(3, SwingConstants.CENTER);
+            hash.put(4, SwingConstants.CENTER);
+            hash.put(5, SwingConstants.CENTER);
+            hash.put(6, SwingConstants.CENTER);
+            TableCellRenderer render = TableConfigurator.configureTableItem(hash);
             tblProveedor.getColumnModel().getColumn(i).setCellRenderer(render);
         }
-      
         //Activar ScrollBar
         tblProveedor.setAutoResizeMode(tblProveedor.AUTO_RESIZE_OFF);
 
-        //Anchos de cada columna
-        int[] anchos = {30,200,80,80,180,70,70,150,80,80,70,200};
-        for(int i = 0; i < tblProveedor.getColumnCount(); i++) {
-            tblProveedor.getColumnModel().getColumn(i).setPreferredWidth(anchos[i]);
-        }
     }
     void BuscarProveedorPanel(){
-        String titulos[]={"ID","Nombre o Razón Social","RUC","DNI","Dirección","Teléfono","Celular","Email","Nº Cuenta 1","Nº Cuenta 2","Estado","Observación"};
-        dtm.setColumnIdentifiers(titulos);
+        dtm.setColumnIdentifiers(titles);
         
         ClsProveedor categoria=new ClsProveedor();
         busqueda=txtBusqueda.getText();
@@ -175,27 +175,41 @@ public class FrmBuscarProveedor_Compra extends javax.swing.JInternalFrame {
     }
     void CantidadTotal(){
         Total= String.valueOf(tblProveedor.getRowCount());   
-        lblEstado.setText("Se cargaron " + Total + " registros");      
+        labelFooter.setText("Se cargaron " + Total + " registros");      
     }
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         buttonGroup1 = new javax.swing.ButtonGroup();
+        panelBackgoud = new javax.swing.JPanel();
+        panelBody = new javax.swing.JPanel();
         jScrollPane5 = new javax.swing.JScrollPane();
         tblProveedor = new javax.swing.JTable();
-        txtBusqueda = new javax.swing.JTextField();
-        rbtnDni = new javax.swing.JRadioButton();
-        rbtnRuc = new javax.swing.JRadioButton();
-        rbtnNombre = new javax.swing.JRadioButton();
-        rbtnCodigo = new javax.swing.JRadioButton();
-        jLabel10 = new javax.swing.JLabel();
+        panelHead = new javax.swing.JPanel();
         btnSalir = new javax.swing.JButton();
-        lblEstado = new javax.swing.JLabel();
+        panel = new javax.swing.JPanel();
+        jPanel1 = new javax.swing.JPanel();
+        rbtnCodigo = new javax.swing.JRadioButton();
+        rbtnNombre = new javax.swing.JRadioButton();
+        rbtnRuc = new javax.swing.JRadioButton();
+        rbtnDni = new javax.swing.JRadioButton();
+        txtBusqueda = new javax.swing.JTextField();
+        labelFooter = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(255, 255, 255));
+        setClosable(true);
+        setIconifiable(true);
+        setMaximizable(true);
+        setResizable(true);
         setTitle("Consultar Proveedor");
-        getContentPane().setLayout(null);
+        setPreferredSize(new java.awt.Dimension(400, 300));
+        getContentPane().setLayout(new java.awt.GridLayout());
+
+        panelBackgoud.setLayout(new java.awt.BorderLayout());
+
+        panelBody.setOpaque(false);
+        panelBody.setLayout(new java.awt.GridLayout(1, 0));
 
         tblProveedor.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -216,56 +230,17 @@ public class FrmBuscarProveedor_Compra extends javax.swing.JInternalFrame {
         });
         jScrollPane5.setViewportView(tblProveedor);
 
-        getContentPane().add(jScrollPane5);
-        jScrollPane5.setBounds(10, 100, 500, 150);
+        panelBody.add(jScrollPane5);
 
-        txtBusqueda.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                txtBusquedaKeyReleased(evt);
-            }
-        });
-        getContentPane().add(txtBusqueda);
-        txtBusqueda.setBounds(30, 61, 380, 20);
+        panelBackgoud.add(panelBody, java.awt.BorderLayout.CENTER);
 
-        rbtnDni.setText("DNI");
-        rbtnDni.setOpaque(false);
-        getContentPane().add(rbtnDni);
-        rbtnDni.setBounds(350, 31, 43, 23);
+        panelHead.setOpaque(false);
+        panelHead.setLayout(new java.awt.BorderLayout(5, 5));
 
-        rbtnRuc.setText("RUC");
-        rbtnRuc.setOpaque(false);
-        getContentPane().add(rbtnRuc);
-        rbtnRuc.setBounds(280, 31, 47, 23);
-
-        rbtnNombre.setText("Nombre o Razón Social");
-        rbtnNombre.setOpaque(false);
-        rbtnNombre.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                rbtnNombreStateChanged(evt);
-            }
-        });
-        getContentPane().add(rbtnNombre);
-        rbtnNombre.setBounds(120, 31, 150, 23);
-
-        rbtnCodigo.setText("ID Cliente");
-        rbtnCodigo.setOpaque(false);
-        rbtnCodigo.addChangeListener(new javax.swing.event.ChangeListener() {
-            public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                rbtnCodigoStateChanged(evt);
-            }
-        });
-        getContentPane().add(rbtnCodigo);
-        rbtnCodigo.setBounds(30, 31, 90, 23);
-
-        jLabel10.setBackground(new java.awt.Color(255, 153, 0));
-        jLabel10.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
-        jLabel10.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Criterios de Búsqueda", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11))); // NOI18N
-        jLabel10.setOpaque(true);
-        getContentPane().add(jLabel10);
-        jLabel10.setBounds(10, 11, 410, 80);
-
+        btnSalir.setForeground(new java.awt.Color(255, 255, 255));
         btnSalir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/door_in.png"))); // NOI18N
         btnSalir.setText("Salir");
+        btnSalir.setBorder(null);
         btnSalir.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnSalir.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         btnSalir.addActionListener(new java.awt.event.ActionListener() {
@@ -273,27 +248,92 @@ public class FrmBuscarProveedor_Compra extends javax.swing.JInternalFrame {
                 btnSalirActionPerformed(evt);
             }
         });
-        getContentPane().add(btnSalir);
-        btnSalir.setBounds(430, 10, 80, 80);
-        getContentPane().add(lblEstado);
-        lblEstado.setBounds(10, 250, 180, 20);
+        panelHead.add(btnSalir, java.awt.BorderLayout.LINE_END);
+
+        panel.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Creiterio de búsqueda", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 0, 11), new java.awt.Color(255, 255, 255))); // NOI18N
+        panel.setMinimumSize(new java.awt.Dimension(450, 100));
+        panel.setOpaque(false);
+        panel.setPreferredSize(new java.awt.Dimension(660, 80));
+        panel.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jPanel1.setOpaque(false);
+        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        rbtnCodigo.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        rbtnCodigo.setForeground(new java.awt.Color(255, 255, 255));
+        rbtnCodigo.setText("ID Cliente");
+        rbtnCodigo.setOpaque(false);
+        rbtnCodigo.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                rbtnCodigoStateChanged(evt);
+            }
+        });
+        jPanel1.add(rbtnCodigo, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 0, 100, -1));
+
+        rbtnNombre.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        rbtnNombre.setForeground(new java.awt.Color(255, 255, 255));
+        rbtnNombre.setText("Nombre o Razón Social");
+        rbtnNombre.setOpaque(false);
+        rbtnNombre.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                rbtnNombreStateChanged(evt);
+            }
+        });
+        jPanel1.add(rbtnNombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 0, 190, -1));
+
+        rbtnRuc.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        rbtnRuc.setForeground(new java.awt.Color(255, 255, 255));
+        rbtnRuc.setText("RUC");
+        rbtnRuc.setOpaque(false);
+        jPanel1.add(rbtnRuc, new org.netbeans.lib.awtextra.AbsoluteConstraints(280, 0, 70, -1));
+
+        rbtnDni.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        rbtnDni.setForeground(new java.awt.Color(255, 255, 255));
+        rbtnDni.setText("DNI");
+        rbtnDni.setOpaque(false);
+        jPanel1.add(rbtnDni, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 0, 90, -1));
+
+        txtBusqueda.setMaximumSize(new java.awt.Dimension(2147483647, 30));
+        txtBusqueda.setMinimumSize(new java.awt.Dimension(5, 30));
+        txtBusqueda.setPreferredSize(new java.awt.Dimension(500, 30));
+        txtBusqueda.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtBusquedaKeyReleased(evt);
+            }
+        });
+        jPanel1.add(txtBusqueda, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 20, 440, -1));
+
+        panel.add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 20, 650, 50));
+
+        panelHead.add(panel, java.awt.BorderLayout.CENTER);
+
+        panelBackgoud.add(panelHead, java.awt.BorderLayout.NORTH);
+
+        labelFooter.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        labelFooter.setForeground(new java.awt.Color(255, 255, 255));
+        labelFooter.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        labelFooter.setText("data");
+        panelBackgoud.add(labelFooter, java.awt.BorderLayout.SOUTH);
+
+        getContentPane().add(panelBackgoud);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void tblProveedorMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblProveedorMouseClicked
-        int fila;
-        DefaultTableModel defaultTableModel = new DefaultTableModel();
-        fila = tblProveedor.getSelectedRow();
+        if(evt.getClickCount() == 2){
+            int fila;
+            DefaultTableModel defaultTableModel = new DefaultTableModel();
+            fila = tblProveedor.getSelectedRow();
+            if (fila == -1) {
+                JOptionPane.showMessageDialog(null, "Se debe seleccionar un registro");
+            } else {
+                defaultTableModel = (DefaultTableModel) tblProveedor.getModel();
 
-        if (fila == -1){
-            JOptionPane.showMessageDialog(null, "Se debe seleccionar un registro");
-        }else{
-            defaultTableModel = (DefaultTableModel)tblProveedor.getModel();
+                Presentacion.FrmCompra.lblIdProveedor.setText((String) defaultTableModel.getValueAt(fila, 0));
+                Presentacion.FrmCompra.txtNombreProveedor.setText((String) defaultTableModel.getValueAt(fila, 1));
 
-            Presentacion.FrmCompra.lblIdProveedor.setText((String) defaultTableModel.getValueAt(fila, 0));
-            Presentacion.FrmCompra.txtNombreProveedor.setText((String) defaultTableModel.getValueAt(fila, 1));
-
+            }
         }
     }//GEN-LAST:event_tblProveedorMouseClicked
 
@@ -318,9 +358,13 @@ public class FrmBuscarProveedor_Compra extends javax.swing.JInternalFrame {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnSalir;
     private javax.swing.ButtonGroup buttonGroup1;
-    private javax.swing.JLabel jLabel10;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane5;
-    private javax.swing.JLabel lblEstado;
+    private javax.swing.JLabel labelFooter;
+    private javax.swing.JPanel panel;
+    private javax.swing.JPanel panelBackgoud;
+    private javax.swing.JPanel panelBody;
+    private javax.swing.JPanel panelHead;
     private javax.swing.JRadioButton rbtnCodigo;
     private javax.swing.JRadioButton rbtnDni;
     private javax.swing.JRadioButton rbtnNombre;
