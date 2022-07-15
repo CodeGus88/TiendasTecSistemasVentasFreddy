@@ -14,8 +14,8 @@ public class ClsEntidadVenta {
     private String strIdVenta;
     private String strIdTipoDocumento;
     private String strTipoDocumento;
-    private String strIdCliente;
-    private String strCliente;
+    private String strIdGarzon1;
+    private String strIdGarzon2;
     private String strIdEmpleado;
     private String strEmpleado;
     private String strSerieVenta;
@@ -51,21 +51,22 @@ public class ClsEntidadVenta {
         this.strTipoDocumento = strTipoDocumento;
     }
 
-    public String getStrIdCliente() {
-        return strIdCliente;
+    public String getStrIdGarzon1() {
+        return strIdGarzon1;
     }
 
-    public void setStrIdCliente(String strIdCliente) {
-        this.strIdCliente = strIdCliente;
+    public void setStrIdGarzon1(String strIdGarzon1) {
+        this.strIdGarzon1 = strIdGarzon1;
     }
 
-    public String getStrCliente() {
-        return strCliente;
+    public String getStrIdGarzon2() {
+        return strIdGarzon2;
     }
 
-    public void setStrCliente(String strCliente) {
-        this.strCliente = strCliente;
+    public void setStrIdGarzon2(String strIdGarzon2) {
+        this.strIdGarzon2 = strIdGarzon2;
     }
+
 
     public String getStrIdEmpleado() {
         return strIdEmpleado;
@@ -150,9 +151,4 @@ public class ClsEntidadVenta {
     public void setStrEstadoVenta(String strEstadoVenta) {
         this.strEstadoVenta = strEstadoVenta;
     }
-
-
-    
-
-
 }

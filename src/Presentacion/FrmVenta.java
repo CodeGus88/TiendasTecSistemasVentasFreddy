@@ -66,6 +66,12 @@ public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterf
 
     static ResultSet rs = null;
     private DefaultTableModel dtmDetalle;
+    
+    private final ClsEntidadCliente garzon1;
+    public static final byte GARZON_1 = 1;
+    private final ClsEntidadCliente garzon2;
+    public static final byte GARZON_2 = 2;
+    private final String titulos[] = {"ID", "CÓDIGO", "PRODUCTO", "DESCRIPCIÓN", "CANTIDAD", "COSTO", "PRECIO", "TOTAL"};
 
     public FrmVenta() {
         initComponents();
@@ -79,19 +85,22 @@ public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterf
         cargarComboTipoDocumento();
 
         lblIdProducto.setVisible(false);
-        lblIdCliente.setVisible(false);
+//        lblIdCliente.setVisible(false);
         txtDescripcionProducto.setVisible(false);
         txtCostoProducto.setVisible(false);
         mirar();
         //--------------------JTABLE - DETALLEPRODUCTO--------------------
-
-        String titulos[] = {"ID", "CÓDIGO", "PRODUCTO", "DESCRIPCIÓN", "CANTIDAD", "COSTO", "PRECIO", "TOTAL"};
         dtmDetalle = new DefaultTableModel(null, titulos){
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
             }
         };
+        
+        // inicializar garzones
+        garzon1 = new ClsEntidadCliente();
+        garzon2 = new ClsEntidadCliente();
+        
         tblDetalleProducto.setModel(dtmDetalle);
         CrearTablaDetalleProducto();
         panelsConfigurator();
@@ -116,7 +125,6 @@ public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterf
         getContentPane().setBackground(Design.COLOR_PRIMARY_DARK);
         btnGuardar.setBackground(Design.COLOR_ACCENT);
         btnGuardar.setBackground(Design.COLOR_ACCENT);
-        btnAgregarCliente.setBackground(Design.COLOR_ACCENT);
         btnAgregarProducto.setBackground(Design.COLOR_ACCENT);
         btnBuscarProducto.setBackground(Design.COLOR_ACCENT);
         btnCancelar.setBackground(Design.COLOR_ACCENT);
@@ -129,7 +137,6 @@ public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterf
         btnBuscarCliente.setBackground(Design.COLOR_ACCENT);
         
         btnGuardar.setBorder(Design.BORDER_BUTTON);
-        btnAgregarCliente.setBorder(Design.BORDER_BUTTON);
         btnAgregarProducto.setBorder(Design.BORDER_BUTTON);
         btnBuscarProducto.setBorder(Design.BORDER_BUTTON);
         btnCancelar.setBorder(Design.BORDER_BUTTON);
@@ -144,7 +151,8 @@ public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterf
         jPanelMenu.setBorder(BorderFactory.createEmptyBorder(10,0,10,10));
         footer.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
         panelMenuAndTable.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
-
+        
+//        tblDetalleProducto.setDragEnabled(true);
     }
     
     /**
@@ -230,6 +238,12 @@ public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterf
         setOcultarColumnasJTable(tblDetalleProducto, new int[]{0, 5});
     }
     
+    private void clearClients(){
+        garzon1.setStrIdCliente(null);
+        garzon1.setStrNombreCliente(null);
+        garzon2.setStrIdCliente(null);
+        garzon2.setStrNombreCliente(null);
+    }
 
     void limpiarCampos() {
 
@@ -262,7 +276,6 @@ public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterf
         txtFecha.setEnabled(false);
         txtNumero.setEnabled(false);
 
-        btnAgregarCliente.setEnabled(false);
         btnBuscarCliente.setEnabled(false);
         btnBuscarProducto.setEnabled(false);
         btnAgregarProducto.setEnabled(false);
@@ -272,6 +285,7 @@ public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterf
         chkCambiarNumero.setSelected(false);
 
         txtNombreGarzon1.setText(null);
+        txtNombreGarzon2.setText(null);
         txtTotalVenta.setText("0.0");
         txtDescuento.setText("0.0");
         txtSubTotal.setText("0.0");
@@ -292,7 +306,6 @@ public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterf
 
         btnNuevo.setEnabled(false);
 
-        btnAgregarCliente.setEnabled(true);
         btnGuardar.setEnabled(true);
         btnCancelar.setEnabled(true);
         btnSalir.setEnabled(false);
@@ -303,7 +316,6 @@ public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterf
         txtCantidadProducto.setEnabled(true);
         txtFecha.setEnabled(true);
 
-        btnAgregarCliente.setEnabled(true);
         btnBuscarCliente.setEnabled(true);
         btnBuscarProducto.setEnabled(true);
         btnAgregarProducto.setEnabled(true);
@@ -363,22 +375,22 @@ public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterf
 
     }
 
-    void BuscarClientePorDefecto() {
-        try {
-            ClsCliente oCliente = new ClsCliente();
-            rs = oCliente.listarClientePorParametro("id", "1");
-            while (rs.next()) {
-                lblIdCliente.setText(rs.getString(1));
-                txtNombreGarzon1.setText(rs.getString(2));
-                break;
-            }
-
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage());
-            System.out.println(ex.getMessage());
-        }
-
-    }
+//    void BuscarClientePorDefecto() {
+//        try {
+//            ClsCliente oCliente = new ClsCliente();
+//            rs = oCliente.listarClientePorParametro("id", "1");
+//            while (rs.next()) {
+//                garzon1.setText(rs.getString(1));
+//                txtNombreGarzon1.setText(rs.getString(2));
+//                break;
+//            }
+//
+//        } catch (Exception ex) {
+//            JOptionPane.showMessageDialog(this, ex.getMessage());
+//            System.out.println(ex.getMessage());
+//        }
+//
+//    }
 
     private void setOcultarColumnasJTable(JTable tbl, int columna[]) {
         for (int i = 0; i < columna.length; i++) {
@@ -435,15 +447,11 @@ public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterf
         jLabel1 = new javax.swing.JLabel();
         btnBuscarCliente = new javax.swing.JButton();
         txtNombreGarzon1 = new javax.swing.JTextField();
-        btnAgregarCliente = new javax.swing.JButton();
         jLabel13 = new javax.swing.JLabel();
         cboTipoDocumento = new javax.swing.JComboBox();
         jLabel2 = new javax.swing.JLabel();
         txtFecha = new com.toedter.calendar.JDateChooser();
-        lblIdCliente = new javax.swing.JLabel();
-        txtNombreCliente1 = new javax.swing.JTextField();
-        btnBuscarCliente1 = new javax.swing.JButton();
-        btnAgregarCliente1 = new javax.swing.JButton();
+        txtNombreGarzon2 = new javax.swing.JTextField();
         jLabel10 = new javax.swing.JLabel();
         jPanel10 = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
@@ -504,9 +512,9 @@ public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterf
         panelMenu.setOpaque(false);
 
         jPanel5.setBackground(new java.awt.Color(34, 81, 249));
-        jPanel5.setMinimumSize(new java.awt.Dimension(530, 320));
+        jPanel5.setMinimumSize(new java.awt.Dimension(530, 275));
         jPanel5.setOpaque(false);
-        jPanel5.setPreferredSize(new java.awt.Dimension(530, 320));
+        jPanel5.setPreferredSize(new java.awt.Dimension(530, 275));
         jPanel5.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         jPanel3.setBackground(new java.awt.Color(208, 218, 247));
@@ -605,7 +613,7 @@ public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterf
         jPanel3.add(jPanel6);
         jPanel6.setBounds(310, 13, 200, 50);
 
-        jPanel5.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 240, 530, 70));
+        jPanel5.add(jPanel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 200, 530, 70));
         jPanel3.getAccessibleContext().setAccessibleName("Proceso");
 
         jPanel2.setBackground(new java.awt.Color(208, 218, 247));
@@ -676,7 +684,7 @@ public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterf
         jPanel2.add(jLabel23, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 50, 50, 20));
         jPanel2.add(txtCostoProducto, new org.netbeans.lib.awtextra.AbsoluteConstraints(410, 80, 90, 20));
 
-        jPanel5.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 140, 530, 100));
+        jPanel5.add(jPanel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 100, 530, 100));
 
         jPanel1.setBackground(new java.awt.Color(208, 218, 247));
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Datos de la venta", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 0, 12), new java.awt.Color(255, 255, 255))); // NOI18N
@@ -686,8 +694,9 @@ public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterf
 
         jLabel1.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel1.setText("Garzón 2:");
-        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 20, 200, 20));
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel1.setText("Garzón 2: ");
+        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 50, 90, 30));
 
         btnBuscarCliente.setForeground(new java.awt.Color(255, 255, 255));
         btnBuscarCliente.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/Buscar_p.png"))); // NOI18N
@@ -700,103 +709,46 @@ public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterf
                 btnBuscarClienteActionPerformed(evt);
             }
         });
-        jPanel1.add(btnBuscarCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(200, 40, 25, 30));
+        jPanel1.add(btnBuscarCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 20, 30, 60));
 
         txtNombreGarzon1.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         txtNombreGarzon1.setEnabled(false);
         txtNombreGarzon1.setSelectionColor(new java.awt.Color(255, 0, 255));
-        jPanel1.add(txtNombreGarzon1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 40, 180, 30));
-
-        btnAgregarCliente.setForeground(new java.awt.Color(255, 255, 255));
-        btnAgregarCliente.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/Agregar_p1.png"))); // NOI18N
-        btnAgregarCliente.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
-        btnAgregarCliente.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        btnAgregarCliente.setOpaque(false);
-        btnAgregarCliente.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btnAgregarClienteMouseClicked(evt);
-            }
-        });
-        btnAgregarCliente.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAgregarClienteActionPerformed(evt);
-            }
-        });
-        btnAgregarCliente.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                btnAgregarClienteKeyReleased(evt);
-            }
-        });
-        jPanel1.add(btnAgregarCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(230, 40, 25, 30));
+        jPanel1.add(txtNombreGarzon1, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 20, 170, 30));
 
         jLabel13.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jLabel13.setForeground(new java.awt.Color(255, 255, 255));
         jLabel13.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel13.setText("Documento: ");
-        jPanel1.add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 90, 90, 30));
+        jPanel1.add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 20, 90, 30));
 
         cboTipoDocumento.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         cboTipoDocumento.setForeground(Design.CONTENT_TEXT);
         cboTipoDocumento.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
         cboTipoDocumento.setAutoscrolls(true);
-        jPanel1.add(cboTipoDocumento, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 90, 170, 30));
+        jPanel1.add(cboTipoDocumento, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 20, 130, 30));
 
         jLabel2.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel2.setText("Fecha: ");
-        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 90, 90, 30));
+        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 50, 90, 30));
 
         txtFecha.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        jPanel1.add(txtFecha, new org.netbeans.lib.awtextra.AbsoluteConstraints(350, 90, 160, 30));
-        jPanel1.add(lblIdCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(70, 20, 20, 20));
+        jPanel1.add(txtFecha, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 50, 130, 30));
 
-        txtNombreCliente1.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        txtNombreCliente1.setEnabled(false);
-        txtNombreCliente1.setSelectionColor(new java.awt.Color(255, 0, 255));
-        jPanel1.add(txtNombreCliente1, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 40, 180, 30));
-
-        btnBuscarCliente1.setForeground(new java.awt.Color(255, 255, 255));
-        btnBuscarCliente1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/Buscar_p.png"))); // NOI18N
-        btnBuscarCliente1.setAlignmentY(1.0F);
-        btnBuscarCliente1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
-        btnBuscarCliente1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        btnBuscarCliente1.setOpaque(false);
-        btnBuscarCliente1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnBuscarCliente1ActionPerformed(evt);
-            }
-        });
-        jPanel1.add(btnBuscarCliente1, new org.netbeans.lib.awtextra.AbsoluteConstraints(460, 40, 25, 30));
-
-        btnAgregarCliente1.setForeground(new java.awt.Color(255, 255, 255));
-        btnAgregarCliente1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/Agregar_p1.png"))); // NOI18N
-        btnAgregarCliente1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
-        btnAgregarCliente1.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        btnAgregarCliente1.setOpaque(false);
-        btnAgregarCliente1.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                btnAgregarCliente1MouseClicked(evt);
-            }
-        });
-        btnAgregarCliente1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnAgregarCliente1ActionPerformed(evt);
-            }
-        });
-        btnAgregarCliente1.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                btnAgregarCliente1KeyReleased(evt);
-            }
-        });
-        jPanel1.add(btnAgregarCliente1, new org.netbeans.lib.awtextra.AbsoluteConstraints(490, 40, 25, 30));
+        txtNombreGarzon2.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        txtNombreGarzon2.setEnabled(false);
+        txtNombreGarzon2.setSelectionColor(new java.awt.Color(255, 0, 255));
+        jPanel1.add(txtNombreGarzon2, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 50, 170, 30));
 
         jLabel10.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jLabel10.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel10.setText("Garzón 1:");
-        jPanel1.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 20, 200, 20));
+        jLabel10.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel10.setText("Garzón 1: ");
+        jPanel1.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 20, 90, 30));
 
-        jPanel5.add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 530, 130));
+        jPanel5.add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 530, 100));
 
         panelMenu.add(jPanel5);
 
@@ -948,13 +900,18 @@ public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterf
         jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel8.setText("Importe:");
         jLabel8.setAutoscrolls(true);
+        jLabel8.setMaximumSize(new java.awt.Dimension(10000, 30));
+        jLabel8.setMinimumSize(new java.awt.Dimension(0, 30));
+        jLabel8.setPreferredSize(new java.awt.Dimension(0, 30));
         footer.add(jLabel8);
 
         txtImporte.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
         txtImporte.setForeground(java.awt.Color.darkGray);
         txtImporte.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         txtImporte.setEnabled(false);
-        txtImporte.setPreferredSize(new java.awt.Dimension(5, 30));
+        txtImporte.setMaximumSize(new java.awt.Dimension(10000, 30));
+        txtImporte.setMinimumSize(new java.awt.Dimension(0, 30));
+        txtImporte.setPreferredSize(new java.awt.Dimension(0, 30));
         footer.add(txtImporte);
 
         jLabel3.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
@@ -962,11 +919,17 @@ public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterf
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel3.setText("Valor venta:");
         jLabel3.setAutoscrolls(true);
+        jLabel3.setMaximumSize(new java.awt.Dimension(10000, 30));
+        jLabel3.setMinimumSize(new java.awt.Dimension(0, 30));
+        jLabel3.setPreferredSize(new java.awt.Dimension(0, 30));
         footer.add(jLabel3);
 
         txtTotalVenta.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
         txtTotalVenta.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         txtTotalVenta.setEnabled(false);
+        txtTotalVenta.setMaximumSize(new java.awt.Dimension(10000, 30));
+        txtTotalVenta.setMinimumSize(new java.awt.Dimension(0, 30));
+        txtTotalVenta.setPreferredSize(new java.awt.Dimension(0, 30));
         footer.add(txtTotalVenta);
 
         jLabel7.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
@@ -974,11 +937,17 @@ public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterf
         jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel7.setText("Sub total:");
         jLabel7.setAutoscrolls(true);
+        jLabel7.setMaximumSize(new java.awt.Dimension(10000, 30));
+        jLabel7.setMinimumSize(new java.awt.Dimension(0, 30));
+        jLabel7.setPreferredSize(new java.awt.Dimension(0, 30));
         footer.add(jLabel7);
 
         txtSubTotal.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
         txtSubTotal.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         txtSubTotal.setEnabled(false);
+        txtSubTotal.setMaximumSize(new java.awt.Dimension(10000, 30));
+        txtSubTotal.setMinimumSize(new java.awt.Dimension(0, 30));
+        txtSubTotal.setPreferredSize(new java.awt.Dimension(0, 30));
         footer.add(txtSubTotal);
 
         jLabel12.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
@@ -987,6 +956,9 @@ public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterf
         jLabel12.setText("Total a pagar:");
         jLabel12.setAutoscrolls(true);
         jLabel12.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        jLabel12.setMaximumSize(new java.awt.Dimension(10000, 30));
+        jLabel12.setMinimumSize(new java.awt.Dimension(0, 30));
+        jLabel12.setPreferredSize(new java.awt.Dimension(0, 30));
         footer.add(jLabel12);
 
         txtTotalPagar.setBackground(new java.awt.Color(51, 51, 0));
@@ -995,6 +967,9 @@ public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterf
         txtTotalPagar.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         txtTotalPagar.setDisabledTextColor(new java.awt.Color(0, 255, 102));
         txtTotalPagar.setEnabled(false);
+        txtTotalPagar.setMaximumSize(new java.awt.Dimension(10000, 30));
+        txtTotalPagar.setMinimumSize(new java.awt.Dimension(0, 30));
+        txtTotalPagar.setPreferredSize(new java.awt.Dimension(0, 30));
         txtTotalPagar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtTotalPagarActionPerformed(evt);
@@ -1007,12 +982,18 @@ public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterf
         jLabel11.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel11.setText("Cambio:");
         jLabel11.setAutoscrolls(true);
+        jLabel11.setMaximumSize(new java.awt.Dimension(10000, 30));
+        jLabel11.setMinimumSize(new java.awt.Dimension(0, 30));
+        jLabel11.setPreferredSize(new java.awt.Dimension(0, 30));
         footer.add(jLabel11);
 
         txtCambio.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
         txtCambio.setForeground(java.awt.Color.darkGray);
         txtCambio.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         txtCambio.setEnabled(false);
+        txtCambio.setMaximumSize(new java.awt.Dimension(10000, 30));
+        txtCambio.setMinimumSize(new java.awt.Dimension(0, 30));
+        txtCambio.setPreferredSize(new java.awt.Dimension(0, 30));
         footer.add(txtCambio);
 
         jLabel15.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
@@ -1020,11 +1001,17 @@ public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterf
         jLabel15.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel15.setText("Descuento:");
         jLabel15.setAutoscrolls(true);
+        jLabel15.setMaximumSize(new java.awt.Dimension(10000, 30));
+        jLabel15.setMinimumSize(new java.awt.Dimension(0, 30));
+        jLabel15.setPreferredSize(new java.awt.Dimension(0, 30));
         footer.add(jLabel15);
 
         txtDescuento.setBackground(new java.awt.Color(255, 255, 204));
         txtDescuento.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
         txtDescuento.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        txtDescuento.setMaximumSize(new java.awt.Dimension(10000, 30));
+        txtDescuento.setMinimumSize(new java.awt.Dimension(0, 30));
+        txtDescuento.setPreferredSize(new java.awt.Dimension(0, 30));
         txtDescuento.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txtDescuentoKeyReleased(evt);
@@ -1037,14 +1024,23 @@ public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterf
         jLabel9.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel9.setText("I.G.V.:");
         jLabel9.setAutoscrolls(true);
+        jLabel9.setMaximumSize(new java.awt.Dimension(10000, 30));
+        jLabel9.setMinimumSize(new java.awt.Dimension(0, 30));
+        jLabel9.setPreferredSize(new java.awt.Dimension(0, 30));
         footer.add(jLabel9);
 
         txtIGV.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
         txtIGV.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
         txtIGV.setEnabled(false);
+        txtIGV.setMaximumSize(new java.awt.Dimension(10000, 30));
+        txtIGV.setMinimumSize(new java.awt.Dimension(0, 30));
+        txtIGV.setPreferredSize(new java.awt.Dimension(0, 30));
         footer.add(txtIGV);
 
+        jPanel12.setMaximumSize(new java.awt.Dimension(10000, 30));
+        jPanel12.setMinimumSize(new java.awt.Dimension(0, 30));
         jPanel12.setOpaque(false);
+        jPanel12.setPreferredSize(new java.awt.Dimension(0, 30));
         footer.add(jPanel12);
 
         btnGuardar.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
@@ -1053,6 +1049,9 @@ public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterf
         btnGuardar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         btnGuardar.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
         btnGuardar.setIconTextGap(0);
+        btnGuardar.setMaximumSize(new java.awt.Dimension(10000, 30));
+        btnGuardar.setMinimumSize(new java.awt.Dimension(0, 30));
+        btnGuardar.setPreferredSize(new java.awt.Dimension(0, 30));
         btnGuardar.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
         btnGuardar.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -1067,7 +1066,7 @@ public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterf
     }// </editor-fold>//GEN-END:initComponents
 
     private void formComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentShown
-        BuscarClientePorDefecto();
+//        BuscarClientePorDefecto();
         cargarComboTipoDocumento();
     }//GEN-LAST:event_formComponentShown
 
@@ -1320,6 +1319,7 @@ public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterf
         mirar();
         limpiarTabla();
         eFormState = EFormState.DISABLE;
+        clearClients();
     }//GEN-LAST:event_btnCancelarActionPerformed
 
     private void btnImprimirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnImprimirActionPerformed
@@ -1351,7 +1351,8 @@ public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterf
                 ClsVenta ventas = new ClsVenta();
                 ClsEntidadVenta venta = new ClsEntidadVenta();
                 venta.setStrIdTipoDocumento(id[cboTipoDocumento.getSelectedIndex()]);
-                venta.setStrIdCliente(lblIdCliente.getText());
+                venta.setStrIdGarzon1(garzon1.getStrIdCliente());
+                venta.setStrIdGarzon2(garzon2.getStrIdCliente());
                 venta.setStrIdEmpleado(IdEmpleado);
                 venta.setStrSerieVenta(txtSerie.getText());
                 venta.setStrNumeroVenta(txtNumero.getText());
@@ -1362,19 +1363,20 @@ public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterf
                 venta.setStrIgvVenta(txtIGV.getText());
                 venta.setStrTotalPagarVenta(txtTotalPagar.getText());
                 venta.setStrEstadoVenta("EMITIDO");
-                if(ventas.agregarVenta(venta))
+                if(ventas.agregarVenta(venta)){
+                    guardarDetalle();
                     Toast.makeText(Toast.SUCCESS, Message.SUCCESS_MESSAGE, Toast.LENGTH_SHORT).show();
-                else
+                }else
                     Toast.makeText(Toast.UNSUCCESS, Message.SUCCESS_MESSAGE, Toast.LENGTH_SHORT).show();
-                guardarDetalle();
             }
 
             mirar();
             tipoDocumento = cboTipoDocumento.getSelectedItem().toString();
             limpiarTabla();
+            clearClients();
             numVenta = generaNumVenta();
             txtNumero.setText(numVenta);
-            BuscarClientePorDefecto();
+//            BuscarClientePorDefecto();
 //------------ Imprimir Venta --------------            
             if (cboTipoDocumento.getSelectedItem().equals("TICKET")) {
                 //Dese imprimir el Comprobante?
@@ -1413,7 +1415,7 @@ public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterf
         eFormState = EFormState.ENABLE;
         modificar();
         limpiarCampos();
-        BuscarClientePorDefecto();
+//        BuscarClientePorDefecto();
     }//GEN-LAST:event_btnNuevoActionPerformed
 
     private void txtCantidadProductoKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCantidadProductoKeyTyped
@@ -1439,34 +1441,6 @@ public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterf
     private void txtTotalPagarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTotalPagarActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtTotalPagarActionPerformed
-
-    private void btnAgregarClienteMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnAgregarClienteMouseClicked
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnAgregarClienteMouseClicked
-
-    private void btnAgregarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarClienteActionPerformed
-        new FrmNewClient(new JFrame(), true, this);
-    }//GEN-LAST:event_btnAgregarClienteActionPerformed
-
-    private void btnAgregarClienteKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_btnAgregarClienteKeyReleased
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnAgregarClienteKeyReleased
-
-    private void btnBuscarCliente1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnBuscarCliente1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnBuscarCliente1ActionPerformed
-
-    private void btnAgregarCliente1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_btnAgregarCliente1MouseClicked
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnAgregarCliente1MouseClicked
-
-    private void btnAgregarCliente1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarCliente1ActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnAgregarCliente1ActionPerformed
-
-    private void btnAgregarCliente1KeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_btnAgregarCliente1KeyReleased
-        // TODO add your handling code here:
-    }//GEN-LAST:event_btnAgregarCliente1KeyReleased
     void obtenerUltimoIdVenta() {
         try {
             ClsVenta oVenta = new ClsVenta();
@@ -1481,7 +1455,6 @@ public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterf
     }
 
     void guardarDetalle() {
-
         obtenerUltimoIdVenta();
         ClsDetalleVenta detalleventas = new ClsDetalleVenta();
         ClsEntidadDetalleVenta detalleventa = new ClsEntidadDetalleVenta();
@@ -1525,11 +1498,8 @@ public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterf
         }
     }
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JButton btnAgregarCliente;
-    private javax.swing.JButton btnAgregarCliente1;
     private javax.swing.JButton btnAgregarProducto;
     private javax.swing.JButton btnBuscarCliente;
-    private javax.swing.JButton btnBuscarCliente1;
     private javax.swing.JButton btnBuscarProducto;
     private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnEliminarProducto;
@@ -1571,7 +1541,6 @@ public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterf
     private javax.swing.JPanel jPanel6;
     private javax.swing.JPanel jPanelMenu;
     private javax.swing.JScrollPane jScrollPane3;
-    public static javax.swing.JLabel lblIdCliente;
     public static javax.swing.JLabel lblIdProducto;
     private javax.swing.JPanel panelMenu;
     private javax.swing.JPanel panelMenuAndTable;
@@ -1586,8 +1555,8 @@ public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterf
     private com.toedter.calendar.JDateChooser txtFecha;
     private javax.swing.JTextField txtIGV;
     private javax.swing.JTextField txtImporte;
-    public static javax.swing.JTextField txtNombreCliente1;
     public static javax.swing.JTextField txtNombreGarzon1;
+    public static javax.swing.JTextField txtNombreGarzon2;
     public static javax.swing.JTextField txtNombreProducto;
     private javax.swing.JTextField txtNumero;
     public static javax.swing.JTextField txtPrecioProducto;
@@ -1600,31 +1569,40 @@ public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterf
     // End of variables declaration//GEN-END:variables
 
     @Override
-    public void  loadNewClient(ClsEntidadCliente client) {
-        if(!client.getStrIdCliente().equals("0")){
-            JOptionPane.showMessageDialog(null,"¡Cliente Agregado con éxito!\n"
-                    + "Se asignará a esta transacción\n"
-                    + "id: " + client.getStrIdCliente()+"\n"
-                    + "Nombre / Razón social: " + client.getStrNombreCliente()+"\n"
-                    + "DNI: " + client.getStrDniCliente()+"\n"
-                    + "Dirección: " + client.getStrDireccionCliente()+"\n"
-                    + "Teféfono: " + client.getStrTelefonoCliente()
-                    ,"Mensaje del Sistema",1);
-        lblIdCliente.setText(client.getStrIdCliente());
-        txtNombreGarzon1.setText(client.getStrNombreCliente());
-        }else{
-            Toast.makeText(Toast.UNSUCCESS, "Ocurrio un error al guardar el cliente, intente nuevamente", Toast.LENGTH_MICRO).show();
-        }
+    public void loadClient(ClsEntidadCliente client, final byte GARZON) {
+        if(GARZON == GARZON_1){
+            garzon1.setStrIdCliente(client.getStrIdCliente());
+            garzon1.setStrNombreCliente(client.getStrNombreCliente());
+            txtNombreGarzon1.setText(client.getStrNombreCliente());
+        }else if(GARZON == GARZON_2){
+            garzon2.setStrIdCliente(client.getStrIdCliente());
+            garzon2.setStrNombreCliente(client.getStrNombreCliente());
+            txtNombreGarzon2.setText(client.getStrNombreCliente());
+        } 
     }
     
     @Override
-    public void loadClient(ClsEntidadCliente client) {
+    public boolean loadClient(ClsEntidadCliente client) {
         if(eFormState.equals(EFormState.ENABLE)){
-            Presentacion.FrmVenta.lblIdCliente.setText(client.getStrIdCliente());
-            Presentacion.FrmVenta.txtNombreGarzon1.setText(client.getStrNombreCliente());
-            Toast.makeText(Toast.SUCCESS, "Se cambió el cliente", Toast.LENGTH_MICRO).show();
+            if(garzon1.getStrIdCliente() == null || garzon1.getStrIdCliente().isEmpty()){
+                garzon1.setStrIdCliente(client.getStrIdCliente());
+                garzon1.setStrNombreCliente(client.getStrNombreCliente());
+                txtNombreGarzon1.setText(client.getStrNombreCliente());
+                Toast.makeText(Toast.SUCCESS, "Se cambió el cliente", Toast.LENGTH_MICRO).show();
+                return true;
+            }else if(garzon2.getStrIdCliente() == null || garzon2.getStrIdCliente().isEmpty()){
+                garzon2.setStrIdCliente(client.getStrIdCliente());
+                garzon2.setStrNombreCliente(client.getStrNombreCliente());
+                txtNombreGarzon2.setText(client.getStrNombreCliente());
+                Toast.makeText(Toast.SUCCESS, "Se cambió el cliente", Toast.LENGTH_MICRO).show();
+                return true;
+            }else{
+                return false;
+            }
+            
         }else{
             Toast.makeText(Toast.UNSUCCESS, "Formulario inactivo, no se cambió el cliente", Toast.LENGTH_MICRO).show();
+            return true;
         }
     }
 

@@ -949,7 +949,7 @@ public class FrmPrincipal extends javax.swing.JFrame implements FrameState {
     }//GEN-LAST:event_mbtnCompraActionPerformed
 
     private void mbtnEstadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mbtnEstadoActionPerformed
-        Presentacion.FrmProductoEstado ProductoEstado = new Presentacion.FrmProductoEstado();
+        Consultas.FrmProductoEstado ProductoEstado = new Consultas.FrmProductoEstado();
         Escritorio.add(ProductoEstado);
         ProductoEstado.show();
     }//GEN-LAST:event_mbtnEstadoActionPerformed
@@ -1104,7 +1104,7 @@ public class FrmPrincipal extends javax.swing.JFrame implements FrameState {
     }//GEN-LAST:event_mClienteActionPerformed
 
     private void mEstadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mEstadoActionPerformed
-        Presentacion.FrmProductoEstado ProductoEstado = new Presentacion.FrmProductoEstado();
+        Consultas.FrmProductoEstado ProductoEstado = new Consultas.FrmProductoEstado();
         Escritorio.add(ProductoEstado);
         ProductoEstado.show();
     }//GEN-LAST:event_mEstadoActionPerformed

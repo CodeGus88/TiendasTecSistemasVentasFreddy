@@ -23,9 +23,9 @@ public class ImageLoader {
     public static void setImage(JLabel lblImage, String path, int scaleType) {
         proccess(lblImage, path, scaleType);
     }
+   
     
     private static void proccess(JLabel lblImage, String path, int scaleType){
-    
         try {
             ImageIcon imageIcon = new ImageIcon(path);
             Icon icon = new ImageIcon(
@@ -36,11 +36,39 @@ public class ImageLoader {
                     )
             );
             lblImage.setIcon(icon);
+            lblImage.setText(null);
             lblImage.repaint();
         } catch (Exception e) {
             Message.LOGGER.log(Level.SEVERE, e.getMessage());
         }
         
+    }
+    
+    public static void setImageWithDim(JLabel lblImage,int width, int height, String path) {
+        proccess(lblImage, width, height, path, Image.SCALE_DEFAULT);
+    }
+
+    public static void setImageWithDim(JLabel lblImage, int width, int height, String path, int scaleType) {
+        proccess(lblImage, width, height, path, scaleType);
+    }
+    
+    private static void proccess(JLabel lblImage, int width, int height, String path, int scaleType) {
+        try {
+            ImageIcon imageIcon = new ImageIcon(path);
+            Icon icon = new ImageIcon(
+                    imageIcon.getImage().getScaledInstance(
+                            width,
+                            height,
+                            scaleType
+                    )
+            );
+            lblImage.setIcon(icon);
+            lblImage.setText(null);
+            lblImage.repaint();
+        } catch (Exception e) {
+            Message.LOGGER.log(Level.SEVERE, e.getMessage());
+        }
+
     }
     
 }

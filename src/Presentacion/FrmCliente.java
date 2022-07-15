@@ -4,15 +4,16 @@
  */
 package Presentacion;
 
+import Consultas.ImageSelector;
 import Conexion.ClsConexion;
 import Entidad.*;
+import Entidad.dtos.ClientDto;
 import Negocio.*;
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Cursor;
 import java.awt.event.KeyEvent;
 import java.io.File;
-import java.io.InputStream;
-import java.net.MalformedURLException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.util.ArrayList;
@@ -29,70 +30,71 @@ import net.sf.jasperreports.engine.JasperCompileManager;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
-import net.sf.jasperreports.engine.design.JasperDesign;
-import net.sf.jasperreports.engine.util.JRLoader;
-import net.sf.jasperreports.engine.xml.JRXmlLoader;
 import net.sf.jasperreports.view.JasperViewer;
+import tools.toast.Toast;
 
 public class FrmCliente extends javax.swing.JInternalFrame {
-    private Connection connection=new ClsConexion().getConection();
+
+    private Connection connection = new ClsConexion().getConection();
     String Total;
     String strCodigo;
     String accion;
     int registros;
-    String id[]=new String[50];
+    String id[] = new String[50];
     static int intContador;
-    
-    //-----------------------------------------------
+
     public String codigo;
-    static Connection conn=null;
-    static ResultSet rs=null;
-    DefaultTableModel dtm=new DefaultTableModel();
-    String criterio,busqueda;
-    
+    static Connection conn = null;
+    static ResultSet rs = null;
+    DefaultTableModel dtm = new DefaultTableModel();
+    String criterio, busqueda;
+
+    private ImageSelector imageSelector;
+
+//    private String titulos[] = {"ID", "NOMBRE", "TEFÉFONO 2", "CI", "DIRECCIÓN", "TELÉFONO", "OBSERVACIÓN"};
+    private String titulos[] = {"ID", "NOMBRE", "CI", "DIRECCIÓN", "TELÉFONO", "OBSERVACIÓN"};
+//    private int[] anchos = {50, 200, 80, 80, 150, 80, 200};
+    private int[] anchos = {50, 280, 80, 150, 80, 200};
+    private ClsEntidadCliente client;
+    private ClientDto clientDto;
+
     public FrmCliente() {
         initComponents();
-        
+
         tabCliente.setIconAt(tabCliente.indexOfComponent(pBuscar), new ImageIcon("src/iconos/busca_p1.png"));
         tabCliente.setIconAt(tabCliente.indexOfComponent(pNuevo), new ImageIcon("src/iconos/nuevo1.png"));
         buttonGroup1.add(rbtnCodigo);
         buttonGroup1.add(rbtnNombre);
-        buttonGroup1.add(rbtnRuc);
         buttonGroup1.add(rbtnDni);
-        
+
         mirar();
         actualizarTabla();
         //---------------------ANCHO Y ALTO DEL FORM----------------------
         this.setSize(966, 412);
         CrearTabla();
         CantidadTotal();
-        
+
     }
 
-//-----------------------------------------------------------------------------------------------
-//--------------------------------------METODOS--------------------------------------------------
-//-----------------------------------------------------------------------------------------------
-  void CrearTabla(){
-   //--------------------PRESENTACION DE JTABLE----------------------
-      
-        TableCellRenderer render = new DefaultTableCellRenderer() { 
-
-            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) { 
+    void CrearTabla() {
+        //--------------------PRESENTACION DE JTABLE----------------------
+        TableCellRenderer render = new DefaultTableCellRenderer() {
+            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
                 //aqui obtengo el render de la calse superior 
-                JLabel l = (JLabel)super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column); 
+                JLabel l = (JLabel) super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
                 //Determinar Alineaciones   
-                    if(column==0 || column==2 || column==3 || column==5){
-                        l.setHorizontalAlignment(SwingConstants.CENTER); 
-                    }else{
-                        l.setHorizontalAlignment(SwingConstants.LEFT);
-                    }
+                if (column == 0 || column == 2 || column == 3 || column == 5) {
+                    l.setHorizontalAlignment(SwingConstants.CENTER);
+                } else {
+                    l.setHorizontalAlignment(SwingConstants.LEFT);
+                }
 
                 //Colores en Jtable        
                 if (isSelected) {
                     l.setBackground(new Color(203, 159, 41));
                     //l.setBackground(new Color(168, 198, 238));
-                    l.setForeground(Color.WHITE); 
-                }else{
+                    l.setForeground(Color.WHITE);
+                } else {
                     l.setForeground(Color.BLACK);
                     if (row % 2 == 0) {
                         l.setBackground(Color.WHITE);
@@ -100,175 +102,183 @@ public class FrmCliente extends javax.swing.JInternalFrame {
                         //l.setBackground(new Color(232, 232, 232));
                         l.setBackground(new Color(254, 227, 152));
                     }
-                }         
-                return l; 
-            } 
-        }; 
-        
+                }
+                return l;
+            }
+        };
+
         //Agregar Render
-        for (int i=0;i<tblCliente.getColumnCount();i++){
+        for (int i = 0; i < tblCliente.getColumnCount(); i++) {
             tblCliente.getColumnModel().getColumn(i).setCellRenderer(render);
         }
-      
+
         //Activar ScrollBar
         tblCliente.setAutoResizeMode(tblCliente.AUTO_RESIZE_OFF);
 
         //Anchos de cada columna
-        int[] anchos = {50,200,80,80,150,80,200};
-        for(int i = 0; i < tblCliente.getColumnCount(); i++) {
+//        int[] anchos = {50,200,80,80,150,80,200};
+        for (int i = 0; i < tblCliente.getColumnCount(); i++) {
             tblCliente.getColumnModel().getColumn(i).setPreferredWidth(anchos[i]);
         }
     }
-   void CantidadTotal(){
-       Total= String.valueOf(tblCliente.getRowCount());   
-       lblEstado.setText("Se cargaron " + Total + " registros");      
-   }
-   void limpiarCampos(){
-       txtCodigo.setText("");
-       txtNombre.setText("");
-       txtRuc.setText("");
-       txtDni.setText("");
-       txtDireccion.setText("");
-       txtTelefono.setText("");
-       txtObservacion.setText("");
-       
-       rbtnCodigo.setSelected(false);
-       rbtnNombre.setSelected(false);
-       rbtnRuc.setSelected(false);
-       rbtnDni.setSelected(false);
-       txtBusqueda.setText("");
-   }
-       
-   void mirar(){
-       tblCliente.setEnabled(true);
-       btnNuevo.setEnabled(true);
-       btnModificar.setEnabled(true);
-       btnGuardar.setEnabled(false);
-       btnCancelar.setEnabled(false);
-       btnSalir.setEnabled(true);
+
+    void CantidadTotal() {
+        Total = String.valueOf(tblCliente.getRowCount());
+        lblEstado.setText("Se cargaron " + Total + " registros");
+    }
+
+    void limpiarCampos() {
+        txtCodigo.setText("");
+        txtNombre.setText("");
+        txtDni.setText("");
+        txtDireccion.setText("");
+        txtTelefono.setText("");
+        txtObservacion.setText("");
+
+        rbtnCodigo.setSelected(false);
+        rbtnNombre.setSelected(false);
+        rbtnDni.setSelected(false);
+        txtBusqueda.setText("");
+    }
+
+    void mirar() {
+        tblCliente.setEnabled(true);
+        btnNuevo.setEnabled(true);
+        btnModificar.setEnabled(true);
+        btnGuardar.setEnabled(false);
+        btnCancelar.setEnabled(false);
+        btnSalir.setEnabled(true);
+
+        txtNombre.setEnabled(false);
+        txtDni.setEnabled(false);
+        txtDireccion.setEnabled(false);
+        txtTelefono.setEnabled(false);
+        txtObservacion.setEnabled(false);
+
+        btnSelectPhoto.setEnabled(false);
+        btnRemovePhoto.setEnabled(false);
+        btnSelectPhoto.setVisible(false);
+        btnRemovePhoto.setVisible(false);
+        jLabelPhoto.setIcon(null);
         
-       txtNombre.setEnabled(false);
-       txtRuc.setEnabled(false);
-       txtDni.setEnabled(false);
-       txtDireccion.setEnabled(false);
-       txtTelefono.setEnabled(false);
-       txtObservacion.setEnabled(false); 
-   
-   }
-   
-   void modificar(){
-       tblCliente.setEnabled(false);
-       btnNuevo.setEnabled(false);
-       btnModificar.setEnabled(false);
-       btnGuardar.setEnabled(true);
-       btnCancelar.setEnabled(true);
-       btnSalir.setEnabled(false);
-        
-       txtNombre.setEnabled(true);
-       txtRuc.setEnabled(true);
-       txtDni.setEnabled(true);
-       txtDireccion.setEnabled(true);
-       txtTelefono.setEnabled(true);
-       txtObservacion.setEnabled(true); 
-       txtNombre.requestFocus();
-   }
-   
-   
-    void actualizarTabla(){
-       String titulos[]={"ID","Nombre o Razón Social","NIT","CI","Dirección","Teléfono","Observación"};
-              
-       ClsCliente clientes=new ClsCliente();
-       ArrayList<ClsEntidadCliente> cliente=clientes.listarCliente();
-       Iterator iterator=cliente.iterator();
-       DefaultTableModel defaultTableModel=new DefaultTableModel(null,titulos);
-       
-       String fila[]=new String[7];
-       while(iterator.hasNext()){
-           ClsEntidadCliente Cliente=new ClsEntidadCliente();
-           Cliente=(ClsEntidadCliente) iterator.next();
-           fila[0]=Cliente.getStrIdCliente();
-           fila[1]=Cliente.getStrNombreCliente();       
-           fila[2]=Cliente.getStrRucCliente();
-           fila[3]=Cliente.getStrDniCliente();
-           fila[4]=Cliente.getStrDireccionCliente();
-           fila[5]=Cliente.getStrTelefonoCliente();
-           fila[6]=Cliente.getStrObsvCliente();
-           defaultTableModel.addRow(fila);               
-       }
-       tblCliente.setModel(defaultTableModel);
-   }
-   void BuscarCliente(){
-        String titulos[]={"ID","Nombre o Razón Social","RUC","DNI","Dirección","Teléfono","Observación"};
-        dtm.setColumnIdentifiers(titulos);
-        
-        ClsCliente categoria=new ClsCliente();
-        busqueda=txtBusqueda.getText();
-        if(rbtnCodigo.isSelected()){
-            criterio="id";
-        }else if(rbtnNombre.isSelected()){
-            criterio="nombre";
-        }else if(rbtnRuc.isSelected()){
-            criterio="ruc";
-        }else if(rbtnDni.isSelected()){
-            criterio="dni";
+        btnRevert.setVisible(false);
+        btnSelectPhoto.setVisible(false);
+        btnRemovePhoto.setVisible(false);
+
+        jLabelPhoto.setIcon(null);
+
+    }
+
+    void modificar() {
+        tblCliente.setEnabled(false);
+        btnNuevo.setEnabled(false);
+        btnModificar.setEnabled(false);
+        btnGuardar.setEnabled(true);
+        btnCancelar.setEnabled(true);
+        btnSalir.setEnabled(false);
+
+        txtNombre.setEnabled(true);
+        txtDni.setEnabled(true);
+        txtDireccion.setEnabled(true);
+        txtTelefono.setEnabled(true);
+        txtObservacion.setEnabled(true);
+        txtNombre.requestFocus();
+
+        btnSelectPhoto.setEnabled(true);
+        btnRemovePhoto.setEnabled(true);
+        btnSelectPhoto.setVisible(true);
+        btnRemovePhoto.setVisible(true);
+    }
+
+    void actualizarTabla() {
+        ClsCliente clientes = new ClsCliente();
+        ArrayList<ClsEntidadCliente> cliente = clientes.listarCliente();
+        Iterator iterator = cliente.iterator();
+        DefaultTableModel defaultTableModel = new DefaultTableModel(null, titulos);
+
+        String fila[] = new String[6];
+        while (iterator.hasNext()) {
+            ClsEntidadCliente Cliente = new ClsEntidadCliente();
+            Cliente = (ClsEntidadCliente) iterator.next();
+            fila[0] = Cliente.getStrIdCliente();
+            fila[1] = Cliente.getStrNombreCliente();
+            fila[2] = Cliente.getStrDniCliente();
+            fila[3] = Cliente.getStrDireccionCliente();
+            fila[4] = Cliente.getStrTelefonoCliente();
+            fila[5] = Cliente.getStrObsvCliente();
+            defaultTableModel.addRow(fila);
         }
-        try{
-            rs=categoria.listarClientePorParametro(criterio,busqueda);
-            boolean encuentra=false;
-            String Datos[]=new String[7];
-            int f,i;
-            f=dtm.getRowCount();
-            if(f>0){
-                for(i=0;i<f;i++){
+        tblCliente.setModel(defaultTableModel);
+    }
+
+    void BuscarCliente() {
+        dtm.setColumnIdentifiers(titulos);
+
+        ClsCliente categoria = new ClsCliente();
+        busqueda = txtBusqueda.getText();
+        if (rbtnCodigo.isSelected()) {
+            criterio = "id";
+        } else if (rbtnNombre.isSelected()) {
+            criterio = "nombre";
+        } else if (rbtnDni.isSelected()) {
+            criterio = "dni";
+        }
+        try {
+            rs = categoria.listarClientePorParametro(criterio, busqueda);
+            boolean encuentra = false;
+            String Datos[] = new String[6];
+            int f, i;
+            f = dtm.getRowCount();
+            if (f > 0) {
+                for (i = 0; i < f; i++) {
                     dtm.removeRow(0);
                 }
             }
-            while(rs.next()){
-                Datos[0]=(String) rs.getString(1);
-                Datos[1]=(String) rs.getString(2);
-                Datos[2]=(String) rs.getString(3);
-                Datos[3]=(String) rs.getString(4);
-                Datos[4]=(String) rs.getString(5);
-                Datos[5]=(String) rs.getString(6);
-                Datos[6]=(String) rs.getString(7);
-
+            while (rs.next()) {
+                Datos[0] = (String) rs.getString(1);
+                Datos[1] = (String) rs.getString(2);
+                Datos[2] = (String) rs.getString(4);
+                Datos[3] = (String) rs.getString(5);
+                Datos[4] = (String) rs.getString(6);
+                Datos[5] = (String) rs.getString(7);
                 dtm.addRow(Datos);
-                encuentra=true;
-
+                encuentra = true;
             }
-            if(encuentra=false){
+            if (encuentra = false) {
                 JOptionPane.showMessageDialog(null, "¡No se encuentra!");
             }
 
-        }catch(Exception ex){
+        } catch (Exception ex) {
             ex.printStackTrace();
         }
         tblCliente.setModel(dtm);
     }
-    void listardatos(){
-        String estado;
-        DefaultTableModel defaultTableModel=new DefaultTableModel();
-        if(registros==-1){
-            JOptionPane.showMessageDialog(null,"Se debe seleccionar un registro");
-        }else{
-            defaultTableModel=(DefaultTableModel) tblCliente.getModel();
-            strCodigo=((String) defaultTableModel.getValueAt(registros,0));
-            txtCodigo.setText((String)defaultTableModel.getValueAt(registros,0));
-            txtNombre.setText((String)defaultTableModel.getValueAt(registros,1));
-            txtRuc.setText((String)defaultTableModel.getValueAt(registros,2));
-            txtDni.setText((String)defaultTableModel.getValueAt(registros,3));
-            txtDireccion.setText((String)defaultTableModel.getValueAt(registros,4));
-            txtTelefono.setText((String)defaultTableModel.getValueAt(registros,5));
-            txtObservacion.setText((String)defaultTableModel.getValueAt(registros,6));
-            tblCliente.setRowSelectionInterval(registros,registros);
-        }
-    
-    }
+
+//    void listardatos() {
+//        String estado;
+//        DefaultTableModel defaultTableModel = new DefaultTableModel();
+//        if (registros == -1) {
+//            JOptionPane.showMessageDialog(null, "Se debe seleccionar un registro");
+//        } else {
+//            defaultTableModel = (DefaultTableModel) tblCliente.getModel();
+//            strCodigo = ((String) defaultTableModel.getValueAt(registros, 0));
+//            txtCodigo.setText((String) defaultTableModel.getValueAt(registros, 0));
+//            txtNombre.setText((String) defaultTableModel.getValueAt(registros, 1));
+////            txtRuc.setText((String)defaultTableModel.getValueAt(registros,2));
+//            txtDni.setText((String) defaultTableModel.getValueAt(registros, 2));
+//            txtDireccion.setText((String) defaultTableModel.getValueAt(registros, 3));
+//            txtTelefono.setText((String) defaultTableModel.getValueAt(registros, 4));
+//            txtObservacion.setText((String) defaultTableModel.getValueAt(registros, 5));
+//            tblCliente.setRowSelectionInterval(registros, registros);
+//        }
+//    }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
         buttonGroup1 = new javax.swing.ButtonGroup();
+        lblEstado = new javax.swing.JLabel();
         btnModificar = new javax.swing.JButton();
         btnCancelar = new javax.swing.JButton();
         btnNuevo = new javax.swing.JButton();
@@ -277,7 +287,6 @@ public class FrmCliente extends javax.swing.JInternalFrame {
         jLabel1 = new javax.swing.JLabel();
         tabCliente = new javax.swing.JTabbedPane();
         pBuscar = new javax.swing.JPanel();
-        lblEstado = new javax.swing.JLabel();
         txtBusqueda = new javax.swing.JTextField();
         rbtnCodigo = new javax.swing.JRadioButton();
         rbtnNombre = new javax.swing.JRadioButton();
@@ -285,18 +294,18 @@ public class FrmCliente extends javax.swing.JInternalFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         tblCliente = new javax.swing.JTable();
         rbtnDni = new javax.swing.JRadioButton();
-        rbtnRuc = new javax.swing.JRadioButton();
         jLabel10 = new javax.swing.JLabel();
         pNuevo = new javax.swing.JPanel();
+        jPanel1 = new javax.swing.JPanel();
+        btnSelectPhoto = new javax.swing.JButton();
+        btnRemovePhoto = new javax.swing.JButton();
+        jLabelPhoto = new javax.swing.JLabel();
         txtCodigo = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         txtNombre = new javax.swing.JTextField();
-        jLabel5 = new javax.swing.JLabel();
-        txtRuc = new javax.swing.JTextField();
         jLabel6 = new javax.swing.JLabel();
         txtDireccion = new javax.swing.JTextField();
-        jLabel11 = new javax.swing.JLabel();
         jLabel7 = new javax.swing.JLabel();
         txtTelefono = new javax.swing.JTextField();
         jLabel8 = new javax.swing.JLabel();
@@ -306,13 +315,19 @@ public class FrmCliente extends javax.swing.JInternalFrame {
         txtObservacion = new javax.swing.JTextArea();
         jLabel4 = new javax.swing.JLabel();
         jLabel12 = new javax.swing.JLabel();
+        btnRevert = new javax.swing.JButton();
+        jLabel11 = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(255, 255, 255));
         setClosable(true);
         setIconifiable(true);
         setResizable(true);
-        setTitle("Clientes");
+        setTitle("Garzones");
         getContentPane().setLayout(null);
+
+        lblEstado.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        getContentPane().add(lblEstado);
+        lblEstado.setBounds(10, 420, 760, 20);
 
         btnModificar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/editar.png"))); // NOI18N
         btnModificar.setText("Modificar");
@@ -383,10 +398,17 @@ public class FrmCliente extends javax.swing.JInternalFrame {
         getContentPane().add(jLabel1);
         jLabel1.setBounds(770, 10, 180, 370);
 
+        tabCliente.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                tabClienteStateChanged(evt);
+            }
+        });
+
         pBuscar.setBackground(new java.awt.Color(255, 255, 255));
         pBuscar.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-        pBuscar.add(lblEstado, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 330, 200, 20));
 
+        txtBusqueda.setMinimumSize(new java.awt.Dimension(5, 30));
+        txtBusqueda.setPreferredSize(new java.awt.Dimension(5, 30));
         txtBusqueda.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 txtBusquedaActionPerformed(evt);
@@ -399,21 +421,30 @@ public class FrmCliente extends javax.swing.JInternalFrame {
         });
         pBuscar.add(txtBusqueda, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 60, 360, -1));
 
-        rbtnCodigo.setText("ID Cliente");
+        rbtnCodigo.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        rbtnCodigo.setText("ID");
+        rbtnCodigo.setOpaque(false);
         rbtnCodigo.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 rbtnCodigoStateChanged(evt);
             }
         });
-        pBuscar.add(rbtnCodigo, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 30, 80, -1));
+        rbtnCodigo.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                rbtnCodigoActionPerformed(evt);
+            }
+        });
+        pBuscar.add(rbtnCodigo, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 30, 60, -1));
 
-        rbtnNombre.setText("Nombre o Razón Social");
+        rbtnNombre.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        rbtnNombre.setText("Nombre");
+        rbtnNombre.setOpaque(false);
         rbtnNombre.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 rbtnNombreStateChanged(evt);
             }
         });
-        pBuscar.add(rbtnNombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 30, 140, -1));
+        pBuscar.add(rbtnNombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 30, 90, -1));
 
         jButton3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/report.png"))); // NOI18N
         jButton3.setText("Reporte");
@@ -443,39 +474,83 @@ public class FrmCliente extends javax.swing.JInternalFrame {
         });
         jScrollPane1.setViewportView(tblCliente);
 
-        pBuscar.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 100, 740, 240));
+        pBuscar.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 120, 740, 240));
 
+        rbtnDni.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         rbtnDni.setText("CI");
-        pBuscar.add(rbtnDni, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 30, 60, -1));
-
-        rbtnRuc.setText("NIT");
-        rbtnRuc.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                rbtnRucActionPerformed(evt);
-            }
-        });
-        pBuscar.add(rbtnRuc, new org.netbeans.lib.awtextra.AbsoluteConstraints(260, 30, 60, -1));
+        rbtnDni.setOpaque(false);
+        pBuscar.add(rbtnDni, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 30, 40, -1));
 
         jLabel10.setBackground(new java.awt.Color(255, 153, 0));
         jLabel10.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
         jLabel10.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Criterios de Búsqueda", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11))); // NOI18N
         jLabel10.setOpaque(true);
-        pBuscar.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 740, 80));
+        pBuscar.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 740, 90));
 
         tabCliente.addTab("Buscar", pBuscar);
 
         pNuevo.setBackground(new java.awt.Color(255, 255, 255));
         pNuevo.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
+        jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
+        jPanel1.setMaximumSize(new java.awt.Dimension(300, 32767));
+        jPanel1.setMinimumSize(new java.awt.Dimension(300, 27));
+        jPanel1.setOpaque(false);
+        jPanel1.setPreferredSize(new java.awt.Dimension(300, 27));
+        jPanel1.setLayout(new java.awt.GridLayout(1, 2, 1, 1));
+
+        btnSelectPhoto.setText("SELECCIONAR");
+        btnSelectPhoto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSelectPhotoActionPerformed(evt);
+            }
+        });
+        jPanel1.add(btnSelectPhoto);
+
+        btnRemovePhoto.setText("QUITAR");
+        btnRemovePhoto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRemovePhotoActionPerformed(evt);
+            }
+        });
+        jPanel1.add(btnRemovePhoto);
+
+        pNuevo.add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(513, 250, 220, 40));
+
+        jLabelPhoto.setFont(new java.awt.Font("Arial", 0, 24)); // NOI18N
+        jLabelPhoto.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabelPhoto.setText("FOTO");
+        jLabelPhoto.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        jLabelPhoto.setMaximumSize(new java.awt.Dimension(5000, 5000));
+        jLabelPhoto.setMinimumSize(new java.awt.Dimension(300, 300));
+        jLabelPhoto.setPreferredSize(new java.awt.Dimension(300, 300));
+        pNuevo.add(jLabelPhoto, new org.netbeans.lib.awtextra.AbsoluteConstraints(513, 55, 220, 190));
+
         txtCodigo.setEnabled(false);
-        pNuevo.add(txtCodigo, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 40, 70, -1));
+        txtCodigo.setMaximumSize(new java.awt.Dimension(10000, 30));
+        txtCodigo.setMinimumSize(new java.awt.Dimension(0, 30));
+        txtCodigo.setPreferredSize(new java.awt.Dimension(0, 30));
+        pNuevo.add(txtCodigo, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 40, 100, -1));
 
+        jLabel3.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel3.setText("ID Cliente:");
-        pNuevo.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 40, 60, 20));
+        jLabel3.setMaximumSize(new java.awt.Dimension(10000, 30));
+        jLabel3.setMinimumSize(new java.awt.Dimension(0, 30));
+        jLabel3.setPreferredSize(new java.awt.Dimension(0, 30));
+        pNuevo.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 40, 120, 30));
 
-        jLabel2.setText("Nombre o Razón Social:");
-        pNuevo.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 70, 120, 20));
+        jLabel2.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel2.setText("Nombre Garzon:");
+        jLabel2.setMaximumSize(new java.awt.Dimension(10000, 30));
+        jLabel2.setMinimumSize(new java.awt.Dimension(0, 30));
+        jLabel2.setPreferredSize(new java.awt.Dimension(0, 30));
+        pNuevo.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 80, 130, 30));
 
+        txtNombre.setMaximumSize(new java.awt.Dimension(10000, 30));
+        txtNombre.setMinimumSize(new java.awt.Dimension(0, 30));
+        txtNombre.setPreferredSize(new java.awt.Dimension(0, 30));
         txtNombre.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txtNombreKeyReleased(evt);
@@ -484,48 +559,55 @@ public class FrmCliente extends javax.swing.JInternalFrame {
                 txtNombreKeyTyped(evt);
             }
         });
-        pNuevo.add(txtNombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 70, 350, -1));
+        pNuevo.add(txtNombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 80, 350, -1));
 
-        jLabel5.setText("NIT:");
-        pNuevo.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(90, 100, 50, 20));
-
-        txtRuc.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                txtRucKeyReleased(evt);
-            }
-            public void keyTyped(java.awt.event.KeyEvent evt) {
-                txtRucKeyTyped(evt);
-            }
-        });
-        pNuevo.add(txtRuc, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 100, 160, -1));
-
+        jLabel6.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel6.setText("Dirección:");
-        pNuevo.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 130, 60, 20));
+        jLabel6.setMaximumSize(new java.awt.Dimension(10000, 30));
+        jLabel6.setMinimumSize(new java.awt.Dimension(0, 30));
+        jLabel6.setPreferredSize(new java.awt.Dimension(0, 30));
+        pNuevo.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 160, 120, 30));
 
+        txtDireccion.setMaximumSize(new java.awt.Dimension(10000, 30));
+        txtDireccion.setMinimumSize(new java.awt.Dimension(0, 30));
+        txtDireccion.setPreferredSize(new java.awt.Dimension(0, 30));
         txtDireccion.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txtDireccionKeyReleased(evt);
             }
         });
-        pNuevo.add(txtDireccion, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 130, 350, -1));
+        pNuevo.add(txtDireccion, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 160, 350, -1));
 
-        jLabel11.setBackground(new java.awt.Color(255, 255, 255));
-        jLabel11.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Datos del Cliente", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11))); // NOI18N
-        pNuevo.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 0, 740, 300));
-
+        jLabel7.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel7.setText("Teléfono:");
-        pNuevo.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 160, 60, 20));
+        jLabel7.setMaximumSize(new java.awt.Dimension(10000, 30));
+        jLabel7.setMinimumSize(new java.awt.Dimension(0, 30));
+        jLabel7.setPreferredSize(new java.awt.Dimension(0, 30));
+        pNuevo.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 200, 120, 30));
 
+        txtTelefono.setMaximumSize(new java.awt.Dimension(10000, 30));
+        txtTelefono.setMinimumSize(new java.awt.Dimension(0, 30));
+        txtTelefono.setPreferredSize(new java.awt.Dimension(0, 30));
         txtTelefono.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txtTelefonoKeyReleased(evt);
             }
         });
-        pNuevo.add(txtTelefono, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 160, 160, -1));
+        pNuevo.add(txtTelefono, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 200, 160, -1));
 
+        jLabel8.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel8.setText("CI:");
-        pNuevo.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 100, 30, 20));
+        jLabel8.setMaximumSize(new java.awt.Dimension(10000, 30));
+        jLabel8.setMinimumSize(new java.awt.Dimension(0, 30));
+        jLabel8.setPreferredSize(new java.awt.Dimension(0, 30));
+        pNuevo.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 120, 130, 30));
 
+        txtDni.setMaximumSize(new java.awt.Dimension(10000, 30));
+        txtDni.setMinimumSize(new java.awt.Dimension(0, 30));
+        txtDni.setPreferredSize(new java.awt.Dimension(0, 30));
         txtDni.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txtDniKeyReleased(evt);
@@ -534,20 +616,22 @@ public class FrmCliente extends javax.swing.JInternalFrame {
                 txtDniKeyTyped(evt);
             }
         });
-        pNuevo.add(txtDni, new org.netbeans.lib.awtextra.AbsoluteConstraints(360, 100, 130, -1));
+        pNuevo.add(txtDni, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 120, 160, -1));
 
+        jLabel9.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        jLabel9.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel9.setText("Observación:");
-        pNuevo.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 190, 80, 20));
+        pNuevo.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(20, 240, 120, 30));
 
         txtObservacion.setColumns(20);
         txtObservacion.setRows(5);
         jScrollPane2.setViewportView(txtObservacion);
 
-        pNuevo.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 190, 350, 50));
+        pNuevo.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(140, 240, 350, 50));
 
         jLabel4.setForeground(new java.awt.Color(0, 51, 153));
-        jLabel4.setText("Los campos marcado con un asterísco (*) son obligatorios");
-        pNuevo.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 315, 280, -1));
+        jLabel4.setText("Los campos marcado con un asterísco (*) son obligatorios, tamaño máximo de la foto 1 Mgb");
+        pNuevo.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 315, 740, 40));
 
         jLabel12.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         jLabel12.setForeground(new java.awt.Color(0, 51, 153));
@@ -555,122 +639,142 @@ public class FrmCliente extends javax.swing.JInternalFrame {
         jLabel12.setText("*");
         pNuevo.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(488, 70, 20, 20));
 
+        btnRevert.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/Refresh.png"))); // NOI18N
+        btnRevert.setText("REVERTIR ORIGINAL");
+        btnRevert.setMaximumSize(new java.awt.Dimension(300, 30));
+        btnRevert.setMinimumSize(new java.awt.Dimension(300, 30));
+        btnRevert.setPreferredSize(new java.awt.Dimension(300, 30));
+        btnRevert.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRevertActionPerformed(evt);
+            }
+        });
+        pNuevo.add(btnRevert, new org.netbeans.lib.awtextra.AbsoluteConstraints(513, 20, 220, 30));
+
+        jLabel11.setBackground(new java.awt.Color(255, 255, 255));
+        jLabel11.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Datos del Cliente", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11))); // NOI18N
+        pNuevo.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 0, 740, 310));
+
         tabCliente.addTab("Nuevo / Modificar", pNuevo);
 
         getContentPane().add(tabCliente);
-        tabCliente.setBounds(10, 10, 760, 370);
+        tabCliente.setBounds(10, 10, 760, 400);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
     private void tblClienteMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblClienteMouseClicked
-        int fila;
-        DefaultTableModel defaultTableModel = new DefaultTableModel();
-        fila = tblCliente.getSelectedRow();
-
-        if (fila == -1){
-            JOptionPane.showMessageDialog(null, "Se debe seleccionar un registro");
-        }else{
-            defaultTableModel = (DefaultTableModel)tblCliente.getModel();
-            strCodigo =  ((String) defaultTableModel.getValueAt(fila, 0));
-            txtCodigo.setText((String) defaultTableModel.getValueAt(fila, 0));
-            txtNombre.setText((String) defaultTableModel.getValueAt(fila, 1));
-            txtRuc.setText((String)defaultTableModel.getValueAt(fila,2));
-            txtDni.setText((String)defaultTableModel.getValueAt(fila,3));
-            txtDireccion.setText((String)defaultTableModel.getValueAt(fila,4));
-            txtTelefono.setText((String)defaultTableModel.getValueAt(fila,5));
-            txtObservacion.setText((String)defaultTableModel.getValueAt(fila,6));
-        }
-        mirar();
     }//GEN-LAST:event_tblClienteMouseClicked
 
     private void txtNombreKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNombreKeyTyped
-    txtNombre.setBackground(Color.WHITE);
-                
-    //char car = evt.getKeyChar();
-    //if((car<'a' || car>'z') && (car<'A' || car>'Z')) evt.consume();
+        txtNombre.setBackground(Color.WHITE);
     }//GEN-LAST:event_txtNombreKeyTyped
 
     private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
-    if(tblCliente.getSelectedRows().length > 0 ) { 
-        accion="Modificar";
-        modificar();
-        tabCliente.setSelectedIndex(tabCliente.indexOfComponent(pNuevo));
-    }else{
-        JOptionPane.showMessageDialog(null, "¡Se debe seleccionar un registro!");
-    }
+        if (tblCliente.getSelectedRows().length > 0) {
+            tabCliente.setSelectedIndex(tabCliente.indexOfComponent(pNuevo));
+            accion = "Modificar";
+            btnRevert.setVisible(true);
+            modificar();
+        } else {
+            JOptionPane.showMessageDialog(null, "¡Se debe seleccionar un registro!");
+        }
     }//GEN-LAST:event_btnModificarActionPerformed
+
+    private void loadForm(ClientDto clientDto) {
+        if (clientDto != null) {
+            strCodigo = String.valueOf(clientDto.getId());
+            txtCodigo.setText(String.valueOf(clientDto.getId()));
+            txtNombre.setText(clientDto.getName());
+            txtDni.setText(clientDto.getCi());
+            txtDireccion.setText(clientDto.getAddress());
+            txtTelefono.setText(clientDto.getPhone());
+            txtObservacion.setText(clientDto.getObservation());
+            if (clientDto.getImageIcon() != null) {
+                Icon icon = new ImageIcon(clientDto.getImageIcon().getImage().getScaledInstance(
+                        jLabelPhoto.getWidth(),
+                        jLabelPhoto.getHeight(),
+                        java.awt.Image.SCALE_FAST)
+                );
+                jLabelPhoto.setText(null);
+                jLabelPhoto.setIcon(icon);
+            } else {
+                jLabelPhoto.setText("FOTO");
+                jLabelPhoto.setIcon(null);
+            }
+        } else {
+            mirar();
+            Toast.makeText(Toast.WARNING, "El usuario no se encuentra en la base de datos", Toast.LENGTH_SHORT).show();
+        }
+    }
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
         mirar();
         tabCliente.setSelectedIndex(tabCliente.indexOfComponent(pBuscar));
-
     }//GEN-LAST:event_btnCancelarActionPerformed
 
     private void btnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoActionPerformed
-        accion="Nuevo";
+        client = new ClsEntidadCliente();
+        accion = "Nuevo";
         modificar();
         limpiarCampos();
         tblCliente.setEnabled(false);
-        tabCliente.setSelectedIndex(tabCliente.indexOfComponent(pNuevo));       
+        tabCliente.setSelectedIndex(tabCliente.indexOfComponent(pNuevo));
+        btnRevert.setVisible(false);
     }//GEN-LAST:event_btnNuevoActionPerformed
 
     private void btnSalirActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalirActionPerformed
         this.dispose();
     }//GEN-LAST:event_btnSalirActionPerformed
-//----------------------VALIDACIÓN DE DATOS-------------------------------------
-    public boolean validardatos(){
-        if (txtNombre.getText().equals("")){
-            JOptionPane.showMessageDialog(null, "Ingrese nombre o razón social del cliente");
+    public boolean validardatos() {
+        if (txtNombre.getText().equals("")) {
+            JOptionPane.showMessageDialog(null, "Ingrese el nombre del garzón");
             txtNombre.requestFocus();
             txtNombre.setBackground(Color.YELLOW);
             return false;
-        }else{
+        } else {
             return true;
         }
     }
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
-    if(validardatos()==true){  
-        if(accion.equals("Nuevo")){
-            ClsCliente clientes=new ClsCliente();
-            ClsEntidadCliente cliente=new ClsEntidadCliente();
-            cliente.setStrNombreCliente(txtNombre.getText());
-            cliente.setStrRucCliente(txtRuc.getText());
-            cliente.setStrDniCliente(txtDni.getText());
-            cliente.setStrDireccionCliente(txtDireccion.getText());
-            cliente.setStrTelefonoCliente(txtTelefono.getText());
-            cliente.setStrObsvCliente(txtObservacion.getText());
-            clientes.agregarCliente(cliente);
-            actualizarTabla();
-            CantidadTotal();
+        if (validardatos() == true) {
+            if (accion.equals("Nuevo")) {
+                ClsCliente clientes = new ClsCliente();
+                client.setStrNombreCliente(txtNombre.getText());
+                client.setStrDniCliente(txtDni.getText());
+                client.setStrDireccionCliente(txtDireccion.getText());
+                client.setStrTelefonoCliente(txtTelefono.getText());
+                client.setStrObsvCliente(txtObservacion.getText());
+                if (client.getImagen() == null) {
+                    client.setImagen(new Image(null, 0));
+                }
+                clientes.agregarCliente(client);
+                actualizarTabla();
+                CantidadTotal();
+            }
+            if (accion.equals("Modificar")) {
+                ClsCliente clientes = new ClsCliente();
+                client.setStrNombreCliente(txtNombre.getText());
+                client.setStrDniCliente(txtDni.getText());
+                client.setStrDireccionCliente(txtDireccion.getText());
+                client.setStrTelefonoCliente(txtTelefono.getText());
+                client.setStrObsvCliente(txtObservacion.getText());
+                clientes.modificarCliente(strCodigo, client);
+                actualizarTabla();
+                limpiarCampos();
+                modificar();
+                CantidadTotal();
+            }
+            CrearTabla();
+            mirar();
+            tabCliente.setSelectedIndex(tabCliente.indexOfComponent(pBuscar));
         }
-        if(accion.equals("Modificar")){
-            ClsCliente clientes=new ClsCliente();
-            ClsEntidadCliente cliente=new ClsEntidadCliente();
-            cliente.setStrNombreCliente(txtNombre.getText());
-            cliente.setStrRucCliente(txtRuc.getText());
-            cliente.setStrDniCliente(txtDni.getText());
-            cliente.setStrDireccionCliente(txtDireccion.getText());
-            cliente.setStrTelefonoCliente(txtTelefono.getText());
-            cliente.setStrObsvCliente(txtObservacion.getText());
-            clientes.modificarCliente(strCodigo, cliente);
-            actualizarTabla();
-            limpiarCampos();
-            modificar();
-            CantidadTotal();
-        }
-        CrearTabla();
-        mirar();
-        tabCliente.setSelectedIndex(tabCliente.indexOfComponent(pBuscar)); 
-    }
     }//GEN-LAST:event_btnGuardarActionPerformed
 
     private void txtBusquedaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBusquedaKeyReleased
         BuscarCliente();
         CrearTabla();
         CantidadTotal();
-        //----------SELECCIONA LA PRIMERA FILA DE LA TABLA-----------------
-        //tblCliente.changeSelection(0,0,false,true);
     }//GEN-LAST:event_txtBusquedaKeyReleased
 
     private void rbtnCodigoStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_rbtnCodigoStateChanged
@@ -682,118 +786,143 @@ public class FrmCliente extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_rbtnNombreStateChanged
 
     private void txtNombreKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNombreKeyReleased
-        String cadena= (txtNombre.getText()).toUpperCase();
+        String cadena = (txtNombre.getText()).toUpperCase();
         txtNombre.setText(cadena);
-        int keyCode = evt.getKeyCode();
-        if (keyCode==KeyEvent.VK_ENTER) txtRuc.requestFocus();
     }//GEN-LAST:event_txtNombreKeyReleased
-
-    private void txtRucKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtRucKeyTyped
-        char car = evt.getKeyChar();
-        if((car<'0' || car>'9')) evt.consume();
-        //----------------Poner limite de caracteres--------------------
-        int i = txtRuc.getText().length();
-        if(txtRuc.getText().trim().length()<11){
-
-        }else{
-            i=10;
-            String com=txtRuc.getText().substring(0, 10);
-            txtRuc.setText("");
-            txtRuc.setText(com);
-        }
-    }//GEN-LAST:event_txtRucKeyTyped
 
     private void txtDniKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDniKeyTyped
         char car = evt.getKeyChar();
-        if((car<'0' || car>'9')) evt.consume();
-        //----------------Poner limite de caracteres--------------------
+        if ((car < '0' || car > '9')) {
+            evt.consume();
+        }
         int i = txtDni.getText().length();
-        if(txtDni.getText().trim().length()<8){
-
-        }else{
-            i=10;
-            String com=txtDni.getText().substring(0, 7);
+        if (txtDni.getText().trim().length() < 8) {
+        } else {
+            i = 10;
+            String com = txtDni.getText().substring(0, 7);
             txtDni.setText("");
             txtDni.setText(com);
         }
     }//GEN-LAST:event_txtDniKeyTyped
 
-    private void txtRucKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtRucKeyReleased
-        int keyCode = evt.getKeyCode();
-        if (keyCode==KeyEvent.VK_ENTER) txtDni.requestFocus();
-    }//GEN-LAST:event_txtRucKeyReleased
-
     private void txtDniKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDniKeyReleased
         int keyCode = evt.getKeyCode();
-        if (keyCode==KeyEvent.VK_ENTER) txtDireccion.requestFocus();        
+        if (keyCode == KeyEvent.VK_ENTER)
+            txtDireccion.requestFocus();
     }//GEN-LAST:event_txtDniKeyReleased
 
     private void txtDireccionKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtDireccionKeyReleased
         int keyCode = evt.getKeyCode();
-        if (keyCode==KeyEvent.VK_ENTER) txtTelefono.requestFocus();        
+        if (keyCode == KeyEvent.VK_ENTER)
+            txtTelefono.requestFocus();
     }//GEN-LAST:event_txtDireccionKeyReleased
 
     private void txtTelefonoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtTelefonoKeyReleased
         int keyCode = evt.getKeyCode();
-        if (keyCode==KeyEvent.VK_ENTER) btnGuardar.requestFocus();       
+        if (keyCode == KeyEvent.VK_ENTER)
+            btnGuardar.requestFocus();
     }//GEN-LAST:event_txtTelefonoKeyReleased
 
     private void jButton3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton3ActionPerformed
-        Map p=new HashMap();
-        p.put("busqueda",txtBusqueda.getText());
-        if(rbtnCodigo.isSelected()){
+        Map p = new HashMap();
+        p.put("busqueda", txtBusqueda.getText());
+        if (rbtnCodigo.isSelected()) {
             p.put("criterio", "id");
-        }
-        else if(rbtnNombre.isSelected()){
+        } else if (rbtnNombre.isSelected()) {
             p.put("criterio", "nombre");
-        }else if(rbtnRuc.isSelected()){
-            p.put("criterio", "ruc");
-        }else if(rbtnDni.isSelected()){
+        } else if (rbtnDni.isSelected()) {
             p.put("criterio", "dni");
-        }else{
+        } else {
             p.put("criterio", "");
         }
         JasperReport report;
         JasperPrint print;
- 
-        
-        try{
-
-
-            report=JasperCompileManager.compileReport(new File("").getAbsolutePath()+ "/src/Reportes/RptCliente.jrxml");
-            print=JasperFillManager.fillReport(report, p,connection);
-            
-//            InputStream in = getClass().getClassLoader().getResourceAsStream("/src/Reportes/RptCliente.jasper");
-//            JasperReport report1 = (JasperReport) JRLoader.loadObject(in);
-//            JasperPrint  print1=JasperFillManager.fillReport(report1, p,connection);
-//            JasperViewer view1=new JasperViewer(print1,false);
-            
-            JasperViewer view=new JasperViewer(print,false);
-            view.setTitle("Reporte de Clientes");
+        try {
+            report = JasperCompileManager.compileReport(new File("").getAbsolutePath() + "/src/Reportes/RptCliente.jrxml");
+            print = JasperFillManager.fillReport(report, p, connection);
+            JasperViewer view = new JasperViewer(print, false);
+            view.setTitle("Reporte de Garzones");
             view.setVisible(true);
-        }catch(JRException e){
+        } catch (JRException e) {
             e.printStackTrace();
-        
-        
-    
         }
-
     }//GEN-LAST:event_jButton3ActionPerformed
-
-    private void rbtnRucActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbtnRucActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_rbtnRucActionPerformed
 
     private void txtBusquedaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtBusquedaActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtBusquedaActionPerformed
+
+    private void btnSelectPhotoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSelectPhotoActionPerformed
+        imageSelector = new ImageSelector(jLabelPhoto);
+        imageSelector.select();
+        if (imageSelector.getImageIcon() != null)
+            if (imageSelector.getByteLength() <= 1000000) {
+                jLabelPhoto.setText(null);
+                jLabelPhoto.setIcon(imageSelector.getImageIcon());
+                client.setImagen(new Image(imageSelector.getFileInputStream(), imageSelector.getByteLength()));
+            } else {
+                Toast.makeText(Toast.WARNING, "Imagen demasiado grande", Toast.LENGTH_LONG).show();
+            }
+    }//GEN-LAST:event_btnSelectPhotoActionPerformed
+
+    private void rbtnCodigoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbtnCodigoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_rbtnCodigoActionPerformed
+
+    private void btnRemovePhotoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRemovePhotoActionPerformed
+        client.setImagen(new Image(null, 0));
+        jLabelPhoto.setIcon(null);
+        jLabelPhoto.setText("FOTO");
+    }//GEN-LAST:event_btnRemovePhotoActionPerformed
+
+    private void btnRevertActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRevertActionPerformed
+        if (clientDto != null) {
+            if (clientDto.getImageIcon() != null) {
+                Icon icon = new ImageIcon(clientDto.getImageIcon().getImage().getScaledInstance(
+                        jLabelPhoto.getWidth(),
+                        jLabelPhoto.getHeight(),
+                        java.awt.Image.SCALE_FAST)
+                );
+                jLabelPhoto.setText(null);
+                jLabelPhoto.setIcon(icon);
+//                jLabelPhoto.repaint();
+            } else {
+                jLabelPhoto.setIcon(null);
+                jLabelPhoto.setText("FOTO");
+            }
+        }
+    }//GEN-LAST:event_btnRevertActionPerformed
+
+    private void tabClienteStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_tabClienteStateChanged
+        if (tabCliente.getSelectedIndex() == 1) {
+            tabCliente.setCursor(new Cursor(Cursor.WAIT_CURSOR));
+            if (tblCliente.getSelectedRows().length > 0) {
+                int fila;
+                DefaultTableModel defaultTableModel = new DefaultTableModel();
+                fila = tblCliente.getSelectedRow();
+                client = new ClsEntidadCliente();
+                ClsCliente clientService = new ClsCliente();
+                defaultTableModel = (DefaultTableModel) tblCliente.getModel();
+                clientDto = clientService.findById(
+                        Integer.parseInt(
+                                (String) defaultTableModel.getValueAt(fila, 0)
+                        )
+                );
+                loadForm(clientDto);
+            }
+            tabCliente.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
+        }
+    }//GEN-LAST:event_tabClienteStateChanged
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnCancelar;
     private javax.swing.JButton btnGuardar;
     private javax.swing.JButton btnModificar;
     private javax.swing.JButton btnNuevo;
+    private javax.swing.JButton btnRemovePhoto;
+    private javax.swing.JButton btnRevert;
     private javax.swing.JButton btnSalir;
+    private javax.swing.JButton btnSelectPhoto;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
@@ -803,11 +932,12 @@ public class FrmCliente extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel5;
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
+    private javax.swing.JLabel jLabelPhoto;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JLabel lblEstado;
@@ -816,7 +946,6 @@ public class FrmCliente extends javax.swing.JInternalFrame {
     private javax.swing.JRadioButton rbtnCodigo;
     private javax.swing.JRadioButton rbtnDni;
     private javax.swing.JRadioButton rbtnNombre;
-    private javax.swing.JRadioButton rbtnRuc;
     private javax.swing.JTabbedPane tabCliente;
     private javax.swing.JTable tblCliente;
     private javax.swing.JTextField txtBusqueda;
@@ -825,7 +954,6 @@ public class FrmCliente extends javax.swing.JInternalFrame {
     private javax.swing.JTextField txtDni;
     private javax.swing.JTextField txtNombre;
     private javax.swing.JTextArea txtObservacion;
-    private javax.swing.JTextField txtRuc;
     private javax.swing.JTextField txtTelefono;
     // End of variables declaration//GEN-END:variables
 }

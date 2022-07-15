@@ -21,9 +21,10 @@ public class ClsVenta {
 
     public boolean agregarVenta(ClsEntidadVenta venta) {
         try {
-            CallableStatement statement = connection.prepareCall("{call SP_I_Venta(?,?,?,?,?,?,?,?,?,?,?,?)}");
+            CallableStatement statement = connection.prepareCall("{call SP_I_Venta(?,?,?,?,?,?,?,?,?,?,?,?,?)}");
             statement.setString("pidtipodocumento", venta.getStrIdTipoDocumento());
-            statement.setString("pidcliente", venta.getStrIdCliente());
+            statement.setString("pidcliente", venta.getStrIdGarzon1());
+            statement.setString("pidcliente2", venta.getStrIdGarzon2());
             statement.setString("pidempleado", venta.getStrIdEmpleado());
             statement.setString("pserie", venta.getStrSerieVenta());
             statement.setString("pnumero", venta.getStrNumeroVenta());
@@ -40,15 +41,15 @@ public class ClsVenta {
             Message.LOGGER.log(Level.SEVERE, ex.getMessage());
             return false;
         }
-
     }
 
     public boolean modificarVenta(String codigo, ClsEntidadVenta venta) {
         try {
-            CallableStatement statement = connection.prepareCall("{call SP_U_Venta(?,?,?,?,?,?,?,?,?,?,?,?,?)}");
+            CallableStatement statement = connection.prepareCall("{call SP_U_Venta(?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
             statement.setString("pidventa", codigo);
             statement.setString("pidtipodocumento", venta.getStrIdTipoDocumento());
-            statement.setString("pidcliente", venta.getStrIdCliente());
+            statement.setString("pidcliente", venta.getStrIdGarzon1());
+            statement.setString("pidcliente2", venta.getStrIdGarzon2());
             statement.setString("pidempleado", venta.getStrIdEmpleado());
             statement.setString("pserie", venta.getStrSerieVenta());
             statement.setString("pnumero", venta.getStrNumeroVenta());
@@ -67,7 +68,7 @@ public class ClsVenta {
         }
     }
 
-    public ArrayList<ClsEntidadVenta> listarVenta() {
+    public ArrayList<ClsEntidadVenta> listarVenta() throws Exception{
         ArrayList<ClsEntidadVenta> ventas = new ArrayList<ClsEntidadVenta>();
         try {
             CallableStatement statement = connection.prepareCall("{call SP_S_Venta}");
@@ -77,7 +78,8 @@ public class ClsVenta {
                 ClsEntidadVenta venta = new ClsEntidadVenta();
                 venta.setStrIdVenta(resultSet.getString("IdVenta"));
                 venta.setStrTipoDocumento(resultSet.getString("TipoDocumento"));
-                venta.setStrCliente(resultSet.getString("Cliente"));
+                venta.setStrIdGarzon1(resultSet.getString("Cliente"));
+                venta.setStrIdGarzon2(resultSet.getString("Cliente2"));
                 venta.setStrEmpleado(resultSet.getString("Empleado"));
                 venta.setStrSerieVenta(resultSet.getString("Serie"));
                 venta.setStrNumeroVenta(resultSet.getString("Numero"));
@@ -93,11 +95,12 @@ public class ClsVenta {
             }
             return ventas;
         } catch (SQLException ex) {
-            ex.printStackTrace();
-            return null;
+            Message.LOGGER.log(Level.SEVERE, ex.getMessage());
+            throw ex;
         }
     }
 
+    // sin uso
     public ResultSet listarVentaPorParametro(String criterio, String busqueda) throws Exception {
         ResultSet rs = null;
         try {
@@ -107,6 +110,7 @@ public class ClsVenta {
             rs = statement.executeQuery();
             return rs;
         } catch (SQLException SQLex) {
+            Message.LOGGER.log(Level.SEVERE, SQLex.getMessage());
             throw SQLex;
         }
     }

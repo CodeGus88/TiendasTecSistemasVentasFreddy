@@ -5,6 +5,9 @@
 package Consultas;
 
 import Entidad.ClsEntidadProducto;
+import Entidad.dtos.ClientDto;
+import Entidad.dtos.ProductDto;
+import Negocio.ClsCliente;
 import Negocio.ClsProducto;
 import interfaces.FrameState;
 import java.awt.Component;
@@ -16,13 +19,19 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 import interfaces.ProductoVentaInterface;
 import java.awt.EventQueue;
+import java.awt.Image;
 import java.awt.Rectangle;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import javax.swing.BorderFactory;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
 import statics.Design;
+import statics.Dimensions;
 import statics.ImageLoader;
 import tools.ObjectDeserializer;
 import tools.ObjectSerializer;
@@ -44,9 +53,9 @@ public class FrmBuscarProducto extends javax.swing.JInternalFrame implements Fra
     String criterio,busqueda;
     private ProductoVentaInterface productoVentaInterface;
     // int[] anchos = {50, 200, 80, 80, 150, 80, 200, 0};
-    private String titulos[] = {"ID", "Cód. de Barras", "Nombre", "Descripción", "Stock", "P. Costo", "P. Venta", "Imagen"};
+    private String titulos[] = {"ID", "Cód. de Barras", "Nombre", "Descripción", "Stock", "P. Costo", "P. Venta"};
 //    private float[] columnSize = {4.95F, 15.81F, 19.52F, 17.52F, 10.86F, 10.52F, 20.81F, 0};
-    private float[] columnSize = {5F, 10F, 25F, 30F, 10F, 10F, 10F, 0};
+    private float[] columnSize = {5F, 10F, 25F, 30F, 10F, 10F, 10F};
     private ArrayList<ClsEntidadProducto> products;
     
     public FrmBuscarProducto(ProductoVentaInterface productoVentaInterface) {
@@ -101,7 +110,7 @@ public class FrmBuscarProducto extends javax.swing.JInternalFrame implements Fra
            }
        };
        
-       String fila[]=new String[8];
+       String fila[]=new String[7];
        while(iterator.hasNext()){
            ClsEntidadProducto Producto=new ClsEntidadProducto();
            Producto=(ClsEntidadProducto) iterator.next();
@@ -112,7 +121,7 @@ public class FrmBuscarProducto extends javax.swing.JInternalFrame implements Fra
            fila[4]=Producto.getStrStockProducto();
            fila[5]=Producto.getStrPrecioCostoProducto();
            fila[6]=Producto.getStrPrecioVentaProducto();
-           fila[7]=Producto.getStrImagen();
+//           fila[7]=Producto.getStrImagen();
            defaultTableModel.addRow(fila);               
        }
        tblProducto.setModel(defaultTableModel);
@@ -197,6 +206,15 @@ public class FrmBuscarProducto extends javax.swing.JInternalFrame implements Fra
 
         buttonGroup1 = new javax.swing.ButtonGroup();
         jPanel4 = new javax.swing.JPanel();
+        jPanel6 = new javax.swing.JPanel();
+        jPanel3 = new javax.swing.JPanel();
+        jScrollPane2 = new javax.swing.JScrollPane();
+        tblProducto = new javax.swing.JTable();
+        jPanelProductData = new javax.swing.JPanel();
+        jLabelTitle = new javax.swing.JLabel();
+        jLabelContent = new javax.swing.JLabel();
+        jPanelCenter = new javax.swing.JPanel();
+        jLabelImage = new javax.swing.JLabel();
         jPanel2 = new javax.swing.JPanel();
         jPanel1 = new javax.swing.JPanel();
         jPanel5 = new javax.swing.JPanel();
@@ -204,11 +222,7 @@ public class FrmBuscarProducto extends javax.swing.JInternalFrame implements Fra
         rbtnNombre = new javax.swing.JRadioButton();
         rbtnDescripcion = new javax.swing.JRadioButton();
         txtBusqueda = new javax.swing.JTextField();
-        jLabelImage = new javax.swing.JLabel();
         btnSalir = new javax.swing.JButton();
-        jPanel3 = new javax.swing.JPanel();
-        jScrollPane2 = new javax.swing.JScrollPane();
-        tblProducto = new javax.swing.JTable();
         lblEstado = new javax.swing.JLabel();
 
         setBackground(new java.awt.Color(255, 255, 255));
@@ -222,7 +236,81 @@ public class FrmBuscarProducto extends javax.swing.JInternalFrame implements Fra
         jPanel4.setOpaque(false);
         jPanel4.setLayout(new java.awt.BorderLayout(5, 5));
 
+        jPanel6.setOpaque(false);
+        jPanel6.setLayout(new java.awt.BorderLayout(5, 5));
+
+        jPanel3.setLayout(new java.awt.GridLayout(1, 0));
+
+        tblProducto.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        tblProducto.setRowHeight(22);
+        tblProducto.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tblProductoMouseClicked(evt);
+            }
+        });
+        tblProducto.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                tblProductoKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                tblProductoKeyReleased(evt);
+            }
+        });
+        jScrollPane2.setViewportView(tblProducto);
+
+        jPanel3.add(jScrollPane2);
+
+        jPanel6.add(jPanel3, java.awt.BorderLayout.CENTER);
+
+        jPanelProductData.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
+        jPanelProductData.setMaximumSize(new java.awt.Dimension(200, 2147483647));
+        jPanelProductData.setMinimumSize(new java.awt.Dimension(200, 34));
+        jPanelProductData.setOpaque(false);
+        jPanelProductData.setPreferredSize(new java.awt.Dimension(200, 100));
+        jPanelProductData.setLayout(new java.awt.BorderLayout());
+
+        jLabelTitle.setFont(new java.awt.Font("Arial", 1, 14)); // NOI18N
+        jLabelTitle.setForeground(new java.awt.Color(255, 255, 255));
+        jLabelTitle.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabelTitle.setText("NAME");
+        jLabelTitle.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
+        jPanelProductData.add(jLabelTitle, java.awt.BorderLayout.NORTH);
+
+        jLabelContent.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        jLabelContent.setForeground(new java.awt.Color(255, 255, 255));
+        jLabelContent.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabelContent.setText("UNDEFINED");
+        jLabelContent.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(255, 255, 255)));
+        jPanelProductData.add(jLabelContent, java.awt.BorderLayout.PAGE_END);
+
+        jPanelCenter.setOpaque(false);
+        jPanelCenter.setPreferredSize(new java.awt.Dimension(200, 200));
+        jPanelCenter.setLayout(new java.awt.GridLayout(1, 0));
+
+        jLabelImage.setFont(new java.awt.Font("Arial", 0, 24)); // NOI18N
+        jLabelImage.setForeground(new java.awt.Color(255, 255, 255));
+        jLabelImage.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabelImage.setText("PHOTO");
+        jPanelCenter.add(jLabelImage);
+
+        jPanelProductData.add(jPanelCenter, java.awt.BorderLayout.LINE_END);
+
+        jPanel6.add(jPanelProductData, java.awt.BorderLayout.EAST);
+
+        jPanel4.add(jPanel6, java.awt.BorderLayout.CENTER);
+
         jPanel2.setOpaque(false);
+        jPanel2.setPreferredSize(new java.awt.Dimension(221, 94));
         jPanel2.setLayout(new java.awt.BorderLayout(5, 5));
 
         jPanel1.setOpaque(false);
@@ -282,13 +370,6 @@ public class FrmBuscarProducto extends javax.swing.JInternalFrame implements Fra
 
         jPanel1.add(jPanel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 0, 490, 90));
 
-        jLabelImage.setBorder(javax.swing.BorderFactory.createTitledBorder(""));
-        jLabelImage.setMaximumSize(new java.awt.Dimension(90, 90));
-        jLabelImage.setMinimumSize(new java.awt.Dimension(90, 90));
-        jLabelImage.setOpaque(true);
-        jLabelImage.setPreferredSize(new java.awt.Dimension(90, 90));
-        jPanel1.add(jLabelImage, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 0, 120, 100));
-
         jPanel2.add(jPanel1, java.awt.BorderLayout.CENTER);
 
         btnSalir.setForeground(new java.awt.Color(255, 255, 255));
@@ -303,40 +384,7 @@ public class FrmBuscarProducto extends javax.swing.JInternalFrame implements Fra
         });
         jPanel2.add(btnSalir, java.awt.BorderLayout.LINE_END);
 
-        jPanel4.add(jPanel2, java.awt.BorderLayout.PAGE_START);
-
-        jPanel3.setLayout(new java.awt.GridLayout(1, 0));
-
-        tblProducto.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
-            }
-        ));
-        tblProducto.setRowHeight(22);
-        tblProducto.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseClicked(java.awt.event.MouseEvent evt) {
-                tblProductoMouseClicked(evt);
-            }
-        });
-        tblProducto.addKeyListener(new java.awt.event.KeyAdapter() {
-            public void keyPressed(java.awt.event.KeyEvent evt) {
-                tblProductoKeyPressed(evt);
-            }
-            public void keyReleased(java.awt.event.KeyEvent evt) {
-                tblProductoKeyReleased(evt);
-            }
-        });
-        jScrollPane2.setViewportView(tblProducto);
-
-        jPanel3.add(jScrollPane2);
-
-        jPanel4.add(jPanel3, java.awt.BorderLayout.CENTER);
+        jPanel4.add(jPanel2, java.awt.BorderLayout.NORTH);
 
         lblEstado.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         lblEstado.setForeground(new java.awt.Color(255, 255, 255));
@@ -385,7 +433,7 @@ public class FrmBuscarProducto extends javax.swing.JInternalFrame implements Fra
                 producto.setStrStockProducto((String) defaultTableModel.getValueAt(fila, 4));
                 producto.setStrPrecioCostoProducto((String) defaultTableModel.getValueAt(fila, 5));
                 producto.setStrPrecioVentaProducto((String) defaultTableModel.getValueAt(fila, 6));
-                producto.setStrImagen((String) defaultTableModel.getValueAt(fila, 7));
+//                producto.setStrImagen((String) defaultTableModel.getValueAt(fila, 7));
                 productoVentaInterface.loadProduct(producto);
             }
         }
@@ -404,20 +452,38 @@ public class FrmBuscarProducto extends javax.swing.JInternalFrame implements Fra
 
     }//GEN-LAST:event_tblProductoKeyPressed
     private void showImageItem(){
+//        DefaultTableModel defaultTableModel = new DefaultTableModel();
+//        defaultTableModel = (DefaultTableModel) tblProducto.getModel();
+//        int fila = tblProducto.getSelectedRow();
+//        if (fila > -1) {
+//            String image = (String) defaultTableModel.getValueAt(fila, 7);
+//            if (image != null) {
+//                if (!image.isEmpty()) {
+//                    ImageLoader.setImage(
+//                            jLabelImage,
+//                            Paths.IMAGES_PATH + "/" + image
+//                    );
+//                }
+//            }
+//        }
+
         DefaultTableModel defaultTableModel = new DefaultTableModel();
         defaultTableModel = (DefaultTableModel) tblProducto.getModel();
         int fila = tblProducto.getSelectedRow();
         if (fila > -1) {
-            String image = (String) defaultTableModel.getValueAt(fila, 7);
-            if (image != null) {
-                if (!image.isEmpty()) {
-                    ImageLoader.setImage(
-                            jLabelImage,
-                            Paths.IMAGES_PATH + "/" + image
-                    );
-                }
-            }
+//            String image = (String) defaultTableModel.getValueAt(fila, 7);
+            ProductThread productThread = new ProductThread(Integer.parseInt((String) defaultTableModel.getValueAt(fila, 0)), 
+                    jPanelProductData, 
+                    jLabelImage, 
+                    jLabelTitle, 
+                    jLabelContent
+            );
+            
+            productThread.start();
         }
+        
+        
+        
     }
     private void tblProductoKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tblProductoKeyReleased
         showImageItem();
@@ -426,12 +492,17 @@ public class FrmBuscarProducto extends javax.swing.JInternalFrame implements Fra
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnSalir;
     private javax.swing.ButtonGroup buttonGroup1;
+    private javax.swing.JLabel jLabelContent;
     private javax.swing.JLabel jLabelImage;
+    private javax.swing.JLabel jLabelTitle;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
     private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
+    private javax.swing.JPanel jPanel6;
+    private javax.swing.JPanel jPanelCenter;
+    private javax.swing.JPanel jPanelProductData;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JLabel lblEstado;
     private javax.swing.JRadioButton rbtnCodigo;
@@ -460,6 +531,60 @@ public class FrmBuscarProducto extends javax.swing.JInternalFrame implements Fra
     public void writeFrameRectangle() {
         ObjectSerializer<Rectangle> serializer = new ObjectSerializer<Rectangle>(Paths.SERIAL_DIRECTORY_DATA, Paths.PRODUCT_RECTANGLE_NAME);
         serializer.serilizer(getBounds());
+    }
+    
+    
+    
+    class ProductThread extends Thread {
+
+        private JPanel panel;
+        private JLabel image, title, content;
+        private int id;
+
+        public ProductThread(int id, JPanel panel, JLabel image, JLabel title, JLabel content) {
+            this.id = id;
+            this.image = image;
+            this.panel = panel;
+            this.title = title;
+            this.content = content;
+        }
+        @Override
+        public void run() {
+            ClsProducto product = new ClsProducto();
+            ProductDto productDto = product.findById(id);
+            image.setText(null);
+            image.setSize(Dimensions.REQUEST_IMAGE_DIMENSION_SIZE);
+            if (productDto != null) {
+                title.setText(productDto.getName());
+                content.setText("Stock: " + productDto.getStock());
+                if (productDto.getImageIcon() != null) {
+                    Icon icon = new ImageIcon(productDto.getImageIcon().getImage().getScaledInstance(
+                            Dimensions.REQUEST_IMAGE_DIMENSION_SIZE.width,
+                            Dimensions.REQUEST_IMAGE_DIMENSION_SIZE.height,
+                            Image.SCALE_FAST)
+                    );
+                    image.setIcon(icon);
+                } else {
+                    ImageLoader.setImageWithDim(image,
+                            Dimensions.REQUEST_IMAGE_DIMENSION_SIZE.width,
+                            Dimensions.REQUEST_IMAGE_DIMENSION_SIZE.height,
+                            Paths.DEFAULT_PRODUCT_IMAGE_WHITE,
+                            Image.SCALE_FAST
+                    );
+                }
+                panel.repaint();
+            } else {
+                title.setText("UNDEFINED");
+                content.setText("UNDEFINED");
+                ImageLoader.setImageWithDim(image,
+                        Dimensions.REQUEST_IMAGE_DIMENSION_SIZE.width,
+                        Dimensions.REQUEST_IMAGE_DIMENSION_SIZE.height,
+                        Paths.DEFAULT_PRODUCT_IMAGE_WHITE,
+                        Image.SCALE_FAST
+                );
+                Toast.makeText(Toast.DANGER, "¡El producto no existe en la base de datos!", Toast.LENGTH_SHORT).show();
+            }
+        }
     }
     
 }

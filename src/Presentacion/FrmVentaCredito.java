@@ -1400,7 +1400,7 @@ public class FrmVentaCredito extends javax.swing.JInternalFrame implements Clien
     }//GEN-LAST:event_btnAgregarClienteMouseClicked
 
     private void btnAgregarClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnAgregarClienteActionPerformed
-        new FrmNewClient(new JFrame(), true, this);
+//        new FrmNewClient(new JFrame(), true, this);
     }//GEN-LAST:event_btnAgregarClienteActionPerformed
 
     private void btnAgregarClienteKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_btnAgregarClienteKeyReleased
@@ -1534,32 +1534,46 @@ public class FrmVentaCredito extends javax.swing.JInternalFrame implements Clien
     private javax.swing.JTextField txtTotalVenta;
     // End of variables declaration//GEN-END:variables
 
+//    @Override
+//    public void  loadNewClient(ClsEntidadCliente client) {
+//        if(!client.getStrIdCliente().equals("0")){
+//            JOptionPane.showMessageDialog(null,"¡Cliente Agregado con éxito!\n"
+//                    + "Se asignará a esta transacción\n"
+//                    + "id: " + client.getStrIdCliente()+client.getStrRucCliente()+"\n"
+//                    + "Nombre / Razón social: " + client.getStrNombreCliente()+"\n"
+//                    + "DNI / NIT: " + client.getStrDniCliente()+"\n"
+//                    + "Dirección: " + client.getStrDireccionCliente()+"\n"
+//                    + "Teféfono: " + client.getStrTelefonoCliente()
+//                    ,"Mensaje del Sistema",1);
+//        lblIdCliente.setText(client.getStrIdCliente());
+//        txtNombreCliente.setText(client.getStrNombreCliente());
+//        }else{
+//            JOptionPane.showMessageDialog(null, "Ocurrio un error al guardar el cliente, intente nuevamente", "ERROR", ERROR);
+//        }
+//    }
+    
+    
     @Override
-    public void  loadNewClient(ClsEntidadCliente client) {
-        if(!client.getStrIdCliente().equals("0")){
-            JOptionPane.showMessageDialog(null,"¡Cliente Agregado con éxito!\n"
-                    + "Se asignará a esta transacción\n"
-                    + "id: " + client.getStrIdCliente()+client.getStrRucCliente()+"\n"
-                    + "Nombre / Razón social: " + client.getStrNombreCliente()+"\n"
-                    + "DNI / NIT: " + client.getStrDniCliente()+"\n"
-                    + "Dirección: " + client.getStrDireccionCliente()+"\n"
-                    + "Teféfono: " + client.getStrTelefonoCliente()
-                    ,"Mensaje del Sistema",1);
-        lblIdCliente.setText(client.getStrIdCliente());
-        txtNombreCliente.setText(client.getStrNombreCliente());
-        }else{
-            JOptionPane.showMessageDialog(null, "Ocurrio un error al guardar el cliente, intente nuevamente", "ERROR", ERROR);
+    public void loadClient(ClsEntidadCliente client, final byte GARZON) {
+        if (eFormState.equals(EFormState.ENABLE)) {
+            Presentacion.FrmVentaCredito.lblIdCliente.setText(client.getStrIdCliente());
+            Presentacion.FrmVentaCredito.txtNombreCliente.setText(client.getStrNombreCliente());
+            Toast.makeText(Toast.SUCCESS, "Se cambió el cliente", Toast.LENGTH_MICRO).show();
+        } else {
+            Toast.makeText(Toast.UNSUCCESS, "Formulario inactivo, no se cambió el cliente", Toast.LENGTH_MICRO).show();
         }
     }
     
     @Override
-    public void loadClient(ClsEntidadCliente client) {
+    public boolean loadClient(ClsEntidadCliente client) {
         if(eFormState.equals(EFormState.ENABLE)){
             Presentacion.FrmVentaCredito.lblIdCliente.setText(client.getStrIdCliente());
             Presentacion.FrmVentaCredito.txtNombreCliente.setText(client.getStrNombreCliente());
-            Toast.makeText(Toast.SUCCESS, "Se cambió el cliente", Toast.LENGTH_MICRO).show();
+            Toast.makeText(Toast.SUCCESS, "OJO EN ESTA PARTE...", Toast.LENGTH_MICRO).show();
+            return true;
         }else{
             Toast.makeText(Toast.UNSUCCESS, "Formulario inactivo, no se cambió el cliente", Toast.LENGTH_MICRO).show();
+            return true;
         }
     }
 

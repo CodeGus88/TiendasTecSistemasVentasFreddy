@@ -56,7 +56,7 @@ public class Toast extends Thread{
     public void run(){
         JFrame frame = new JFrame();
         frame.setLocationRelativeTo(null);
-        frame.getContentPane().setBackground(Color.DARK_GRAY);
+//        frame.getContentPane().setBackground(Color.DARK_GRAY);
         frame.setUndecorated(true);
         frame.setAlwaysOnTop(true); // siempre visible
         frame.setLayout(new GridLayout());

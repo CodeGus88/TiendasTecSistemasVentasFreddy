@@ -4,11 +4,13 @@
  */
 package Entidad;
 
+
 /**
  *
  * @author dayperperu
  */
 public class ClsEntidadCliente {
+    
     private String strIdCliente;
     private String strNombreCliente;
     private String strRucCliente;
@@ -16,6 +18,7 @@ public class ClsEntidadCliente {
     private String strDireccionCliente;
     private String strTelefonoCliente;
     private String strObsvCliente;
+    private Image imagen;
     
     public String getStrIdCliente() {
         return strIdCliente;
@@ -71,6 +74,14 @@ public class ClsEntidadCliente {
 
     public void setStrObsvCliente(String strObsvCliente) {
         this.strObsvCliente = strObsvCliente;
+    }
+
+    public Image getImagen() {
+        return imagen;
+    }
+
+    public void setImagen(Image imagen) {
+        this.imagen = imagen;
     }
 
 }

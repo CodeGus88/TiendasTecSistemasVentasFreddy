@@ -28,9 +28,7 @@ private Connection connection=new ClsConexion().getConection();
             statement.setString("pprecio",DetalleVenta.getStrPrecioDet());
             statement.setString("ptotal",DetalleVenta.getStrTotalDet());
             statement.execute();
-
             //JOptionPane.showMessageDialog(null,"¡Venta Realizada con éxito!","Mensaje del Sistema",1);
-
         }catch(SQLException ex){
             ex.printStackTrace();
         }

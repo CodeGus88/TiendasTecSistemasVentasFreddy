@@ -26,16 +26,8 @@ public class ClsEntidadProducto {
     private String strEstadoProducto;
     private String strIdCategoria;
     private String strDescripcionCategoria;
-    private String strImagen;
+    private Image imagen;
     private Date fechaVencimiento;
-    
-    public String getStrImagen() {
-        return strImagen;
-    }
-
-    public void setStrImagen(String strImagen) {
-        this.strImagen = strImagen;
-    }
     
     public String getStrIdProducto() {
         return strIdProducto;
@@ -133,6 +125,15 @@ public class ClsEntidadProducto {
         this.strDescripcionCategoria = strDescripcionCategoria;
     }
 
+    public Image getImagen() {
+        return imagen;
+    }
+
+    public void setImagen(Image imagen) {
+        this.imagen = imagen;
+    }
+
+    
     public Date getFechaVencimiento() {
         return fechaVencimiento;
     }

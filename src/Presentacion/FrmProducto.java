@@ -4,22 +4,25 @@
  */
 package Presentacion;
 
+import Consultas.FrmProductInformation;
 import Conexion.ClsConexion;
+import Consultas.ImageSelector;
 import Entidad.*;
+import Entidad.dtos.ProductDto;
 import Negocio.*;
 import java.awt.Color;
-import java.awt.Component;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.Iterator;
 import javax.swing.*;
-import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
 
 //--------------CODIGO DE BARRAS------------
-import java.awt.Image;
+//import java.awt.Image;
+import Entidad.Image;
+import java.awt.Cursor;
 import javax.swing.ImageIcon;
 import net.sourceforge.barbecue.BarcodeFactory;
 import net.sourceforge.barbecue.Barcode;
@@ -27,16 +30,10 @@ import net.sourceforge.barbecue.BarcodeException;
 import net.sourceforge.barbecue.BarcodeImageHandler;
 import java.awt.event.*;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
-import java.util.logging.Logger;
 import net.sf.jasperreports.engine.JREmptyDataSource;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperCompileManager;
@@ -45,7 +42,9 @@ import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.view.JasperViewer;
 import net.sourceforge.barbecue.output.OutputException;
+import statics.Message;
 import statics.TableConfigurator;
+import tools.toast.Toast;
 
 public class FrmProducto extends javax.swing.JInternalFrame {
 
@@ -53,18 +52,23 @@ public class FrmProducto extends javax.swing.JInternalFrame {
     String Total;
     String strCodigo;
     String accion;
-    
-    String imagen = "";
+
     int registros;
     String id[] = new String[50];
     static int intContador;
     public String codigo;
     static Connection conn = null;
     static ResultSet rs = null;
-    DefaultTableModel dtm = new DefaultTableModel();
     String criterio, busqueda;
-    private final String[] titulos = {"ID", "Cód. de Barras", "Nombre", "Descripción", "Stock", "Stock Min.", "Costo", "Precio", "Utilidad", "Estado", "Categoría", "Imagen", "Vencimiento"};
-
+//    private DefaultTableModel dtm = new DefaultTableModel();
+    private DefaultTableModel dtm;
+    private final String[] titulos = {"ID", "CÓDIGO", "NOMBRE", "DESCRIPCIÓN", "STOCK", "STOCK MIN", "COSTO", "PRECIO", "UTILIDAD", "ESTADO", "CATEGORÍA", "VENCIMIENTO"};
+    private int[] anchos = {40, 100, 150, 200, 60, 60, 60, 60, 60, 80, 100, 80};
+    
+    private ImageSelector imageSelector;
+    private ClsEntidadProducto product;
+    private ProductDto productDto;
+            
     public FrmProducto() {
         initComponents();
         tabProducto.setIconAt(tabProducto.indexOfComponent(pBuscar), new ImageIcon("src/iconos/busca_p1.png"));
@@ -81,9 +85,16 @@ public class FrmProducto extends javax.swing.JInternalFrame {
         actualizarTabla();
 
         //---------------------ANCHO Y ALTO DEL FORM----------------------
-        this.setSize(965, 558);
+        this.setSize(965, 600);
         CrearTabla();
         CantidadTotal();
+        
+//        dtm = new DefaultTableModel(null, titulos) {
+//            @Override
+//            public boolean isCellEditable(int row, int column) {
+//                return false;
+//            }
+//        };
 
     }
 
@@ -106,7 +117,7 @@ public class FrmProducto extends javax.swing.JInternalFrame {
         tblProducto.setAutoResizeMode(tblProducto.AUTO_RESIZE_OFF);
 
         //Anchos de cada columna
-        int[] anchos = {40, 100, 150, 200, 60, 60, 60, 60, 60, 80, 100, 80, 80};
+//        int[] anchos = {40, 100, 150, 200, 60, 60, 60, 60, 60, 80, 100, 50, 80};
         for (int i = 0; i < tblProducto.getColumnCount(); i++) {
             tblProducto.getColumnModel().getColumn(i).setPreferredWidth(anchos[i]);
         }
@@ -118,7 +129,7 @@ public class FrmProducto extends javax.swing.JInternalFrame {
     }
 
     void limpiarCampos() {
-        txtCodigo.setText("");
+        txtId.setText("");
         txtCodigoBar.setText("");
         txtNombre.setText("");
         txtDescripcion.setText("");
@@ -126,7 +137,7 @@ public class FrmProducto extends javax.swing.JInternalFrame {
         txtStockMin.setText("");
         txtPrecioCosto.setText("");
         txtPrecioVenta.setText("");
-        lblImagen.setIcon(null);
+        jLabelPhoto.setIcon(null);
         txtUtilidad.setText("");
         txtCodigoBar.requestFocus();
         rbtnActivo.setSelected(true);
@@ -150,7 +161,7 @@ public class FrmProducto extends javax.swing.JInternalFrame {
         btnGuardar.setEnabled(false);
         btnCancelar.setEnabled(false);
         btnSalir1.setEnabled(true);
-        btnSeleccionarImagen.setEnabled(false);
+//        btnSeleccionarImagen.setEnabled(false);
 
         txtCodigoBar.setEnabled(false);
         txtNombre.setEnabled(false);
@@ -167,8 +178,12 @@ public class FrmProducto extends javax.swing.JInternalFrame {
         lstCodigos.setEnabled(false);
         cboTipoCodificacion.setEnabled(false);
         btnGenerar.setEnabled(false);
-        imagen = "";
         dcFechaVencimiento.setEnabled(false);
+        
+        btnRevert.setVisible(false);
+        btnSelectPhoto.setVisible(false);
+        btnRemovePhoto.setVisible(false);
+        jLabelPhoto.setIcon(null);
 
     }
 
@@ -178,7 +193,7 @@ public class FrmProducto extends javax.swing.JInternalFrame {
         btnModificar.setEnabled(false);
         btnGuardar.setEnabled(true);
         btnCancelar.setEnabled(true);
-        btnSeleccionarImagen.setEnabled(true);
+//        btnSeleccionarImagen.setEnabled(true);
         btnSalir1.setEnabled(false);
 
         txtCodigoBar.setEnabled(true);
@@ -198,6 +213,9 @@ public class FrmProducto extends javax.swing.JInternalFrame {
         btnGenerar.setEnabled(true);
         txtCodigoBar.requestFocus();
         dcFechaVencimiento.setEnabled(true);
+        
+        btnSelectPhoto.setVisible(true);
+        btnRemovePhoto.setVisible(true);
 
     }
 
@@ -229,14 +247,14 @@ public class FrmProducto extends javax.swing.JInternalFrame {
         ArrayList<ClsEntidadProducto> producto = productos.listarProducto();
         Iterator iterator = producto.iterator();
 
-        DefaultTableModel defaultTableModel = new DefaultTableModel(null, titulos) {
+        dtm = new DefaultTableModel(null, titulos) {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
             }
         };
 
-        String fila[] = new String[13];
+        String fila[] = new String[12];
         while (iterator.hasNext()) {
             ClsEntidadProducto Producto = new ClsEntidadProducto();
             Producto = (ClsEntidadProducto) iterator.next();
@@ -251,15 +269,13 @@ public class FrmProducto extends javax.swing.JInternalFrame {
             fila[8] = Producto.getStrUtilidadProducto();
             fila[9] = Producto.getStrEstadoProducto();
             fila[10] = Producto.getStrDescripcionCategoria();
-            fila[11] = Producto.getStrImagen();
-            fila[12] = Producto.getFechaVencimiento() == null ? "" : Producto.getFechaVencimiento().toString();
-            defaultTableModel.addRow(fila);
+            fila[11] = Producto.getFechaVencimiento() == null ? "" : Producto.getFechaVencimiento().toString();
+            dtm.addRow(fila);
         }
-        tblProducto.setModel(defaultTableModel);
+        tblProducto.setModel(dtm);
     }
 
     void BuscarProducto() {
-        dtm.setColumnIdentifiers(titulos);
 
         ClsProducto categoria = new ClsProducto();
         busqueda = txtBusqueda.getText();
@@ -296,10 +312,8 @@ public class FrmProducto extends javax.swing.JInternalFrame {
                 Datos[9] = (String) rs.getString(10);
                 Datos[10] = (String) rs.getString(11);
                 Datos[11] = (String) rs.getString(12);
-                Datos[12] = (String) rs.getString(13);
                 dtm.addRow(Datos);
                 encuentra = true;
-
             }
             if (encuentra = false) {
                 JOptionPane.showMessageDialog(null, "¡No se encuentra!");
@@ -311,40 +325,40 @@ public class FrmProducto extends javax.swing.JInternalFrame {
         tblProducto.setModel(dtm);
     }
 
-    void listardatos() {
-        String estado;
-        DefaultTableModel defaultTableModel = new DefaultTableModel();
-        if (registros == -1) {
-            JOptionPane.showMessageDialog(null, "Se debe seleccionar un registro");
-        } else {
-            defaultTableModel = (DefaultTableModel) tblProducto.getModel();
-            strCodigo = ((String) defaultTableModel.getValueAt(registros, 0));
-            txtCodigo.setText((String) defaultTableModel.getValueAt(registros, 0));
-            txtCodigoBar.setText((String) defaultTableModel.getValueAt(registros, 1));
-            txtNombre.setText((String) defaultTableModel.getValueAt(registros, 2));
-            txtDescripcion.setText((String) defaultTableModel.getValueAt(registros, 3));
-            txtStock.setText((String) defaultTableModel.getValueAt(registros, 4));
-            txtStockMin.setText((String) defaultTableModel.getValueAt(registros, 5));
-            txtPrecioCosto.setText((String) defaultTableModel.getValueAt(registros, 6));
-            txtPrecioVenta.setText((String) defaultTableModel.getValueAt(registros, 7));
-            txtUtilidad.setText((String) defaultTableModel.getValueAt(registros, 8));
-            if ("ACTIVO".equals((String) defaultTableModel.getValueAt(registros, 9))) {
-                rbtnActivo.setSelected(true);
-            } else if ("INACTIVO".equals((String) defaultTableModel.getValueAt(registros, 9))) {
-                rbtnInactivo.setSelected(true);
-            }
-            cboCategoria.setSelectedItem((String) defaultTableModel.getValueAt(registros, 10));
-            imagen = (String) defaultTableModel.getValueAt(registros, 11);
-            String ruta = "src/Images/" + imagen;
-            ImageIcon fot = new ImageIcon(ruta);
-            Icon icono = new ImageIcon(fot.getImage().getScaledInstance(lblImagen.getWidth(), lblImagen.getHeight(), Image.SCALE_DEFAULT));
-            lblImagen.setIcon(icono);
-            lblImagen.repaint();
-
-            tblProducto.setRowSelectionInterval(registros, registros);
-        }
-
-    }
+//    void listardatos() {
+//        String estado;
+//        DefaultTableModel defaultTableModel = new DefaultTableModel();
+//        if (registros == -1) {
+//            JOptionPane.showMessageDialog(null, "Se debe seleccionar un registro");
+//        } else {
+//            defaultTableModel = (DefaultTableModel) tblProducto.getModel();
+//            strCodigo = ((String) defaultTableModel.getValueAt(registros, 0));
+//            txtCodigo.setText((String) defaultTableModel.getValueAt(registros, 0));
+//            txtCodigoBar.setText((String) defaultTableModel.getValueAt(registros, 1));
+//            txtNombre.setText((String) defaultTableModel.getValueAt(registros, 2));
+//            txtDescripcion.setText((String) defaultTableModel.getValueAt(registros, 3));
+//            txtStock.setText((String) defaultTableModel.getValueAt(registros, 4));
+//            txtStockMin.setText((String) defaultTableModel.getValueAt(registros, 5));
+//            txtPrecioCosto.setText((String) defaultTableModel.getValueAt(registros, 6));
+//            txtPrecioVenta.setText((String) defaultTableModel.getValueAt(registros, 7));
+//            txtUtilidad.setText((String) defaultTableModel.getValueAt(registros, 8));
+//            if ("ACTIVO".equals((String) defaultTableModel.getValueAt(registros, 9))) {
+//                rbtnActivo.setSelected(true);
+//            } else if ("INACTIVO".equals((String) defaultTableModel.getValueAt(registros, 9))) {
+//                rbtnInactivo.setSelected(true);
+//            }
+//            cboCategoria.setSelectedItem((String) defaultTableModel.getValueAt(registros, 10));
+//            imagen = (String) defaultTableModel.getValueAt(registros, 11);
+//            String ruta = "src/Images/" + imagen;
+//            ImageIcon fot = new ImageIcon(ruta);
+//            Icon icono = new ImageIcon(fot.getImage().getScaledInstance(lblImagen.getWidth(), lblImagen.getHeight(), Image.SCALE_DEFAULT));
+//            lblImagen.setIcon(icono);
+//            lblImagen.repaint();
+//
+//            tblProducto.setRowSelectionInterval(registros, registros);
+//        }
+//
+//    }
 
     void CalcularUtilidad() {
         double pre_costo = 0, pre_venta = 0, utilidad = 0, t_utilidad;
@@ -381,7 +395,7 @@ public class FrmProducto extends javax.swing.JInternalFrame {
         jScrollPane1 = new javax.swing.JScrollPane();
         tblProducto = new javax.swing.JTable();
         pNuevo = new javax.swing.JPanel();
-        txtCodigo = new javax.swing.JTextField();
+        txtId = new javax.swing.JTextField();
         jLabel3 = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         txtCodigoBar = new javax.swing.JTextField();
@@ -414,8 +428,7 @@ public class FrmProducto extends javax.swing.JInternalFrame {
         jLabel20 = new javax.swing.JLabel();
         jLabel21 = new javax.swing.JLabel();
         btnImprimir = new javax.swing.JButton();
-        lblImagen = new javax.swing.JLabel();
-        btnSeleccionarImagen = new javax.swing.JButton();
+        jLabelPhoto = new javax.swing.JLabel();
         btnActualizar = new javax.swing.JButton();
         jLabel16 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
@@ -424,6 +437,10 @@ public class FrmProducto extends javax.swing.JInternalFrame {
         jLabel19 = new javax.swing.JLabel();
         dcFechaVencimiento = new com.toedter.calendar.JDateChooser();
         jLabel14 = new javax.swing.JLabel();
+        btnRevert = new javax.swing.JButton();
+        jPanel1 = new javax.swing.JPanel();
+        btnSelectPhoto = new javax.swing.JButton();
+        btnRemovePhoto = new javax.swing.JButton();
         btnSalir1 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
 
@@ -496,6 +513,12 @@ public class FrmProducto extends javax.swing.JInternalFrame {
         });
         getContentPane().add(btnGuardar);
         btnGuardar.setBounds(780, 120, 160, 70);
+
+        tabProducto.addChangeListener(new javax.swing.event.ChangeListener() {
+            public void stateChanged(javax.swing.event.ChangeEvent evt) {
+                tabProductoStateChanged(evt);
+            }
+        });
 
         pBuscar.setBackground(new java.awt.Color(255, 255, 255));
         pBuscar.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
@@ -576,13 +599,13 @@ public class FrmProducto extends javax.swing.JInternalFrame {
         pNuevo.setBackground(new java.awt.Color(255, 255, 255));
         pNuevo.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        txtCodigo.setEnabled(false);
-        txtCodigo.addActionListener(new java.awt.event.ActionListener() {
+        txtId.setEnabled(false);
+        txtId.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtCodigoActionPerformed(evt);
+                txtIdActionPerformed(evt);
             }
         });
-        pNuevo.add(txtCodigo, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 20, 70, 40));
+        pNuevo.add(txtId, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 20, 70, 40));
 
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel3.setText("ID Producto:");
@@ -759,17 +782,11 @@ public class FrmProducto extends javax.swing.JInternalFrame {
         });
         pNuevo.add(btnImprimir, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 60, 160, 40));
 
-        lblImagen.setBackground(new java.awt.Color(255, 255, 153));
-        lblImagen.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        pNuevo.add(lblImagen, new org.netbeans.lib.awtextra.AbsoluteConstraints(430, 240, 290, 240));
-
-        btnSeleccionarImagen.setText("Subir imagen");
-        btnSeleccionarImagen.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnSeleccionarImagenActionPerformed(evt);
-            }
-        });
-        pNuevo.add(btnSeleccionarImagen, new org.netbeans.lib.awtextra.AbsoluteConstraints(610, 190, 110, 40));
+        jLabelPhoto.setBackground(new java.awt.Color(255, 255, 153));
+        jLabelPhoto.setFont(new java.awt.Font("Arial", 0, 24)); // NOI18N
+        jLabelPhoto.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabelPhoto.setBorder(javax.swing.BorderFactory.createEtchedBorder());
+        pNuevo.add(jLabelPhoto, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 250, 220, 170));
 
         btnActualizar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/Refresh.png"))); // NOI18N
         btnActualizar.addActionListener(new java.awt.event.ActionListener() {
@@ -806,6 +823,43 @@ public class FrmProducto extends javax.swing.JInternalFrame {
         jLabel14.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Datos del Producto", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11))); // NOI18N
         pNuevo.add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 480, 240));
 
+        btnRevert.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/Refresh.png"))); // NOI18N
+        btnRevert.setText("REVERTIR ORIGINAL");
+        btnRevert.setMaximumSize(new java.awt.Dimension(300, 30));
+        btnRevert.setMinimumSize(new java.awt.Dimension(300, 30));
+        btnRevert.setPreferredSize(new java.awt.Dimension(300, 30));
+        btnRevert.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRevertActionPerformed(evt);
+            }
+        });
+        pNuevo.add(btnRevert, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 220, 220, 30));
+
+        jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
+        jPanel1.setMaximumSize(new java.awt.Dimension(300, 32767));
+        jPanel1.setMinimumSize(new java.awt.Dimension(300, 27));
+        jPanel1.setOpaque(false);
+        jPanel1.setPreferredSize(new java.awt.Dimension(300, 27));
+        jPanel1.setLayout(new java.awt.GridLayout(1, 2, 1, 1));
+
+        btnSelectPhoto.setText("SELECCIONAR");
+        btnSelectPhoto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnSelectPhotoActionPerformed(evt);
+            }
+        });
+        jPanel1.add(btnSelectPhoto);
+
+        btnRemovePhoto.setText("QUITAR");
+        btnRemovePhoto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnRemovePhotoActionPerformed(evt);
+            }
+        });
+        jPanel1.add(btnRemovePhoto);
+
+        pNuevo.add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 420, 220, 30));
+
         tabProducto.addTab("Nuevo / Modificar", pNuevo);
 
         getContentPane().add(tabProducto);
@@ -834,8 +888,9 @@ public class FrmProducto extends javax.swing.JInternalFrame {
     private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
         if (tblProducto.getSelectedRows().length > 0) {
             accion = "Modificar";
-            loadProduct();
+//            loadProduct();
             modificar();
+            btnRevert.setVisible(true);
             tabProducto.setSelectedIndex(tabProducto.indexOfComponent(pNuevo));
         } else {
             JOptionPane.showMessageDialog(null, "¡Se debe seleccionar un registro!");
@@ -848,6 +903,7 @@ public class FrmProducto extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnCancelarActionPerformed
 
     private void btnNuevoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnNuevoActionPerformed
+        product = new ClsEntidadProducto();
         accion = "Nuevo";
         modificar();
         limpiarCampos();
@@ -876,110 +932,103 @@ public class FrmProducto extends javax.swing.JInternalFrame {
         if (validardatos() == true) {
             if (accion.equals("Nuevo")) {
                 ClsProducto productos = new ClsProducto();
-                ClsEntidadProducto producto = new ClsEntidadProducto();
-                producto.setStrCodigoProducto(txtCodigoBar.getText());
-                producto.setStrNombreProducto(txtNombre.getText());
-                producto.setStrDescripcionProducto(txtDescripcion.getText());
+//                ClsEntidadProducto product = new ClsEntidadProducto();
+                product.setStrCodigoProducto(txtCodigoBar.getText());
+                product.setStrNombreProducto(txtNombre.getText());
+                product.setStrDescripcionProducto(txtDescripcion.getText());
                 if (txtStock.getText().equals("")) {
-                    producto.setStrStockProducto("0");
+                    product.setStrStockProducto("0");
                 } else {
-                    producto.setStrStockProducto(txtStock.getText());
+                    product.setStrStockProducto(txtStock.getText());
                 }
                 if (txtStockMin.getText().equals("")) {
-                    producto.setStrStockMinProducto("0");
+                    product.setStrStockMinProducto("0");
                 } else {
-                    producto.setStrStockMinProducto(txtStockMin.getText());
+                    product.setStrStockMinProducto(txtStockMin.getText());
                 }
                 if (txtPrecioCosto.getText().equals("")) {
-                    producto.setStrPrecioCostoProducto("0");
+                    product.setStrPrecioCostoProducto("0");
                 } else {
-                    producto.setStrPrecioCostoProducto(txtPrecioCosto.getText());
+                    product.setStrPrecioCostoProducto(txtPrecioCosto.getText());
                 }
                 if (txtPrecioVenta.getText().equals("")) {
-                    producto.setStrPrecioVentaProducto("0");
+                    product.setStrPrecioVentaProducto("0");
                 } else {
-                    producto.setStrPrecioVentaProducto(txtPrecioVenta.getText());
+                    product.setStrPrecioVentaProducto(txtPrecioVenta.getText());
                 }
                 if (txtUtilidad.getText().equals("")) {
-                    producto.setStrUtilidadProducto("0");
+                    product.setStrUtilidadProducto("0");
                 } else {
-                    producto.setStrUtilidadProducto(txtUtilidad.getText());
+                    product.setStrUtilidadProducto(txtUtilidad.getText());
                 }
                 if (rbtnActivo.isSelected()) {
-                    producto.setStrEstadoProducto("ACTIVO");
+                    product.setStrEstadoProducto("ACTIVO");
                 } else if (rbtnInactivo.isSelected()) {
-                    producto.setStrEstadoProducto("INACTIVO");
+                    product.setStrEstadoProducto("INACTIVO");
                 }
-                producto.setStrIdCategoria(id[cboCategoria.getSelectedIndex()]);
-                if (imagen.equals("")) {
-                    producto.setStrImagen("imagen.png");
-                } else {
-                    producto.setStrImagen(imagen);
+                product.setStrIdCategoria(id[cboCategoria.getSelectedIndex()]);
+                if (product.getImagen() == null) {
+                    product.setImagen(new Image(null, 0));
                 }
                 if (dcFechaVencimiento != null) {
                     try {
-                        producto.setFechaVencimiento(dcFechaVencimiento.getDate());
+                        product.setFechaVencimiento(dcFechaVencimiento.getDate());
                     } catch (Exception e) {
                         e.getStackTrace();
-                        producto.setFechaVencimiento(null);
+                        product.setFechaVencimiento(null);
                     }
                 }
-
-                productos.agregarProducto(producto);
+                productos.agregarProducto(product);
                 actualizarTabla();
                 CantidadTotal();
             }
             if (accion.equals("Modificar")) {
                 ClsProducto productos = new ClsProducto();
-                ClsEntidadProducto producto = new ClsEntidadProducto();
-                producto.setStrCodigoProducto(txtCodigoBar.getText());
-                producto.setStrNombreProducto(txtNombre.getText());
-                producto.setStrDescripcionProducto(txtDescripcion.getText());
+                product.setStrCodigoProducto(txtCodigoBar.getText());
+                product.setStrNombreProducto(txtNombre.getText());
+                product.setStrDescripcionProducto(txtDescripcion.getText());
                 if (txtStock.getText().equals("")) {
-                    producto.setStrStockProducto("0");
+                    product.setStrStockProducto("0");
                 } else {
-                    producto.setStrStockProducto(txtStock.getText());
+                    product.setStrStockProducto(txtStock.getText());
                 }
                 if (txtStockMin.getText().equals("")) {
-                    producto.setStrStockMinProducto("0");
+                    product.setStrStockMinProducto("0");
                 } else {
-                    producto.setStrStockMinProducto(txtStockMin.getText());
+                    product.setStrStockMinProducto(txtStockMin.getText());
                 }
                 if (txtPrecioCosto.getText().equals("")) {
-                    producto.setStrPrecioCostoProducto("0");
+                    product.setStrPrecioCostoProducto("0");
                 } else {
-                    producto.setStrPrecioCostoProducto(txtPrecioCosto.getText());
+                    product.setStrPrecioCostoProducto(txtPrecioCosto.getText());
                 }
                 if (txtPrecioVenta.getText().equals("")) {
-                    producto.setStrPrecioVentaProducto("0");
+                    product.setStrPrecioVentaProducto("0");
                 } else {
-                    producto.setStrPrecioVentaProducto(txtPrecioVenta.getText());
+                    product.setStrPrecioVentaProducto(txtPrecioVenta.getText());
                 }
                 if (txtUtilidad.getText().equals("")) {
-                    producto.setStrUtilidadProducto("0");
+                    product.setStrUtilidadProducto("0");
                 } else {
-                    producto.setStrUtilidadProducto(txtUtilidad.getText());
+                    product.setStrUtilidadProducto(txtUtilidad.getText());
                 }
                 if (rbtnActivo.isSelected()) {
-                    producto.setStrEstadoProducto("ACTIVO");
+                    product.setStrEstadoProducto("ACTIVO");
                 } else if (rbtnInactivo.isSelected()) {
-                    producto.setStrEstadoProducto("INACTIVO");
+                    product.setStrEstadoProducto("INACTIVO");
                 }
-                producto.setStrIdCategoria(id[cboCategoria.getSelectedIndex()]);
-                if (imagen.equals("")) {
-                    producto.setStrImagen("imagen.png");
-                } else {
-                    producto.setStrImagen(imagen);
-                }
+                product.setStrIdCategoria(id[cboCategoria.getSelectedIndex()]);
+                
+                
                 if (dcFechaVencimiento != null) {
                     try {
-                        producto.setFechaVencimiento(dcFechaVencimiento.getDate());
+                        product.setFechaVencimiento(dcFechaVencimiento.getDate());
                     } catch (Exception e) {
                         e.getStackTrace();
-                        producto.setFechaVencimiento(null);
+                        product.setFechaVencimiento(null);
                     }
                 }
-                productos.modificarProducto(strCodigo, producto);
+                productos.modificarProducto(strCodigo, product);
                 actualizarTabla();
                 modificar();
                 limpiarCampos();
@@ -1007,54 +1056,30 @@ public class FrmProducto extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_rbtnNombreStateChanged
 
     private void tblProductoMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tblProductoMouseClicked
-        
         if(evt.getClickCount() == 2){
+            tblProducto.setCursor(new Cursor(Cursor.WAIT_CURSOR));
             int row = tblProducto.getSelectedRow();
             DefaultTableModel defaultTableModel = (DefaultTableModel) tblProducto.getModel();
-            ClsEntidadProducto product = new ClsEntidadProducto();
-            product.setStrIdProducto((String) defaultTableModel.getValueAt(row, 0));
-            product.setStrCodigoProducto( (String) defaultTableModel.getValueAt(row, 1) );
-            product.setStrNombreProducto( (String) defaultTableModel.getValueAt(row, 2) );
-            product.setStrDescripcionProducto( (String) defaultTableModel.getValueAt(row, 3) );
-            product.setStrStockProducto( (String) defaultTableModel.getValueAt(row, 4) );
-            product.setStrStockMinProducto( (String) defaultTableModel.getValueAt(row, 5) );
-            product.setStrPrecioCostoProducto( (String) defaultTableModel.getValueAt(row, 6) );
-            product.setStrPrecioVentaProducto( (String) defaultTableModel.getValueAt(row, 7) );
-            product.setStrUtilidadProducto( (String) defaultTableModel.getValueAt(row, 8) );
-            product.setStrEstadoProducto( (String) defaultTableModel.getValueAt(row, 9) );
-            product.setStrIdCategoria( (String) defaultTableModel.getValueAt(row, 10) ); // contiene el nombre de la categoría
-            product.setStrImagen( (String) defaultTableModel.getValueAt(row, 11) );
-            try {
-                if(!defaultTableModel.getValueAt(row, 12).toString().isEmpty()){
-                    SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
-                    product.setFechaVencimiento(
-                            formatter.parse(defaultTableModel.getValueAt(row, 12).toString().replace("-", "/"))
-                    );
-                }
-                
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-//            FrmProductInformation productInf = new FrmProductInformation(product);
-            
-            FrmProductInformation productInf = new FrmProductInformation(product);
+//            productDto.setStrIdProducto();
+            ClsProducto productService = new ClsProducto();
+            ProductDto productDto = productService.findById( Integer.parseInt((String) defaultTableModel.getValueAt(row, 0)) );
+            FrmProductInformation productInf = new FrmProductInformation(productDto);
+            tblProducto.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
             Presentacion.FrmPrincipal.Escritorio.add(productInf);
             productInf.toFront();
         }
     }//GEN-LAST:event_tblProductoMouseClicked
 
     private void loadProduct() {
-
         int fila;
         DefaultTableModel defaultTableModel = new DefaultTableModel();
         fila = tblProducto.getSelectedRow();
-
         if (fila == -1) {
             JOptionPane.showMessageDialog(null, "Se debe seleccionar un registro");
         } else {
             defaultTableModel = (DefaultTableModel) tblProducto.getModel();
             strCodigo = ((String) defaultTableModel.getValueAt(fila, 0));
-            txtCodigo.setText((String) defaultTableModel.getValueAt(fila, 0));
+            txtId.setText((String) defaultTableModel.getValueAt(fila, 0));
             txtCodigoBar.setText((String) defaultTableModel.getValueAt(fila, 1));
             txtNombre.setText((String) defaultTableModel.getValueAt(fila, 2));
             txtDescripcion.setText((String) defaultTableModel.getValueAt(fila, 3));
@@ -1069,12 +1094,6 @@ public class FrmProducto extends javax.swing.JInternalFrame {
                 rbtnInactivo.setSelected(true);
             }
             cboCategoria.setSelectedItem((String) defaultTableModel.getValueAt(fila, 10));
-            imagen = (String) defaultTableModel.getValueAt(fila, 11);
-            String ruta = "src/Images/" + imagen;
-            ImageIcon fot = new ImageIcon(ruta);
-            Icon icono = new ImageIcon(fot.getImage().getScaledInstance(lblImagen.getWidth(), lblImagen.getHeight(), Image.SCALE_DEFAULT));
-            lblImagen.setIcon(icono);
-            lblImagen.repaint();
             try {
                 if(defaultTableModel.getValueAt(fila, 12) != null & !defaultTableModel.getValueAt(fila, 12).toString().isEmpty()){
                     SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
@@ -1082,15 +1101,11 @@ public class FrmProducto extends javax.swing.JInternalFrame {
                             formatter.parse(defaultTableModel.getValueAt(fila, 12).toString().replace("-", "/"))
                     );
                 }
-                
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
         }
-
         mirar();
-
     }
 
     private void txtCodigoBarKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCodigoBarKeyTyped
@@ -1112,40 +1127,40 @@ public class FrmProducto extends javax.swing.JInternalFrame {
         if (keyCode == KeyEvent.VK_ENTER)
             btnGuardar.requestFocus();
     }//GEN-LAST:event_txtPrecioVentaKeyReleased
-    void verificarCodigoBar() {
-        String busqueda = null;
-        int sen = 2;
-        busqueda = txtCodigoBar.getText();
-
-        try {
-            ClsProducto oProducto = new ClsProducto();
-
-            rs = oProducto.verificarCodigoBar(busqueda);
-            while (rs.next()) {
-                if (!rs.getString(2).equals("")) {
-
-                    sen = 1;
-                } else {
-
-                    sen = 2;
-                }
-                break;
-            }
-
-        } catch (Exception ex) {
-            JOptionPane.showMessageDialog(this, ex.getMessage());
-            System.out.println(ex.getMessage());
-        }
-
-        if (sen == 1) {
-            JOptionPane.showMessageDialog(null, "Codigo No Disponible");
-        } else if (sen == 2) {
-            JOptionPane.showMessageDialog(null, "Codigo Disponible");
-        } else if (rs == null) {
-            JOptionPane.showMessageDialog(null, "no hay");
-        }
-
-    }
+//    void verificarCodigoBar() {
+//        String busqueda = null;
+//        int sen = 2;
+//        busqueda = txtCodigoBar.getText();
+//
+//        try {
+//            ClsProducto oProducto = new ClsProducto();
+//
+//            rs = oProducto.verificarCodigoBar(busqueda);
+//            while (rs.next()) {
+//                if (!rs.getString(2).equals("")) {
+//
+//                    sen = 1;
+//                } else {
+//
+//                    sen = 2;
+//                }
+//                break;
+//            }
+//
+//        } catch (Exception ex) {
+//            JOptionPane.showMessageDialog(this, ex.getMessage());
+//            System.out.println(ex.getMessage());
+//        }
+//
+//        if (sen == 1) {
+//            JOptionPane.showMessageDialog(null, "Codigo No Disponible");
+//        } else if (sen == 2) {
+//            JOptionPane.showMessageDialog(null, "Codigo Disponible");
+//        } else if (rs == null) {
+//            JOptionPane.showMessageDialog(null, "no hay");
+//        }
+//
+//    }
 
     void GeneraAleatorio() {
 
@@ -1347,49 +1362,6 @@ public class FrmProducto extends javax.swing.JInternalFrame {
         }
     }//GEN-LAST:event_btnImprimirActionPerformed
 
-    private void btnSeleccionarImagenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSeleccionarImagenActionPerformed
-        // TODO add your handling code here:
-        String ruta = "";
-        String pathOrigen;
-        String pathDestino;
-
-        JFileChooser file = new JFileChooser();
-        int estado = file.showOpenDialog(this);
-        if (estado == JFileChooser.APPROVE_OPTION);
-        {
-            imagen = file.getSelectedFile().getName();
-            //-----------------------------------------------
-            pathOrigen = file.getSelectedFile().getAbsolutePath();
-            pathDestino = "src/Images/" + imagen;
-
-            File origen = new File(pathOrigen);
-            File destino = new File(pathDestino);
-            try {
-                InputStream in = new FileInputStream(origen);
-                OutputStream out = new FileOutputStream(destino);
-                byte[] buf = new byte[1024];
-                int len;
-
-                while ((len = in.read(buf)) > 0) {
-                    out.write(buf, 0, len);
-                }
-                in.close();
-                out.close();
-            } catch (IOException ex) {
-                Logger.getLogger(FrmProducto.class.getName()).log(Level.SEVERE, null, ex);
-            }
-
-            //-----------------------------------------------
-            ruta = "src/Images/" + imagen;
-            ImageIcon fot = new ImageIcon(ruta);
-            Icon icono = new ImageIcon(fot.getImage().getScaledInstance(lblImagen.getWidth(), lblImagen.getHeight(), Image.SCALE_DEFAULT));
-            lblImagen.setIcon(icono);
-            lblImagen.repaint();
-
-        }
-
-    }//GEN-LAST:event_btnSeleccionarImagenActionPerformed
-
     private void btnSalir1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSalir1ActionPerformed
         // TODO add your handling code here:
         this.dispose();
@@ -1405,7 +1377,7 @@ public class FrmProducto extends javax.swing.JInternalFrame {
             accion = "Nuevo";
             loadProduct();
             modificar();
-            txtCodigo.setText("");
+            txtId.setText("");
             txtCodigoBar.setText("");
             tabProducto.setSelectedIndex(tabProducto.indexOfComponent(pNuevo));
         } else {
@@ -1413,10 +1385,105 @@ public class FrmProducto extends javax.swing.JInternalFrame {
         }
     }//GEN-LAST:event_duplicateItemActionPerformed
 
-    private void txtCodigoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtCodigoActionPerformed
+    private void txtIdActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtIdActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_txtCodigoActionPerformed
+    }//GEN-LAST:event_txtIdActionPerformed
 
+    private void btnRevertActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRevertActionPerformed
+        if (productDto != null) {
+            if (productDto.getImageIcon() != null) {
+                Icon icon = new ImageIcon(productDto.getImageIcon().getImage().getScaledInstance(
+                    jLabelPhoto.getWidth(),
+                    jLabelPhoto.getHeight(),
+                    java.awt.Image.SCALE_FAST)
+            );
+            jLabelPhoto.setText(null);
+            jLabelPhoto.setIcon(icon);
+            //                jLabelPhoto.repaint();
+            } else {
+                jLabelPhoto.setIcon(null);
+                jLabelPhoto.setText("FOTO");
+            }
+        }
+    }//GEN-LAST:event_btnRevertActionPerformed
+
+    private void btnSelectPhotoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSelectPhotoActionPerformed
+        imageSelector = new ImageSelector(jLabelPhoto);
+        imageSelector.select();
+        if (imageSelector.getImageIcon() != null)
+        if (imageSelector.getByteLength() <= 1000000) {
+            jLabelPhoto.setText(null);
+            jLabelPhoto.setIcon(imageSelector.getImageIcon());
+            product.setImagen(new Image(imageSelector.getFileInputStream(), imageSelector.getByteLength()));
+        } else {
+            Toast.makeText(Toast.WARNING, "Imagen demasiado grande", Toast.LENGTH_LONG).show();
+        }
+    }//GEN-LAST:event_btnSelectPhotoActionPerformed
+
+    private void btnRemovePhotoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRemovePhotoActionPerformed
+        product.setImagen(new Image(null, 0));
+        jLabelPhoto.setIcon(null);
+        jLabelPhoto.setText("FOTO");
+    }//GEN-LAST:event_btnRemovePhotoActionPerformed
+
+    private void tabProductoStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_tabProductoStateChanged
+        if (tabProducto.getSelectedIndex() == 1) {
+            if (tblProducto.getSelectedRows().length > 0) {
+                int fila;
+                DefaultTableModel defaultTableModel = new DefaultTableModel();
+                fila = tblProducto.getSelectedRow();
+                product = new ClsEntidadProducto();
+                defaultTableModel = (DefaultTableModel) tblProducto.getModel();
+                ClsProducto productService = new ClsProducto();
+                productDto = productService.findById(
+                        Integer.parseInt(
+                                (String) defaultTableModel.getValueAt(fila, 0)
+                        )
+                );
+                loadForm(productDto);
+            }
+        }
+    }//GEN-LAST:event_tabProductoStateChanged
+    private void loadForm(ProductDto productDto) {
+        if (productDto != null) {
+            strCodigo = String.valueOf(productDto.getId());
+            txtId.setText(String.valueOf(productDto.getId()));
+            txtCodigoBar.setText(productDto.getCode());
+            txtNombre.setText(productDto.getName());
+            txtDescripcion.setText(productDto.getDescription());
+            txtStock.setText(productDto.getStock());
+            txtStockMin.setText(productDto.getMinStock());
+            txtPrecioCosto.setText(productDto.getCoste());
+            txtPrecioVenta.setText(productDto.getPrice());
+            txtUtilidad.setText(productDto.getUtility());
+            if ("ACTIVO".equalsIgnoreCase(productDto.getState())) {
+                rbtnActivo.setSelected(true);
+            } else if ("INACTIVO".equalsIgnoreCase( productDto.getState() )) {
+                rbtnInactivo.setSelected(true);
+            }
+            cboCategoria.setSelectedItem(productDto.getCategory());
+            if (productDto.getImageIcon() != null) {
+                Icon icon = new ImageIcon(productDto.getImageIcon().getImage().getScaledInstance(
+                        jLabelPhoto.getWidth(),
+                        jLabelPhoto.getHeight(),
+                        java.awt.Image.SCALE_FAST)
+                );
+                jLabelPhoto.setText(null);
+                jLabelPhoto.setIcon(icon);
+            } else {
+                jLabelPhoto.setText("FOTO");
+                jLabelPhoto.setIcon(null);
+            }
+            try {
+                dcFechaVencimiento.setDate(productDto.getExpiration());
+            } catch (Exception e) {
+                Message.LOGGER.log(Level.SEVERE, e.getMessage());
+            }
+        } else {
+            mirar();
+            Toast.makeText(Toast.WARNING, "El producto no se encuentra en la base de datos", Toast.LENGTH_SHORT).show();
+        }
+    }
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnActualizar;
     private javax.swing.JButton btnCancelar;
@@ -1425,8 +1492,10 @@ public class FrmProducto extends javax.swing.JInternalFrame {
     private javax.swing.JButton btnImprimir;
     private javax.swing.JButton btnModificar;
     private javax.swing.JButton btnNuevo;
+    private javax.swing.JButton btnRemovePhoto;
+    private javax.swing.JButton btnRevert;
     private javax.swing.JButton btnSalir1;
-    private javax.swing.JButton btnSeleccionarImagen;
+    private javax.swing.JButton btnSelectPhoto;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.ButtonGroup buttonGroup2;
     private javax.swing.JComboBox cboCategoria;
@@ -1455,13 +1524,14 @@ public class FrmProducto extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
+    private javax.swing.JLabel jLabelPhoto;
+    private javax.swing.JPanel jPanel1;
     private javax.swing.JPopupMenu jPopupMenu;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JTabbedPane jTabbedPane2;
     private javax.swing.JLabel lblEstado;
-    private javax.swing.JLabel lblImagen;
     private javax.swing.JLabel lblprueba;
     private javax.swing.JList lstCodigos;
     private javax.swing.JPanel pBuscar;
@@ -1476,9 +1546,9 @@ public class FrmProducto extends javax.swing.JInternalFrame {
     private javax.swing.JTabbedPane tabProducto;
     private javax.swing.JTable tblProducto;
     private javax.swing.JTextField txtBusqueda;
-    private javax.swing.JTextField txtCodigo;
     private javax.swing.JTextField txtCodigoBar;
     private javax.swing.JTextArea txtDescripcion;
+    private javax.swing.JTextField txtId;
     private javax.swing.JTextField txtNombre;
     private javax.swing.JTextField txtPrecioCosto;
     private javax.swing.JTextField txtPrecioVenta;
