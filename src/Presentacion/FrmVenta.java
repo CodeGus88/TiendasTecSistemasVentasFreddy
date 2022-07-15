@@ -61,7 +61,6 @@ public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterf
     public String IdEmpleado, NombreEmpleado;
     int idventa;
     String idventa_print;
-    //-----------------------------------------------
     public String codigo;
 
     static ResultSet rs = null;
@@ -1574,11 +1573,15 @@ public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterf
             garzon1.setStrIdCliente(client.getStrIdCliente());
             garzon1.setStrNombreCliente(client.getStrNombreCliente());
             txtNombreGarzon1.setText(client.getStrNombreCliente());
+            Toast.makeText(Toast.SUCCESS, "Se agregó el elemento en el primer campo", Toast.LENGTH_MICRO).show();
         }else if(GARZON == GARZON_2){
             garzon2.setStrIdCliente(client.getStrIdCliente());
             garzon2.setStrNombreCliente(client.getStrNombreCliente());
             txtNombreGarzon2.setText(client.getStrNombreCliente());
-        } 
+            Toast.makeText(Toast.SUCCESS, "Se agregó el elemento, en el segundo campo", Toast.LENGTH_MICRO).show();
+        }else{
+            Toast.makeText(Toast.SUCCESS, "¡Imcompatible!", Toast.LENGTH_MICRO).show();
+        }
     }
     
     @Override
@@ -1588,20 +1591,20 @@ public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterf
                 garzon1.setStrIdCliente(client.getStrIdCliente());
                 garzon1.setStrNombreCliente(client.getStrNombreCliente());
                 txtNombreGarzon1.setText(client.getStrNombreCliente());
-                Toast.makeText(Toast.SUCCESS, "Se cambió el cliente", Toast.LENGTH_MICRO).show();
+                Toast.makeText(Toast.SUCCESS, "Se agregó el elemento", Toast.LENGTH_MICRO).show();
                 return true;
             }else if(garzon2.getStrIdCliente() == null || garzon2.getStrIdCliente().isEmpty()){
                 garzon2.setStrIdCliente(client.getStrIdCliente());
                 garzon2.setStrNombreCliente(client.getStrNombreCliente());
                 txtNombreGarzon2.setText(client.getStrNombreCliente());
-                Toast.makeText(Toast.SUCCESS, "Se cambió el cliente", Toast.LENGTH_MICRO).show();
+                Toast.makeText(Toast.SUCCESS, "Se agregó el elemento", Toast.LENGTH_MICRO).show();
                 return true;
             }else{
                 return false;
             }
             
         }else{
-            Toast.makeText(Toast.UNSUCCESS, "Formulario inactivo, no se cambió el cliente", Toast.LENGTH_MICRO).show();
+            Toast.makeText(Toast.UNSUCCESS, "Formulario inactivo", Toast.LENGTH_MICRO).show();
             return true;
         }
     }

@@ -59,7 +59,7 @@ public class FrmBuscarCliente extends javax.swing.JInternalFrame implements Fram
     private ClientInterface clientInterface;
 
     private final String titulos[] = {"ID", "NOMBRE", "CI", "DIRECCIÓN", "TELÉFONO", "OBSERVACIÓN"};
-    private float[] widths = {4.95F, 26.81F, 9.54F, 24.86F, 12.52F, 21.31F}; // pos 2:  9.52F
+    private final float[] widths = {4.95F, 26.81F, 9.54F, 24.86F, 12.52F, 21.31F}; // pos 2:  9.52F
 
     public FrmBuscarCliente(ClientInterface clientInterface) {
         this.clientInterface = clientInterface;
@@ -628,7 +628,7 @@ public class FrmBuscarCliente extends javax.swing.JInternalFrame implements Fram
                         Paths.DEFAULT_USER_IMAGE_WHITE,
                         Image.SCALE_FAST
                 );
-                Toast.makeText(Toast.DANGER, "¡El usuario no existe en la base de datos!", Toast.LENGTH_SHORT).show();
+                Toast.makeText(Toast.DANGER, "¡El registro no existe en la base de datos!", Toast.LENGTH_SHORT).show();
             }
         }
     }
