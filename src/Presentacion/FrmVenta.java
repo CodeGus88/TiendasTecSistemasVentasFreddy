@@ -1485,11 +1485,8 @@ public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterf
                 JOptionPane.showMessageDialog(this, ex.getMessage());
                 System.out.println(ex.getMessage());
             }
-
             strId = ((String) tblDetalleProducto.getValueAt(f, 0));
-
             ncant = Double.parseDouble(String.valueOf(tblDetalleProducto.getModel().getValueAt(f, 4)));
-
             stock = cant - ncant;
             producto.setStrStockProducto(String.valueOf(stock));
             productos.actualizarProductoStock(strId, producto);
@@ -1602,7 +1599,6 @@ public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterf
             }else{
                 return false;
             }
-            
         }else{
             Toast.makeText(Toast.UNSUCCESS, "Formulario inactivo", Toast.LENGTH_MICRO).show();
             return true;

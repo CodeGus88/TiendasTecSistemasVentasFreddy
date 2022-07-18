@@ -15,6 +15,7 @@ public class ClsConexion {
             ds.setServerName("localhost");
             ds.setPort(3306);
             ds.setDatabaseName("dbventaspiura");
+//            ds.setDatabaseName("borrar");
             conection=ds.getConnection("root","");
         }catch(Exception ex){
            ex.printStackTrace();
