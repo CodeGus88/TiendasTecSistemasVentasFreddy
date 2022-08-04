@@ -1458,7 +1458,7 @@ public class FrmVentaCredito extends javax.swing.JInternalFrame implements Clien
             ncant = Double.parseDouble(String.valueOf(tblDetalleProducto.getModel().getValueAt(f, 4)));
 
             stock = cant - ncant;
-            producto.setStrStockProducto(String.valueOf(stock));
+            producto.setStockProducto(String.valueOf(stock));
             productos.actualizarProductoStock(strId, producto);
 
         }
@@ -1580,13 +1580,13 @@ public class FrmVentaCredito extends javax.swing.JInternalFrame implements Clien
     @Override
     public void loadProduct(ClsEntidadProducto product) {
         if(eFormState.equals(EFormState.ENABLE)){
-            lblIdProducto.setText(product.getStrIdProducto());
-            txtCodigoProducto.setText(product.getStrCodigoProducto());
-            txtNombreProducto.setText(product.getStrNombreProducto());
-            txtDescripcionProducto.setText(product.getStrDescripcionProducto());
-            txtStockProducto.setText(product.getStrStockProducto());
-            txtCostoProducto.setText(product.getStrPrecioCostoProducto());  // producto.preciocosto 
-            txtPrecioProducto.setText(product.getStrPrecioVentaProducto()); // producto.precioVenta
+            lblIdProducto.setText(product.getIdProducto());
+            txtCodigoProducto.setText(product.getCodigoProducto());
+            txtNombreProducto.setText(product.getNombreProducto());
+            txtDescripcionProducto.setText(product.getDescripcionProducto());
+            txtStockProducto.setText(product.getStockProducto());
+            txtCostoProducto.setText(product.getPrecioCostoProducto());  // producto.preciocosto 
+            txtPrecioProducto.setText(product.getPrecioVentaProducto()); // producto.precioVenta
             Toast.makeText(Toast.SUCCESS, "Se agregó el producto", Toast.LENGTH_MICRO).show();
         }else{
             Toast.makeText(Toast.UNSUCCESS, "Fornulario inactivo, no se agregó el producto", Toast.LENGTH_MICRO).show();

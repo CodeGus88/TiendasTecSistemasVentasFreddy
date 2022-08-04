@@ -18,10 +18,8 @@ import java.util.Iterator;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
-
-//--------------CODIGO DE BARRAS------------
-//import java.awt.Image;
 import Entidad.Image;
+import Entidad.dtos.ProductItemDto;
 import java.awt.Cursor;
 import javax.swing.ImageIcon;
 import net.sourceforge.barbecue.BarcodeFactory;
@@ -30,8 +28,8 @@ import net.sourceforge.barbecue.BarcodeException;
 import net.sourceforge.barbecue.BarcodeImageHandler;
 import java.awt.event.*;
 import java.io.File;
-import java.text.SimpleDateFormat;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import net.sf.jasperreports.engine.JREmptyDataSource;
@@ -43,6 +41,7 @@ import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.view.JasperViewer;
 import net.sourceforge.barbecue.output.OutputException;
 import statics.Message;
+import statics.ScreenUses;
 import statics.TableConfigurator;
 import tools.toast.Toast;
 
@@ -58,12 +57,14 @@ public class FrmProducto extends javax.swing.JInternalFrame {
     static int intContador;
     public String codigo;
     static Connection conn = null;
-    static ResultSet rs = null;
+    private ResultSet rs = null;
+    private List<ProductItemDto> productItemDtoList;
     String criterio, busqueda;
-//    private DefaultTableModel dtm = new DefaultTableModel();
     private DefaultTableModel dtm;
-    private final String[] titulos = {"ID", "CÓDIGO", "NOMBRE", "DESCRIPCIÓN", "STOCK", "STOCK MIN", "COSTO", "PRECIO", "UTILIDAD", "ESTADO", "CATEGORÍA", "VENCIMIENTO"};
-    private int[] anchos = {40, 100, 150, 200, 60, 60, 60, 60, 60, 80, 100, 80};
+//    private final String[] titulos = {"ID", "CÓDIGO", "NOMBRE", "DESCRIPCIÓN", "STOCK", "STOCK MIN", "COSTO", "PRECIO", "UTILIDAD", "ESTADO", "CATEGORÍA", "VENCIMIENTO"};
+//    private int[] anchos = {40, 100, 150, 200, 60, 60, 60, 60, 60, 80, 100, 80};
+    private final String[] titulos = {"ID", "CÓDIGO", "NOMBRE", "DESCRIPCIÓN", "STOCK", "STOCK MIN", "COSTO", "COSTO CHICA", "PRECIO", "UTILIDAD", "ESTADO", "CATEGORÍA", "VENCIMIENTO"};
+    private int[] anchos = {40, 100, 150, 200, 60, 60, 60, 60, 60, 60, 80, 100, 80};
     
     private ImageSelector imageSelector;
     private ClsEntidadProducto product;
@@ -83,28 +84,11 @@ public class FrmProducto extends javax.swing.JInternalFrame {
 
         mirar();
         actualizarTabla();
-
-        //---------------------ANCHO Y ALTO DEL FORM----------------------
         this.setSize(965, 600);
         CrearTabla();
         CantidadTotal();
-        
-//        dtm = new DefaultTableModel(null, titulos) {
-//            @Override
-//            public boolean isCellEditable(int row, int column) {
-//                return false;
-//            }
-//        };
-
+        setLocation((ScreenUses.getHorizontal() /2 - getWidth() /2), (ScreenUses.getVertical()/ 2) - (getHeight() / 2));
     }
-
-    public void duplicateProduct(ClsEntidadProducto producto) {
-
-        // escribir en el formulario
-    }
-//-----------------------------------------------------------------------------------------------
-//--------------------------------------METODOS--------------------------------------------------
-//-----------------------------------------------------------------------------------------------
 
     void CrearTabla() {
         //Agregar Render
@@ -117,7 +101,6 @@ public class FrmProducto extends javax.swing.JInternalFrame {
         tblProducto.setAutoResizeMode(tblProducto.AUTO_RESIZE_OFF);
 
         //Anchos de cada columna
-//        int[] anchos = {40, 100, 150, 200, 60, 60, 60, 60, 60, 80, 100, 50, 80};
         for (int i = 0; i < tblProducto.getColumnCount(); i++) {
             tblProducto.getColumnModel().getColumn(i).setPreferredWidth(anchos[i]);
         }
@@ -138,13 +121,13 @@ public class FrmProducto extends javax.swing.JInternalFrame {
         txtPrecioCosto.setText("");
         txtPrecioVenta.setText("");
         jLabelPhoto.setIcon(null);
-        txtUtilidad.setText("");
+        txtUtilidadCasa.setText("");
         txtCodigoBar.requestFocus();
         rbtnActivo.setSelected(true);
         rbtnInactivo.setSelected(false);
         txtPrecioCosto.setText("0.0");
         txtPrecioVenta.setText("0.0");
-        txtUtilidad.setText("0.0");
+        txtUtilidadCasa.setText("0.0");
 
         rbtnCodigo.setSelected(false);
         rbtnNombre.setSelected(false);
@@ -161,7 +144,6 @@ public class FrmProducto extends javax.swing.JInternalFrame {
         btnGuardar.setEnabled(false);
         btnCancelar.setEnabled(false);
         btnSalir1.setEnabled(true);
-//        btnSeleccionarImagen.setEnabled(false);
 
         txtCodigoBar.setEnabled(false);
         txtNombre.setEnabled(false);
@@ -193,7 +175,6 @@ public class FrmProducto extends javax.swing.JInternalFrame {
         btnModificar.setEnabled(false);
         btnGuardar.setEnabled(true);
         btnCancelar.setEnabled(true);
-//        btnSeleccionarImagen.setEnabled(true);
         btnSalir1.setEnabled(false);
 
         txtCodigoBar.setEnabled(true);
@@ -244,39 +225,34 @@ public class FrmProducto extends javax.swing.JInternalFrame {
 
     void actualizarTabla() {
         ClsProducto productos = new ClsProducto();
-        ArrayList<ClsEntidadProducto> producto = productos.listarProducto();
-        Iterator iterator = producto.iterator();
-
+        ArrayList<ClsEntidadProducto> list = productos.listarProducto();
         dtm = new DefaultTableModel(null, titulos) {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
             }
         };
-
-        String fila[] = new String[12];
-        while (iterator.hasNext()) {
-            ClsEntidadProducto Producto = new ClsEntidadProducto();
-            Producto = (ClsEntidadProducto) iterator.next();
-            fila[0] = Producto.getStrIdProducto();
-            fila[1] = Producto.getStrCodigoProducto();
-            fila[2] = Producto.getStrNombreProducto();
-            fila[3] = Producto.getStrDescripcionProducto();
-            fila[4] = Producto.getStrStockProducto();
-            fila[5] = Producto.getStrStockMinProducto();
-            fila[6] = Producto.getStrPrecioCostoProducto();
-            fila[7] = Producto.getStrPrecioVentaProducto();
-            fila[8] = Producto.getStrUtilidadProducto();
-            fila[9] = Producto.getStrEstadoProducto();
-            fila[10] = Producto.getStrDescripcionCategoria();
-            fila[11] = Producto.getFechaVencimiento() == null ? "" : Producto.getFechaVencimiento().toString();
+        String fila[] = new String[13];
+        for (ClsEntidadProducto product : list) {
+            fila[0] = product.getIdProducto();
+            fila[1] = product.getCodigoProducto();
+            fila[2] = product.getNombreProducto();
+            fila[3] = product.getDescripcionProducto();
+            fila[4] = product.getStockProducto();
+            fila[5] = product.getStockMinProducto();
+            fila[6] = product.getPrecioCostoProducto();
+            fila[7] = String.valueOf(product.getCostoChica());
+            fila[8] = product.getPrecioVentaProducto();
+            fila[9] = product.getUtilidadProducto();
+            fila[10] = product.getEstadoProducto();
+            fila[11] = product.getDescripcionCategoria();
+            fila[12] = product.getFechaVencimiento() == null ? "" : product.getFechaVencimiento().toString();
             dtm.addRow(fila);
         }
         tblProducto.setModel(dtm);
     }
 
     void BuscarProducto() {
-
         ClsProducto categoria = new ClsProducto();
         busqueda = txtBusqueda.getText();
         if (rbtnCodigo.isSelected()) {
@@ -289,9 +265,9 @@ public class FrmProducto extends javax.swing.JInternalFrame {
             criterio = "categoria";
         }
         try {
-            rs = categoria.listarProductoPorParametro(criterio, busqueda);
+            productItemDtoList = categoria.listarProductoPorParametro(criterio, busqueda);
             boolean encuentra = false;
-            String Datos[] = new String[12];
+            String Datos[] = new String[13];
             int f, i;
             f = dtm.getRowCount();
             if (f > 0) {
@@ -299,19 +275,24 @@ public class FrmProducto extends javax.swing.JInternalFrame {
                     dtm.removeRow(0);
                 }
             }
-            while (rs.next()) {
-                Datos[0] = (String) rs.getString(1);
-                Datos[1] = (String) rs.getString(2);
-                Datos[2] = (String) rs.getString(3);
-                Datos[3] = (String) rs.getString(4);
-                Datos[4] = (String) rs.getString(5);
-                Datos[5] = (String) rs.getString(6);
-                Datos[6] = (String) rs.getString(7);
-                Datos[7] = (String) rs.getString(8);
-                Datos[8] = (String) rs.getString(9);
-                Datos[9] = (String) rs.getString(10);
-                Datos[10] = (String) rs.getString(11);
-                Datos[11] = (String) rs.getString(12);
+            
+//       "ID 0" , "CÓDIGO 1", "NOMBRE 2", "DESCRIPCIÓN 3", "STOCK 4", "STOCK MIN 5", "COSTO 6", 
+//       "COSTO CHICA 7", "PRECIO 8", "UTILIDAD 9", "ESTADO 10", "CATEGORÍA 11", "VENCIMIENTO 12"
+            for(int x = 0; x < productItemDtoList.size(); x++){
+                ProductItemDto pidto = productItemDtoList.get(x);
+                Datos[0] = String.valueOf(pidto.getId());
+                Datos[1] = pidto.getCode();
+                Datos[2] = pidto.getName();
+                Datos[3] = pidto.getDescription();
+                Datos[4] = pidto.getStock();
+                Datos[5] = pidto.getMinStock();
+                Datos[6] = pidto.getCoste();
+                Datos[7] = pidto.getGirlCost();
+                Datos[8] = pidto.getPrice();
+                Datos[9] = pidto.getUtility();
+                Datos[10] = pidto.getState();
+                Datos[11] = pidto.getCategory();
+                Datos[12] = pidto.getExpiration()!=null?pidto.getExpiration().toString():"-";
                 dtm.addRow(Datos);
                 encuentra = true;
             }
@@ -325,48 +306,18 @@ public class FrmProducto extends javax.swing.JInternalFrame {
         tblProducto.setModel(dtm);
     }
 
-//    void listardatos() {
-//        String estado;
-//        DefaultTableModel defaultTableModel = new DefaultTableModel();
-//        if (registros == -1) {
-//            JOptionPane.showMessageDialog(null, "Se debe seleccionar un registro");
-//        } else {
-//            defaultTableModel = (DefaultTableModel) tblProducto.getModel();
-//            strCodigo = ((String) defaultTableModel.getValueAt(registros, 0));
-//            txtCodigo.setText((String) defaultTableModel.getValueAt(registros, 0));
-//            txtCodigoBar.setText((String) defaultTableModel.getValueAt(registros, 1));
-//            txtNombre.setText((String) defaultTableModel.getValueAt(registros, 2));
-//            txtDescripcion.setText((String) defaultTableModel.getValueAt(registros, 3));
-//            txtStock.setText((String) defaultTableModel.getValueAt(registros, 4));
-//            txtStockMin.setText((String) defaultTableModel.getValueAt(registros, 5));
-//            txtPrecioCosto.setText((String) defaultTableModel.getValueAt(registros, 6));
-//            txtPrecioVenta.setText((String) defaultTableModel.getValueAt(registros, 7));
-//            txtUtilidad.setText((String) defaultTableModel.getValueAt(registros, 8));
-//            if ("ACTIVO".equals((String) defaultTableModel.getValueAt(registros, 9))) {
-//                rbtnActivo.setSelected(true);
-//            } else if ("INACTIVO".equals((String) defaultTableModel.getValueAt(registros, 9))) {
-//                rbtnInactivo.setSelected(true);
-//            }
-//            cboCategoria.setSelectedItem((String) defaultTableModel.getValueAt(registros, 10));
-//            imagen = (String) defaultTableModel.getValueAt(registros, 11);
-//            String ruta = "src/Images/" + imagen;
-//            ImageIcon fot = new ImageIcon(ruta);
-//            Icon icono = new ImageIcon(fot.getImage().getScaledInstance(lblImagen.getWidth(), lblImagen.getHeight(), Image.SCALE_DEFAULT));
-//            lblImagen.setIcon(icono);
-//            lblImagen.repaint();
-//
-//            tblProducto.setRowSelectionInterval(registros, registros);
-//        }
-//
-//    }
-
     void CalcularUtilidad() {
-        double pre_costo = 0, pre_venta = 0, utilidad = 0, t_utilidad;
-        pre_costo = Double.parseDouble(txtPrecioCosto.getText());
-        pre_venta = Double.parseDouble(txtPrecioVenta.getText());
-        utilidad = pre_venta - pre_costo;
+        double pre_costo = 0, costo_chica = 0, pre_venta = 0, utilidad = 0, t_utilidad;
+        try {
+            pre_costo = Double.parseDouble(txtPrecioCosto.getText());
+            pre_venta = Double.parseDouble(txtPrecioVenta.getText());
+            costo_chica = Double.parseDouble(txtCostoChica.getText());
+        } catch (Exception e) {
+            Message.LOGGER.log(Level.SEVERE, e.getMessage());
+        }
+        utilidad = pre_venta - pre_costo - costo_chica;
         t_utilidad = Math.rint(utilidad * 100) / 100;
-        txtUtilidad.setText(String.valueOf(t_utilidad));
+        txtUtilidadCasa.setText(String.valueOf(t_utilidad));
     }
 
     @SuppressWarnings("unchecked")
@@ -414,7 +365,7 @@ public class FrmProducto extends javax.swing.JInternalFrame {
         jLabel11 = new javax.swing.JLabel();
         txtStock = new javax.swing.JTextField();
         jLabel15 = new javax.swing.JLabel();
-        txtUtilidad = new javax.swing.JTextField();
+        txtUtilidadCasa = new javax.swing.JTextField();
         jScrollPane3 = new javax.swing.JScrollPane();
         txtDescripcion = new javax.swing.JTextArea();
         jLabel4 = new javax.swing.JLabel();
@@ -433,7 +384,6 @@ public class FrmProducto extends javax.swing.JInternalFrame {
         jLabel16 = new javax.swing.JLabel();
         jScrollPane2 = new javax.swing.JScrollPane();
         lstCodigos = new javax.swing.JList();
-        jLabel17 = new javax.swing.JLabel();
         jLabel19 = new javax.swing.JLabel();
         dcFechaVencimiento = new com.toedter.calendar.JDateChooser();
         jLabel14 = new javax.swing.JLabel();
@@ -441,6 +391,9 @@ public class FrmProducto extends javax.swing.JInternalFrame {
         jPanel1 = new javax.swing.JPanel();
         btnSelectPhoto = new javax.swing.JButton();
         btnRemovePhoto = new javax.swing.JButton();
+        jLabel22 = new javax.swing.JLabel();
+        txtCostoChica = new javax.swing.JTextField();
+        jLabel17 = new javax.swing.JLabel();
         btnSalir1 = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
 
@@ -458,7 +411,6 @@ public class FrmProducto extends javax.swing.JInternalFrame {
         setBackground(new java.awt.Color(255, 255, 255));
         setClosable(true);
         setIconifiable(true);
-        setResizable(true);
         setTitle("Productos");
         getContentPane().setLayout(null);
 
@@ -572,17 +524,6 @@ public class FrmProducto extends javax.swing.JInternalFrame {
         jLabel13.setOpaque(true);
         pBuscar.add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 10, 720, 90));
 
-        tblProducto.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
-            }
-        ));
         tblProducto.setComponentPopupMenu(jPopupMenu);
         tblProducto.setRowHeight(22);
         tblProducto.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -592,11 +533,13 @@ public class FrmProducto extends javax.swing.JInternalFrame {
         });
         jScrollPane1.setViewportView(tblProducto);
 
-        pBuscar.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 110, 720, 340));
+        pBuscar.add(jScrollPane1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 110, 720, 310));
 
         tabProducto.addTab("Buscar", pBuscar);
 
         pNuevo.setBackground(new java.awt.Color(255, 255, 255));
+        pNuevo.setMinimumSize(new java.awt.Dimension(720, 500));
+        pNuevo.setPreferredSize(new java.awt.Dimension(720, 500));
         pNuevo.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         txtId.setEnabled(false);
@@ -608,11 +551,11 @@ public class FrmProducto extends javax.swing.JInternalFrame {
         pNuevo.add(txtId, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 20, 70, 40));
 
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel3.setText("ID Producto:");
+        jLabel3.setText("ID producto:");
         pNuevo.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 30, 90, 20));
 
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel2.setText("Código de Barras:");
+        jLabel2.setText("Código de barras:");
         pNuevo.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(180, 30, 120, 20));
 
         txtCodigoBar.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -641,7 +584,7 @@ public class FrmProducto extends javax.swing.JInternalFrame {
 
         jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel6.setText("Stock: ");
-        pNuevo.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 260, 90, 30));
+        pNuevo.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 260, 110, 30));
 
         txtStockMin.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
         txtStockMin.addKeyListener(new java.awt.event.KeyAdapter() {
@@ -649,11 +592,11 @@ public class FrmProducto extends javax.swing.JInternalFrame {
                 txtStockMinKeyReleased(evt);
             }
         });
-        pNuevo.add(txtStockMin, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 260, 80, 30));
+        pNuevo.add(txtStockMin, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 260, 80, 30));
 
         jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel7.setText("Stock Mínimo: ");
-        pNuevo.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 260, 100, 30));
+        jLabel7.setText("Stock mínimo: ");
+        pNuevo.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 260, 110, 30));
 
         txtPrecioVenta.setBackground(new java.awt.Color(254, 254, 241));
         txtPrecioVenta.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
@@ -665,27 +608,32 @@ public class FrmProducto extends javax.swing.JInternalFrame {
                 txtPrecioVentaKeyTyped(evt);
             }
         });
-        pNuevo.add(txtPrecioVenta, new org.netbeans.lib.awtextra.AbsoluteConstraints(310, 310, 80, 30));
+        pNuevo.add(txtPrecioVenta, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 340, 80, 30));
 
         jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel8.setText("Descripción:");
         pNuevo.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 170, 140, 20));
 
         jLabel10.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel10.setText("Precio Costo: ");
-        pNuevo.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 310, 90, 30));
+        jLabel10.setText("Costo producto: ");
+        pNuevo.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 300, 110, 30));
 
         txtPrecioCosto.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        txtPrecioCosto.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtPrecioCostoActionPerformed(evt);
+            }
+        });
         txtPrecioCosto.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txtPrecioCostoKeyReleased(evt);
             }
         });
-        pNuevo.add(txtPrecioCosto, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 310, 80, 30));
+        pNuevo.add(txtPrecioCosto, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 300, 80, 30));
 
         jLabel12.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel12.setText("Precio Venta: ");
-        pNuevo.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 310, 100, 30));
+        pNuevo.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 340, 110, 30));
 
         rbtnActivo.setFont(new java.awt.Font("Tahoma", 1, 12)); // NOI18N
         rbtnActivo.setText("ACTIVO");
@@ -698,10 +646,11 @@ public class FrmProducto extends javax.swing.JInternalFrame {
         pNuevo.add(rbtnInactivo, new org.netbeans.lib.awtextra.AbsoluteConstraints(620, 140, 90, -1));
 
         jLabel11.setBorder(javax.swing.BorderFactory.createTitledBorder("Estado"));
-        pNuevo.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 120, 200, 50));
+        pNuevo.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 120, 220, 50));
 
         txtStock.setBackground(new java.awt.Color(242, 253, 253));
         txtStock.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        txtStock.setPreferredSize(new java.awt.Dimension(200, 19));
         txtStock.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyReleased(java.awt.event.KeyEvent evt) {
                 txtStockKeyReleased(evt);
@@ -710,15 +659,15 @@ public class FrmProducto extends javax.swing.JInternalFrame {
                 txtStockKeyTyped(evt);
             }
         });
-        pNuevo.add(txtStock, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 260, 80, 30));
+        pNuevo.add(txtStock, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 260, 80, 30));
 
         jLabel15.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel15.setText("Fecha de vencimiento: ");
-        pNuevo.add(jLabel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 410, 210, 30));
+        pNuevo.add(jLabel15, new org.netbeans.lib.awtextra.AbsoluteConstraints(190, 380, 140, 30));
 
-        txtUtilidad.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        txtUtilidad.setEnabled(false);
-        pNuevo.add(txtUtilidad, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 360, 270, 30));
+        txtUtilidadCasa.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        txtUtilidadCasa.setEnabled(false);
+        pNuevo.add(txtUtilidadCasa, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 340, 80, 30));
 
         txtDescripcion.setColumns(20);
         txtDescripcion.setRows(5);
@@ -786,7 +735,7 @@ public class FrmProducto extends javax.swing.JInternalFrame {
         jLabelPhoto.setFont(new java.awt.Font("Arial", 0, 24)); // NOI18N
         jLabelPhoto.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabelPhoto.setBorder(javax.swing.BorderFactory.createEtchedBorder());
-        pNuevo.add(jLabelPhoto, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 250, 220, 170));
+        pNuevo.add(jLabelPhoto, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 220, 220, 170));
 
         btnActualizar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/Refresh.png"))); // NOI18N
         btnActualizar.addActionListener(new java.awt.event.ActionListener() {
@@ -807,18 +756,14 @@ public class FrmProducto extends javax.swing.JInternalFrame {
         });
         jScrollPane2.setViewportView(lstCodigos);
 
-        pNuevo.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(520, 40, 200, 70));
-
-        jLabel17.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel17.setText("Utilidad: ");
-        pNuevo.add(jLabel17, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 360, 90, 30));
+        pNuevo.add(jScrollPane2, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 40, 220, 70));
 
         jLabel19.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel19.setText("Utilidad: ");
-        pNuevo.add(jLabel19, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 360, 90, 30));
+        pNuevo.add(jLabel19, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 340, 110, 30));
 
         dcFechaVencimiento.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
-        pNuevo.add(dcFechaVencimiento, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 410, 120, 30));
+        pNuevo.add(dcFechaVencimiento, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 380, 80, 30));
 
         jLabel14.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Datos del Producto", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11))); // NOI18N
         pNuevo.add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 480, 240));
@@ -833,7 +778,7 @@ public class FrmProducto extends javax.swing.JInternalFrame {
                 btnRevertActionPerformed(evt);
             }
         });
-        pNuevo.add(btnRevert, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 220, 220, 30));
+        pNuevo.add(btnRevert, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 190, 220, 30));
 
         jPanel1.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(204, 204, 204)));
         jPanel1.setMaximumSize(new java.awt.Dimension(300, 32767));
@@ -858,12 +803,28 @@ public class FrmProducto extends javax.swing.JInternalFrame {
         });
         jPanel1.add(btnRemovePhoto);
 
-        pNuevo.add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 420, 220, 30));
+        pNuevo.add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(500, 390, 220, 30));
+
+        jLabel22.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel22.setText("Costo chica (s): ");
+        pNuevo.add(jLabel22, new org.netbeans.lib.awtextra.AbsoluteConstraints(220, 300, 110, 30));
+
+        txtCostoChica.setFont(new java.awt.Font("Tahoma", 0, 12)); // NOI18N
+        txtCostoChica.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtCostoChicaKeyReleased(evt);
+            }
+        });
+        pNuevo.add(txtCostoChica, new org.netbeans.lib.awtextra.AbsoluteConstraints(330, 300, 80, 30));
+
+        jLabel17.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel17.setText("Precio Venta: ");
+        pNuevo.add(jLabel17, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 340, 110, 30));
 
         tabProducto.addTab("Nuevo / Modificar", pNuevo);
 
         getContentPane().add(tabProducto);
-        tabProducto.setBounds(10, 10, 750, 510);
+        tabProducto.setBounds(10, 10, 750, 460);
 
         btnSalir1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/principal.png"))); // NOI18N
         btnSalir1.setText("Salir");
@@ -880,7 +841,7 @@ public class FrmProducto extends javax.swing.JInternalFrame {
 
         jLabel1.setBorder(javax.swing.BorderFactory.createTitledBorder("Mantenimiento"));
         getContentPane().add(jLabel1);
-        jLabel1.setBounds(770, 30, 180, 490);
+        jLabel1.setBounds(770, 30, 180, 440);
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
@@ -888,7 +849,6 @@ public class FrmProducto extends javax.swing.JInternalFrame {
     private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
         if (tblProducto.getSelectedRows().length > 0) {
             accion = "Modificar";
-//            loadProduct();
             modificar();
             btnRevert.setVisible(true);
             tabProducto.setSelectedIndex(tabProducto.indexOfComponent(pNuevo));
@@ -910,7 +870,7 @@ public class FrmProducto extends javax.swing.JInternalFrame {
         tblProducto.setEnabled(false);
         tabProducto.setSelectedIndex(tabProducto.indexOfComponent(pNuevo));
     }//GEN-LAST:event_btnNuevoActionPerformed
-//----------------------VALIDACIÓN DE DATOS-------------------------------------
+
 
     public boolean validardatos() {
         if (txtCodigoBar.getText().equals("")) {
@@ -928,45 +888,51 @@ public class FrmProducto extends javax.swing.JInternalFrame {
         }
 
     }
+    
     private void btnGuardarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarActionPerformed
         if (validardatos() == true) {
             if (accion.equals("Nuevo")) {
                 ClsProducto productos = new ClsProducto();
 //                ClsEntidadProducto product = new ClsEntidadProducto();
-                product.setStrCodigoProducto(txtCodigoBar.getText());
-                product.setStrNombreProducto(txtNombre.getText());
-                product.setStrDescripcionProducto(txtDescripcion.getText());
+                product.setCodigoProducto(txtCodigoBar.getText());
+                product.setNombreProducto(txtNombre.getText());
+                product.setDescripcionProducto(txtDescripcion.getText());
                 if (txtStock.getText().equals("")) {
-                    product.setStrStockProducto("0");
+                    product.setStockProducto("0");
                 } else {
-                    product.setStrStockProducto(txtStock.getText());
+                    product.setStockProducto(txtStock.getText());
                 }
                 if (txtStockMin.getText().equals("")) {
-                    product.setStrStockMinProducto("0");
+                    product.setStockMinProducto("0");
                 } else {
-                    product.setStrStockMinProducto(txtStockMin.getText());
+                    product.setStockMinProducto(txtStockMin.getText());
                 }
                 if (txtPrecioCosto.getText().equals("")) {
-                    product.setStrPrecioCostoProducto("0");
+                    product.setPrecioCostoProducto("0");
                 } else {
-                    product.setStrPrecioCostoProducto(txtPrecioCosto.getText());
+                    product.setPrecioCostoProducto(txtPrecioCosto.getText());
+                }
+                if (txtCostoChica.getText().equals("")) {
+                    product.setCostoChica(0);
+                } else {
+                    product.setCostoChica(Double.parseDouble(txtPrecioCosto.getText()));
                 }
                 if (txtPrecioVenta.getText().equals("")) {
-                    product.setStrPrecioVentaProducto("0");
+                    product.setPrecioVentaProducto("0");
                 } else {
-                    product.setStrPrecioVentaProducto(txtPrecioVenta.getText());
+                    product.setPrecioVentaProducto(txtPrecioVenta.getText());
                 }
-                if (txtUtilidad.getText().equals("")) {
-                    product.setStrUtilidadProducto("0");
+                if (txtUtilidadCasa.getText().equals("")) {
+                    product.setUtilidadProducto("0");
                 } else {
-                    product.setStrUtilidadProducto(txtUtilidad.getText());
+                    product.setUtilidadProducto(txtUtilidadCasa.getText());
                 }
                 if (rbtnActivo.isSelected()) {
-                    product.setStrEstadoProducto("ACTIVO");
+                    product.setEstadoProducto("ACTIVO");
                 } else if (rbtnInactivo.isSelected()) {
-                    product.setStrEstadoProducto("INACTIVO");
+                    product.setEstadoProducto("INACTIVO");
                 }
-                product.setStrIdCategoria(id[cboCategoria.getSelectedIndex()]);
+                product.setIdCategoria(id[cboCategoria.getSelectedIndex()]);
                 if (product.getImagen() == null) {
                     product.setImagen(new Image(null, 0));
                 }
@@ -984,40 +950,45 @@ public class FrmProducto extends javax.swing.JInternalFrame {
             }
             if (accion.equals("Modificar")) {
                 ClsProducto productos = new ClsProducto();
-                product.setStrCodigoProducto(txtCodigoBar.getText());
-                product.setStrNombreProducto(txtNombre.getText());
-                product.setStrDescripcionProducto(txtDescripcion.getText());
+                product.setCodigoProducto(txtCodigoBar.getText());
+                product.setNombreProducto(txtNombre.getText());
+                product.setDescripcionProducto(txtDescripcion.getText());
                 if (txtStock.getText().equals("")) {
-                    product.setStrStockProducto("0");
+                    product.setStockProducto("0");
                 } else {
-                    product.setStrStockProducto(txtStock.getText());
+                    product.setStockProducto(txtStock.getText());
                 }
                 if (txtStockMin.getText().equals("")) {
-                    product.setStrStockMinProducto("0");
+                    product.setStockMinProducto("0");
                 } else {
-                    product.setStrStockMinProducto(txtStockMin.getText());
+                    product.setStockMinProducto(txtStockMin.getText());
                 }
                 if (txtPrecioCosto.getText().equals("")) {
-                    product.setStrPrecioCostoProducto("0");
+                    product.setPrecioCostoProducto("0");
                 } else {
-                    product.setStrPrecioCostoProducto(txtPrecioCosto.getText());
+                    product.setPrecioCostoProducto(txtPrecioCosto.getText());
+                }
+                if (txtCostoChica.getText().equals("")) {
+                    product.setCostoChica(0);
+                } else {
+                    product.setCostoChica(Double.parseDouble(txtPrecioCosto.getText()));
                 }
                 if (txtPrecioVenta.getText().equals("")) {
-                    product.setStrPrecioVentaProducto("0");
+                    product.setPrecioVentaProducto("0");
                 } else {
-                    product.setStrPrecioVentaProducto(txtPrecioVenta.getText());
+                    product.setPrecioVentaProducto(txtPrecioVenta.getText());
                 }
-                if (txtUtilidad.getText().equals("")) {
-                    product.setStrUtilidadProducto("0");
+                if (txtUtilidadCasa.getText().equals("")) {
+                    product.setUtilidadProducto("0");
                 } else {
-                    product.setStrUtilidadProducto(txtUtilidad.getText());
+                    product.setUtilidadProducto(txtUtilidadCasa.getText());
                 }
                 if (rbtnActivo.isSelected()) {
-                    product.setStrEstadoProducto("ACTIVO");
+                    product.setEstadoProducto("ACTIVO");
                 } else if (rbtnInactivo.isSelected()) {
-                    product.setStrEstadoProducto("INACTIVO");
+                    product.setEstadoProducto("INACTIVO");
                 }
-                product.setStrIdCategoria(id[cboCategoria.getSelectedIndex()]);
+                product.setIdCategoria(id[cboCategoria.getSelectedIndex()]);
                 
                 
                 if (dcFechaVencimiento != null) {
@@ -1060,7 +1031,6 @@ public class FrmProducto extends javax.swing.JInternalFrame {
             tblProducto.setCursor(new Cursor(Cursor.WAIT_CURSOR));
             int row = tblProducto.getSelectedRow();
             DefaultTableModel defaultTableModel = (DefaultTableModel) tblProducto.getModel();
-//            productDto.setStrIdProducto();
             ClsProducto productService = new ClsProducto();
             ProductDto productDto = productService.findById( Integer.parseInt((String) defaultTableModel.getValueAt(row, 0)) );
             FrmProductInformation productInf = new FrmProductInformation(productDto);
@@ -1070,43 +1040,6 @@ public class FrmProducto extends javax.swing.JInternalFrame {
         }
     }//GEN-LAST:event_tblProductoMouseClicked
 
-    private void loadProduct() {
-        int fila;
-        DefaultTableModel defaultTableModel = new DefaultTableModel();
-        fila = tblProducto.getSelectedRow();
-        if (fila == -1) {
-            JOptionPane.showMessageDialog(null, "Se debe seleccionar un registro");
-        } else {
-            defaultTableModel = (DefaultTableModel) tblProducto.getModel();
-            strCodigo = ((String) defaultTableModel.getValueAt(fila, 0));
-            txtId.setText((String) defaultTableModel.getValueAt(fila, 0));
-            txtCodigoBar.setText((String) defaultTableModel.getValueAt(fila, 1));
-            txtNombre.setText((String) defaultTableModel.getValueAt(fila, 2));
-            txtDescripcion.setText((String) defaultTableModel.getValueAt(fila, 3));
-            txtStock.setText((String) defaultTableModel.getValueAt(fila, 4));
-            txtStockMin.setText((String) defaultTableModel.getValueAt(fila, 5));
-            txtPrecioCosto.setText((String) defaultTableModel.getValueAt(fila, 6));
-            txtPrecioVenta.setText((String) defaultTableModel.getValueAt(fila, 7));
-            txtUtilidad.setText((String) defaultTableModel.getValueAt(fila, 8));
-            if ("ACTIVO".equals((String) defaultTableModel.getValueAt(fila, 9))) {
-                rbtnActivo.setSelected(true);
-            } else if ("INACTIVO".equals((String) defaultTableModel.getValueAt(fila, 9))) {
-                rbtnInactivo.setSelected(true);
-            }
-            cboCategoria.setSelectedItem((String) defaultTableModel.getValueAt(fila, 10));
-            try {
-                if(defaultTableModel.getValueAt(fila, 12) != null & !defaultTableModel.getValueAt(fila, 12).toString().isEmpty()){
-                    SimpleDateFormat formatter = new SimpleDateFormat("yyyy/MM/dd");
-                    dcFechaVencimiento.setDate(
-                            formatter.parse(defaultTableModel.getValueAt(fila, 12).toString().replace("-", "/"))
-                    );
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        mirar();
-    }
 
     private void txtCodigoBarKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCodigoBarKeyTyped
         txtCodigoBar.setBackground(Color.WHITE);
@@ -1118,7 +1051,7 @@ public class FrmProducto extends javax.swing.JInternalFrame {
         CalcularUtilidad();
         int keyCode = evt.getKeyCode();
         if (keyCode == KeyEvent.VK_ENTER)
-            txtPrecioVenta.requestFocus();
+            txtCostoChica.requestFocus();
     }//GEN-LAST:event_txtPrecioCostoKeyReleased
 
     private void txtPrecioVentaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPrecioVentaKeyReleased
@@ -1127,40 +1060,7 @@ public class FrmProducto extends javax.swing.JInternalFrame {
         if (keyCode == KeyEvent.VK_ENTER)
             btnGuardar.requestFocus();
     }//GEN-LAST:event_txtPrecioVentaKeyReleased
-//    void verificarCodigoBar() {
-//        String busqueda = null;
-//        int sen = 2;
-//        busqueda = txtCodigoBar.getText();
-//
-//        try {
-//            ClsProducto oProducto = new ClsProducto();
-//
-//            rs = oProducto.verificarCodigoBar(busqueda);
-//            while (rs.next()) {
-//                if (!rs.getString(2).equals("")) {
-//
-//                    sen = 1;
-//                } else {
-//
-//                    sen = 2;
-//                }
-//                break;
-//            }
-//
-//        } catch (Exception ex) {
-//            JOptionPane.showMessageDialog(this, ex.getMessage());
-//            System.out.println(ex.getMessage());
-//        }
-//
-//        if (sen == 1) {
-//            JOptionPane.showMessageDialog(null, "Codigo No Disponible");
-//        } else if (sen == 2) {
-//            JOptionPane.showMessageDialog(null, "Codigo Disponible");
-//        } else if (rs == null) {
-//            JOptionPane.showMessageDialog(null, "no hay");
-//        }
-//
-//    }
+
 
     void GeneraAleatorio() {
 
@@ -1372,15 +1272,14 @@ public class FrmProducto extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_cboTipoCodificacionActionPerformed
 
     private void duplicateItemActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_duplicateItemActionPerformed
-
         if (tblProducto.getSelectedRows().length > 0) {
             accion = "Nuevo";
-            loadProduct();
             modificar();
             txtId.setText("");
             txtCodigoBar.setText("");
             tabProducto.setSelectedIndex(tabProducto.indexOfComponent(pNuevo));
-        } else {
+            btnRemovePhoto.doClick();
+        }else {
             JOptionPane.showMessageDialog(null, "¡Se debe seleccionar un registro!");
         }
     }//GEN-LAST:event_duplicateItemActionPerformed
@@ -1444,6 +1343,17 @@ public class FrmProducto extends javax.swing.JInternalFrame {
             }
         }
     }//GEN-LAST:event_tabProductoStateChanged
+
+    private void txtCostoChicaKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtCostoChicaKeyReleased
+        CalcularUtilidad();
+        int keyCode = evt.getKeyCode();
+        if (keyCode == KeyEvent.VK_ENTER)
+            txtPrecioVenta.requestFocus();
+    }//GEN-LAST:event_txtCostoChicaKeyReleased
+
+    private void txtPrecioCostoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtPrecioCostoActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtPrecioCostoActionPerformed
     private void loadForm(ProductDto productDto) {
         if (productDto != null) {
             strCodigo = String.valueOf(productDto.getId());
@@ -1454,8 +1364,9 @@ public class FrmProducto extends javax.swing.JInternalFrame {
             txtStock.setText(productDto.getStock());
             txtStockMin.setText(productDto.getMinStock());
             txtPrecioCosto.setText(productDto.getCoste());
+            txtCostoChica.setText(productDto.getGirlCost());
             txtPrecioVenta.setText(productDto.getPrice());
-            txtUtilidad.setText(productDto.getUtility());
+            txtUtilidadCasa.setText(productDto.getUtility());
             if ("ACTIVO".equalsIgnoreCase(productDto.getState())) {
                 rbtnActivo.setSelected(true);
             } else if ("INACTIVO".equalsIgnoreCase( productDto.getState() )) {
@@ -1517,6 +1428,7 @@ public class FrmProducto extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel21;
+    private javax.swing.JLabel jLabel22;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
@@ -1547,6 +1459,7 @@ public class FrmProducto extends javax.swing.JInternalFrame {
     private javax.swing.JTable tblProducto;
     private javax.swing.JTextField txtBusqueda;
     private javax.swing.JTextField txtCodigoBar;
+    private javax.swing.JTextField txtCostoChica;
     private javax.swing.JTextArea txtDescripcion;
     private javax.swing.JTextField txtId;
     private javax.swing.JTextField txtNombre;
@@ -1554,6 +1467,6 @@ public class FrmProducto extends javax.swing.JInternalFrame {
     private javax.swing.JTextField txtPrecioVenta;
     private javax.swing.JTextField txtStock;
     private javax.swing.JTextField txtStockMin;
-    private javax.swing.JTextField txtUtilidad;
+    private javax.swing.JTextField txtUtilidadCasa;
     // End of variables declaration//GEN-END:variables
 }

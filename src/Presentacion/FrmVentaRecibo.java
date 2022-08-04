@@ -142,8 +142,6 @@ private Connection connection=new ClsConexion().getConection();
             }
         }
         
-        
-
     }//GEN-LAST:event_btnVerReciboActionPerformed
 
     private void formComponentShown(java.awt.event.ComponentEvent evt) {//GEN-FIRST:event_formComponentShown
@@ -190,10 +188,6 @@ obtenerUltimoIdVenta();
                 report=JasperCompileManager.compileReport(new File("").getAbsolutePath()+ "/src/Reportes/RptVentaTicket.jrxml");
                 print=JasperFillManager.fillReport(report, p,connection);
                 JasperViewer view=new JasperViewer(print,false);
-//                view.setTitle("Reporte de Venta");
-//                view.setVisible(true);
-              
-                
                 JasperPrintManager.printReport(print, false);
                 
             }catch(JRException e){

@@ -14,115 +14,116 @@ import java.util.Date;
  */
 public class ClsEntidadProducto {
     
-    private String strIdProducto;
-    private String strCodigoProducto;
-    private String strNombreProducto;
-    private String strDescripcionProducto;
-    private String strStockProducto;
-    private String strStockMinProducto;
-    private String strPrecioCostoProducto;
-    private String strPrecioVentaProducto;
-    private String strUtilidadProducto;
-    private String strEstadoProducto;
-    private String strIdCategoria;
-    private String strDescripcionCategoria;
+    private String idProducto;
+    private String codigoProducto;
+    private String nombreProducto;
+    private String descripcionProducto;
+    private String stockProducto;
+    private String stockMinProducto;
+    private double costoChica;
+    private String precioCostoProducto;
+    private String precioVentaProducto;
+    private String utilidadProducto;
+    private String estadoProducto;
+    private String idCategoria;
+    private String descripcionCategoria;
     private Image imagen;
     private Date fechaVencimiento;
     
-    public String getStrIdProducto() {
-        return strIdProducto;
+    public String getIdProducto() {
+        return idProducto;
     }
 
-    public void setStrIdProducto(String strIdProducto) {
-        this.strIdProducto = strIdProducto;
+    public void setIdProducto(String strIdProducto) {
+        this.idProducto = strIdProducto;
     }
 
-    public String getStrCodigoProducto() {
-        return strCodigoProducto;
+    public String getCodigoProducto() {
+        return codigoProducto;
     }
 
-    public void setStrCodigoProducto(String strCodigoProducto) {
-        this.strCodigoProducto = strCodigoProducto;
+    public void setCodigoProducto(String strCodigoProducto) {
+        this.codigoProducto = strCodigoProducto;
     }
 
-    public String getStrNombreProducto() {
-        return strNombreProducto;
+    public String getNombreProducto() {
+        return nombreProducto;
     }
 
-    public void setStrNombreProducto(String strNombreProducto) {
-        this.strNombreProducto = strNombreProducto;
+    public void setNombreProducto(String strNombreProducto) {
+        this.nombreProducto = strNombreProducto;
     }
 
-    public String getStrDescripcionProducto() {
-        return strDescripcionProducto;
+    public String getDescripcionProducto() {
+        return descripcionProducto;
     }
 
-    public void setStrDescripcionProducto(String strDescripcionProducto) {
-        this.strDescripcionProducto = strDescripcionProducto;
+    public void setDescripcionProducto(String strDescripcionProducto) {
+        this.descripcionProducto = strDescripcionProducto;
     }
 
-    public String getStrStockProducto() {
-        return strStockProducto;
+    public String getStockProducto() {
+        return stockProducto;
     }
 
-    public void setStrStockProducto(String strStockProducto) {
-        this.strStockProducto = strStockProducto;
+    public void setStockProducto(String strStockProducto) {
+        this.stockProducto = strStockProducto;
     }
 
-    public String getStrStockMinProducto() {
-        return strStockMinProducto;
+    public String getStockMinProducto() {
+        return stockMinProducto;
     }
 
-    public void setStrStockMinProducto(String strStockMinProducto) {
-        this.strStockMinProducto = strStockMinProducto;
+    public void setStockMinProducto(String strStockMinProducto) {
+        this.stockMinProducto = strStockMinProducto;
     }
 
-    public String getStrPrecioCostoProducto() {
-        return strPrecioCostoProducto;
+    public String getPrecioCostoProducto() {
+        return precioCostoProducto;
     }
 
-    public void setStrPrecioCostoProducto(String strPrecioCostoProducto) {
-        this.strPrecioCostoProducto = strPrecioCostoProducto;
+    public void setPrecioCostoProducto(String strPrecioCostoProducto) {
+        this.precioCostoProducto = strPrecioCostoProducto;
     }
 
-    public String getStrPrecioVentaProducto() {
-        return strPrecioVentaProducto;
+    public String getPrecioVentaProducto() {
+        return precioVentaProducto;
     }
 
-    public void setStrPrecioVentaProducto(String strPrecioVentaProducto) {
-        this.strPrecioVentaProducto = strPrecioVentaProducto;
+    public void setPrecioVentaProducto(String strPrecioVentaProducto) {
+        this.precioVentaProducto = strPrecioVentaProducto;
     }
 
-    public String getStrUtilidadProducto() {
-        return strUtilidadProducto;
+    public String getUtilidadProducto() {
+        return utilidadProducto;
     }
 
-    public void setStrUtilidadProducto(String strUtilidadProducto) {
-        this.strUtilidadProducto = strUtilidadProducto;
+    public void setUtilidadProducto(String strUtilidadProducto) {
+        this.utilidadProducto = strUtilidadProducto;
     }
 
-    public String getStrEstadoProducto() {
-        return strEstadoProducto;
+    public String getEstadoProducto() {
+        return estadoProducto;
     }
 
-    public void setStrEstadoProducto(String strEstadoProducto) {
-        this.strEstadoProducto = strEstadoProducto;
+    public void setEstadoProducto(String strEstadoProducto) {
+        this.estadoProducto = strEstadoProducto;
     }
 
-    public String getStrIdCategoria() {
-        return strIdCategoria;
+    public String getIdCategoria() {
+        return idCategoria;
     }
 
-    public void setStrIdCategoria(String strIdCategoria) {
-        this.strIdCategoria = strIdCategoria;
+    public void setIdCategoria(String strIdCategoria) {
+        this.idCategoria = strIdCategoria;
     }
 
-    public String getStrDescripcionCategoria() {
-        return strDescripcionCategoria;
+    public String getDescripcionCategoria() {
+        return descripcionCategoria;
     }
 
-    public void setStrDescripcionCategoria(String strDescripcionCategoria) {
-        this.strDescripcionCategoria = strDescripcionCategoria;
+    public void setDescripcionCategoria(String strDescripcionCategoria) {
+        this.descripcionCategoria = strDescripcionCategoria;
     }
 
     public Image getImagen() {
@@ -141,5 +142,13 @@ public class ClsEntidadProducto {
     public void setFechaVencimiento(Date fechaVencimiento) {
         this.fechaVencimiento = fechaVencimiento;
     }
-    
+
+    public double getCostoChica() {
+        return costoChica;
+    }
+
+    public void setCostoChica(double costoChica) {
+        this.costoChica = costoChica;
+    }
+
 }

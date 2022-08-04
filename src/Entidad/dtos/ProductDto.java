@@ -17,6 +17,7 @@ public class ProductDto {
     private String stock;
     private String minStock;
     private String coste;
+    private String girlCost;
     private String price;
     private String utility;
     private String state;
@@ -135,6 +136,14 @@ public class ProductDto {
 
     public void setExpiration(Date expiration) {
         this.expiration = expiration;
+    }
+
+    public String getGirlCost() {
+        return girlCost;
+    }
+
+    public void setGirlCost(String girlCost) {
+        this.girlCost = girlCost;
     }
   
 }

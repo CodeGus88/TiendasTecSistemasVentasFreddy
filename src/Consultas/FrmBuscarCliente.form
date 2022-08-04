@@ -21,20 +21,36 @@
         <Property name="useNullLayout" type="boolean" value="true"/>
       </Layout>
       <SubComponents>
-        <MenuItem class="javax.swing.JMenuItem" name="jMenuItemGarzon1">
+        <MenuItem class="javax.swing.JMenuItem" name="jMenuItemGarzon">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Garz&#xf3;n 1"/>
+            <Property name="text" type="java.lang.String" value="Garz&#xf3;n"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMenuItemGarzon1ActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMenuItemGarzonActionPerformed"/>
           </Events>
         </MenuItem>
-        <MenuItem class="javax.swing.JMenuItem" name="jMenuItemGarzon2">
+        <MenuItem class="javax.swing.JMenuItem" name="jMenuItemChica1">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Garz&#xf3;n 2"/>
+            <Property name="text" type="java.lang.String" value="Chica 1"/>
           </Properties>
           <Events>
-            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMenuItemGarzon2ActionPerformed"/>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMenuItemChica1ActionPerformed"/>
+          </Events>
+        </MenuItem>
+        <MenuItem class="javax.swing.JMenuItem" name="jMenuItemChica2">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Chica 2"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMenuItemChica2ActionPerformed"/>
+          </Events>
+        </MenuItem>
+        <MenuItem class="javax.swing.JMenuItem" name="jMenuItemChica3">
+          <Properties>
+            <Property name="text" type="java.lang.String" value="Chica 3"/>
+          </Properties>
+          <Events>
+            <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jMenuItemChica3ActionPerformed"/>
           </Events>
         </MenuItem>
       </SubComponents>

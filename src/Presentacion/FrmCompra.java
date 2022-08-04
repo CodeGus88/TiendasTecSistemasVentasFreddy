@@ -470,7 +470,7 @@ public class FrmCompra extends javax.swing.JInternalFrame {
             strId = ((String) tblDetalleProducto.getValueAt(f, 0));
             ncant = Double.parseDouble(String.valueOf(tblDetalleProducto.getModel().getValueAt(f, 4)));
             stock = cant + ncant;
-            producto.setStrStockProducto(String.valueOf(stock));
+            producto.setStockProducto(String.valueOf(stock));
             productos.actualizarProductoStock(strId, producto);
 
         }

@@ -46,7 +46,7 @@ public class FrmCliente extends javax.swing.JInternalFrame {
     public String codigo;
     static Connection conn = null;
     static ResultSet rs = null;
-    DefaultTableModel dtm = new DefaultTableModel();
+    DefaultTableModel dtm;
     String criterio, busqueda;
 
     private ImageSelector imageSelector;
@@ -68,16 +68,14 @@ public class FrmCliente extends javax.swing.JInternalFrame {
         buttonGroup1.add(rbtnDni);
 
         mirar();
-        actualizarTabla();
-        //---------------------ANCHO Y ALTO DEL FORM----------------------
         this.setSize(966, 412);
+        actualizarTabla();
         CrearTabla();
         CantidadTotal();
 
     }
 
     void CrearTabla() {
-        //--------------------PRESENTACION DE JTABLE----------------------
         TableCellRenderer render = new DefaultTableCellRenderer() {
             public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
                 //aqui obtengo el render de la calse superior 
@@ -92,14 +90,12 @@ public class FrmCliente extends javax.swing.JInternalFrame {
                 //Colores en Jtable        
                 if (isSelected) {
                     l.setBackground(new Color(203, 159, 41));
-                    //l.setBackground(new Color(168, 198, 238));
                     l.setForeground(Color.WHITE);
                 } else {
                     l.setForeground(Color.BLACK);
                     if (row % 2 == 0) {
                         l.setBackground(Color.WHITE);
                     } else {
-                        //l.setBackground(new Color(232, 232, 232));
                         l.setBackground(new Color(254, 227, 152));
                     }
                 }
@@ -116,7 +112,6 @@ public class FrmCliente extends javax.swing.JInternalFrame {
         tblCliente.setAutoResizeMode(tblCliente.AUTO_RESIZE_OFF);
 
         //Anchos de cada columna
-//        int[] anchos = {50,200,80,80,150,80,200};
         for (int i = 0; i < tblCliente.getColumnCount(); i++) {
             tblCliente.getColumnModel().getColumn(i).setPreferredWidth(anchos[i]);
         }
@@ -194,8 +189,13 @@ public class FrmCliente extends javax.swing.JInternalFrame {
         ClsCliente clientes = new ClsCliente();
         ArrayList<ClsEntidadCliente> cliente = clientes.listarCliente();
         Iterator iterator = cliente.iterator();
-        DefaultTableModel defaultTableModel = new DefaultTableModel(null, titulos);
-
+        dtm = new DefaultTableModel(null, titulos) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
+        
         String fila[] = new String[6];
         while (iterator.hasNext()) {
             ClsEntidadCliente Cliente = new ClsEntidadCliente();
@@ -206,13 +206,12 @@ public class FrmCliente extends javax.swing.JInternalFrame {
             fila[3] = Cliente.getStrDireccionCliente();
             fila[4] = Cliente.getStrTelefonoCliente();
             fila[5] = Cliente.getStrObsvCliente();
-            defaultTableModel.addRow(fila);
+            dtm.addRow(fila);
         }
-        tblCliente.setModel(defaultTableModel);
+        tblCliente.setModel(dtm);
     }
 
     void BuscarCliente() {
-        dtm.setColumnIdentifiers(titulos);
 
         ClsCliente categoria = new ClsCliente();
         busqueda = txtBusqueda.getText();
@@ -253,25 +252,6 @@ public class FrmCliente extends javax.swing.JInternalFrame {
         }
         tblCliente.setModel(dtm);
     }
-
-//    void listardatos() {
-//        String estado;
-//        DefaultTableModel defaultTableModel = new DefaultTableModel();
-//        if (registros == -1) {
-//            JOptionPane.showMessageDialog(null, "Se debe seleccionar un registro");
-//        } else {
-//            defaultTableModel = (DefaultTableModel) tblCliente.getModel();
-//            strCodigo = ((String) defaultTableModel.getValueAt(registros, 0));
-//            txtCodigo.setText((String) defaultTableModel.getValueAt(registros, 0));
-//            txtNombre.setText((String) defaultTableModel.getValueAt(registros, 1));
-////            txtRuc.setText((String)defaultTableModel.getValueAt(registros,2));
-//            txtDni.setText((String) defaultTableModel.getValueAt(registros, 2));
-//            txtDireccion.setText((String) defaultTableModel.getValueAt(registros, 3));
-//            txtTelefono.setText((String) defaultTableModel.getValueAt(registros, 4));
-//            txtObservacion.setText((String) defaultTableModel.getValueAt(registros, 5));
-//            tblCliente.setRowSelectionInterval(registros, registros);
-//        }
-//    }
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
@@ -434,7 +414,7 @@ public class FrmCliente extends javax.swing.JInternalFrame {
                 rbtnCodigoActionPerformed(evt);
             }
         });
-        pBuscar.add(rbtnCodigo, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 30, 60, -1));
+        pBuscar.add(rbtnCodigo, new org.netbeans.lib.awtextra.AbsoluteConstraints(30, 30, 80, -1));
 
         rbtnNombre.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         rbtnNombre.setText("Nombre");
@@ -444,7 +424,7 @@ public class FrmCliente extends javax.swing.JInternalFrame {
                 rbtnNombreStateChanged(evt);
             }
         });
-        pBuscar.add(rbtnNombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 30, 90, -1));
+        pBuscar.add(rbtnNombre, new org.netbeans.lib.awtextra.AbsoluteConstraints(110, 30, 100, -1));
 
         jButton3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/report.png"))); // NOI18N
         jButton3.setText("Reporte");
@@ -479,7 +459,7 @@ public class FrmCliente extends javax.swing.JInternalFrame {
         rbtnDni.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         rbtnDni.setText("CI");
         rbtnDni.setOpaque(false);
-        pBuscar.add(rbtnDni, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 30, 40, -1));
+        pBuscar.add(rbtnDni, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 30, 150, -1));
 
         jLabel10.setBackground(new java.awt.Color(255, 153, 0));
         jLabel10.setFont(new java.awt.Font("Tahoma", 1, 11)); // NOI18N
@@ -652,7 +632,7 @@ public class FrmCliente extends javax.swing.JInternalFrame {
         pNuevo.add(btnRevert, new org.netbeans.lib.awtextra.AbsoluteConstraints(513, 20, 220, 30));
 
         jLabel11.setBackground(new java.awt.Color(255, 255, 255));
-        jLabel11.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Datos del Cliente", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11))); // NOI18N
+        jLabel11.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Datos del garzón", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Tahoma", 1, 11))); // NOI18N
         pNuevo.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 0, 740, 310));
 
         tabCliente.addTab("Nuevo / Modificar", pNuevo);

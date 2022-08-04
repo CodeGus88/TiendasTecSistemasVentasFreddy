@@ -110,7 +110,6 @@ public class FrmBuscarCliente extends javax.swing.JInternalFrame implements Fram
                 return false;
             }
         };
-
         String fila[] = new String[6];
         while (iterator.hasNext()) {
             ClsEntidadCliente Cliente = new ClsEntidadCliente();
@@ -201,8 +200,10 @@ public class FrmBuscarCliente extends javax.swing.JInternalFrame implements Fram
 
         buttonGroup1 = new javax.swing.ButtonGroup();
         jPopupMenuGarzones = new javax.swing.JPopupMenu();
-        jMenuItemGarzon1 = new javax.swing.JMenuItem();
-        jMenuItemGarzon2 = new javax.swing.JMenuItem();
+        jMenuItemGarzon = new javax.swing.JMenuItem();
+        jMenuItemChica1 = new javax.swing.JMenuItem();
+        jMenuItemChica2 = new javax.swing.JMenuItem();
+        jMenuItemChica3 = new javax.swing.JMenuItem();
         jPanel6 = new javax.swing.JPanel();
         jPanel4 = new javax.swing.JPanel();
         jPanel3 = new javax.swing.JPanel();
@@ -228,21 +229,37 @@ public class FrmBuscarCliente extends javax.swing.JInternalFrame implements Fram
         jPopupMenuGarzones.setForeground(new java.awt.Color(255, 255, 255));
         jPopupMenuGarzones.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
-        jMenuItemGarzon1.setText("Garzón 1");
-        jMenuItemGarzon1.addActionListener(new java.awt.event.ActionListener() {
+        jMenuItemGarzon.setText("Garzón");
+        jMenuItemGarzon.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItemGarzon1ActionPerformed(evt);
+                jMenuItemGarzonActionPerformed(evt);
             }
         });
-        jPopupMenuGarzones.add(jMenuItemGarzon1);
+        jPopupMenuGarzones.add(jMenuItemGarzon);
 
-        jMenuItemGarzon2.setText("Garzón 2");
-        jMenuItemGarzon2.addActionListener(new java.awt.event.ActionListener() {
+        jMenuItemChica1.setText("Chica 1");
+        jMenuItemChica1.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItemGarzon2ActionPerformed(evt);
+                jMenuItemChica1ActionPerformed(evt);
             }
         });
-        jPopupMenuGarzones.add(jMenuItemGarzon2);
+        jPopupMenuGarzones.add(jMenuItemChica1);
+
+        jMenuItemChica2.setText("Chica 2");
+        jMenuItemChica2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemChica2ActionPerformed(evt);
+            }
+        });
+        jPopupMenuGarzones.add(jMenuItemChica2);
+
+        jMenuItemChica3.setText("Chica 3");
+        jMenuItemChica3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItemChica3ActionPerformed(evt);
+            }
+        });
+        jPopupMenuGarzones.add(jMenuItemChica3);
 
         setBackground(new java.awt.Color(255, 255, 255));
         setClosable(true);
@@ -436,7 +453,7 @@ public class FrmBuscarCliente extends javax.swing.JInternalFrame implements Fram
         if (evt.getClickCount() == 2) {
             ClsEntidadCliente client = sendClient();
             if (client == null) {
-                Toast.makeText("¡Selecciona un garzón!", Toast.INFORMATION).show();
+                Toast.makeText("¡Selecciona un elemento!", Toast.INFORMATION).show();
             } else {
                 if (!clientInterface.loadClient(client)) {
                     try {
@@ -498,23 +515,23 @@ public class FrmBuscarCliente extends javax.swing.JInternalFrame implements Fram
         // TODO add your handling code here:
     }//GEN-LAST:event_txtBusquedaActionPerformed
 
-    private void jMenuItemGarzon1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemGarzon1ActionPerformed
+    private void jMenuItemGarzonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemGarzonActionPerformed
         ClsEntidadCliente cliente = sendClient();
         if (cliente == null) {
             Toast.makeText("¡Selecciona un garzón!", Toast.INFORMATION).show();
         } else {
-            clientInterface.loadClient(cliente, FrmVenta.GARZON_1);
+            clientInterface.loadClient(cliente, FrmVenta.GARZON);
         }
-    }//GEN-LAST:event_jMenuItemGarzon1ActionPerformed
+    }//GEN-LAST:event_jMenuItemGarzonActionPerformed
 
-    private void jMenuItemGarzon2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemGarzon2ActionPerformed
+    private void jMenuItemChica1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemChica1ActionPerformed
         ClsEntidadCliente cliente = sendClient();
         if (cliente == null) {
             Toast.makeText("¡Selecciona un garzón!", Toast.INFORMATION).show();
         } else {
-            clientInterface.loadClient(cliente, FrmVenta.GARZON_2);
+            clientInterface.loadClient(cliente, FrmVenta.CHICA_1);
         }
-    }//GEN-LAST:event_jMenuItemGarzon2ActionPerformed
+    }//GEN-LAST:event_jMenuItemChica1ActionPerformed
 
     private void rbtnNombreActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_rbtnNombreActionPerformed
         // TODO add your handling code here:
@@ -524,14 +541,34 @@ public class FrmBuscarCliente extends javax.swing.JInternalFrame implements Fram
         loadClientPhoto();
     }//GEN-LAST:event_tblClienteKeyReleased
 
+    private void jMenuItemChica2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemChica2ActionPerformed
+        ClsEntidadCliente cliente = sendClient();
+        if (cliente == null) {
+            Toast.makeText("¡Selecciona un elemento!", Toast.INFORMATION).show();
+        } else {
+            clientInterface.loadClient(cliente, FrmVenta.CHICA_2);
+        }
+    }//GEN-LAST:event_jMenuItemChica2ActionPerformed
+
+    private void jMenuItemChica3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItemChica3ActionPerformed
+        ClsEntidadCliente cliente = sendClient();
+        if (cliente == null) {
+            Toast.makeText("¡Selecciona un elemento!", Toast.INFORMATION).show();
+        } else {
+            clientInterface.loadClient(cliente, FrmVenta.CHICA_3);
+        }
+    }//GEN-LAST:event_jMenuItemChica3ActionPerformed
+
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JButton btnSalir;
     private javax.swing.ButtonGroup buttonGroup1;
     private javax.swing.JLabel jLabelContent;
     private javax.swing.JLabel jLabelImage;
     private javax.swing.JLabel jLabelTitle;
-    private javax.swing.JMenuItem jMenuItemGarzon1;
-    private javax.swing.JMenuItem jMenuItemGarzon2;
+    private javax.swing.JMenuItem jMenuItemChica1;
+    private javax.swing.JMenuItem jMenuItemChica2;
+    private javax.swing.JMenuItem jMenuItemChica3;
+    private javax.swing.JMenuItem jMenuItemGarzon;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;

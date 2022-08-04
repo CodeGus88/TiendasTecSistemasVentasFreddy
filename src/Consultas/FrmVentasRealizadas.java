@@ -282,7 +282,7 @@ public class FrmVentasRealizadas extends javax.swing.JInternalFrame {
         strId = ((String) tblDetalleVenta.getValueAt(f, 1));
         ncant=Double.parseDouble(String.valueOf(tblDetalleVenta.getModel().getValueAt(f, 5)));
         stock=cant+ncant;
-        producto.setStrStockProducto(String.valueOf(stock));
+        producto.setStockProducto(String.valueOf(stock));
         productos.actualizarProductoStock(strId, producto);
 
     }

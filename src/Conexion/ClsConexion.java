@@ -14,8 +14,7 @@ public class ClsConexion {
             MysqlConnectionPoolDataSource ds=new MysqlConnectionPoolDataSource();
             ds.setServerName("localhost");
             ds.setPort(3306);
-            ds.setDatabaseName("dbventaspiura");
-//            ds.setDatabaseName("borrar");
+            ds.setDatabaseName("db_store_app_fr");
             conection=ds.getConnection("root","");
         }catch(Exception ex){
            ex.printStackTrace();

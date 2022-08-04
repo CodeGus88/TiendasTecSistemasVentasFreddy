@@ -12,10 +12,6 @@ import statics.ImageLoader;
 import statics.Paths;
 import statics.ScreenUses;
 
-/**
- *
- * @author Gustavo
- */
 public class FrmProductInformation extends javax.swing.JInternalFrame {
 
     private ProductDto productDto;
@@ -41,6 +37,7 @@ public class FrmProductInformation extends javax.swing.JInternalFrame {
         lblStock.setText(productDto.getStock());
         lblMinimunStock.setText(productDto.getMinStock());
         lblCost.setText(productDto.getCoste());
+        lblGirlCost.setText(productDto.getGirlCost());
         lblSalePrice.setText(productDto.getPrice());
         lblUtility.setText(productDto.getUtility());
         lblState.setText(productDto.getState());
@@ -102,6 +99,8 @@ public class FrmProductInformation extends javax.swing.JInternalFrame {
         lblState = new javax.swing.JLabel();
         jLabel1 = new javax.swing.JLabel();
         lblCategory = new javax.swing.JLabel();
+        lblGirlCost = new javax.swing.JLabel();
+        jLabel12 = new javax.swing.JLabel();
         jPanel5 = new javax.swing.JPanel();
         lblImage = new javax.swing.JLabel();
 
@@ -119,229 +118,150 @@ public class FrmProductInformation extends javax.swing.JInternalFrame {
         jPanel3.setForeground(new java.awt.Color(204, 204, 255));
         jPanel3.setOpaque(false);
         jPanel3.setPreferredSize(new java.awt.Dimension(335, 310));
+        jPanel3.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
         lblExpirationDate.setFont(new java.awt.Font("Arial", 0, 13)); // NOI18N
         lblExpirationDate.setForeground(new java.awt.Color(255, 255, 255));
         lblExpirationDate.setText("empty");
+        jPanel3.add(lblExpirationDate, new org.netbeans.lib.awtextra.AbsoluteConstraints(176, 269, 162, -1));
 
         jLabel10.setFont(new java.awt.Font("Arial", 1, 13)); // NOI18N
         jLabel10.setForeground(new java.awt.Color(255, 255, 255));
         jLabel10.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jLabel10.setText("FECHA DE VENCIMINTO: ");
+        jPanel3.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(13, 269, -1, -1));
 
         jLabel11.setFont(new java.awt.Font("Arial", 1, 13)); // NOI18N
         jLabel11.setForeground(new java.awt.Color(255, 255, 255));
         jLabel11.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jLabel11.setText("ID: ");
+        jPanel3.add(jLabel11, new org.netbeans.lib.awtextra.AbsoluteConstraints(15, 13, -1, -1));
 
         lblId.setFont(new java.awt.Font("Arial", 0, 13)); // NOI18N
         lblId.setForeground(new java.awt.Color(255, 255, 255));
         lblId.setText("empty");
+        jPanel3.add(lblId, new org.netbeans.lib.awtextra.AbsoluteConstraints(42, 13, 260, -1));
 
         jLabel13.setFont(new java.awt.Font("Arial", 1, 13)); // NOI18N
         jLabel13.setForeground(new java.awt.Color(255, 255, 255));
         jLabel13.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jLabel13.setText("CÓDIGO DE BARRAS:  ");
+        jPanel3.add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(15, 34, -1, -1));
 
         lblBarcode.setFont(new java.awt.Font("Arial", 0, 13)); // NOI18N
         lblBarcode.setForeground(new java.awt.Color(255, 255, 255));
         lblBarcode.setText("empy");
+        jPanel3.add(lblBarcode, new org.netbeans.lib.awtextra.AbsoluteConstraints(155, 34, 147, -1));
 
         jLabel2.setFont(new java.awt.Font("Arial", 1, 13)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jLabel2.setText("NOMBRE: ");
+        jPanel3.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(15, 56, -1, -1));
 
         lblName.setFont(new java.awt.Font("Arial", 0, 13)); // NOI18N
         lblName.setForeground(new java.awt.Color(255, 255, 255));
         lblName.setText("empy");
+        jPanel3.add(lblName, new org.netbeans.lib.awtextra.AbsoluteConstraints(93, 56, 211, -1));
 
         lblDescription.setFont(new java.awt.Font("Arial", 0, 13)); // NOI18N
         lblDescription.setForeground(new java.awt.Color(255, 255, 255));
         lblDescription.setText("Empty");
+        jPanel3.add(lblDescription, new org.netbeans.lib.awtextra.AbsoluteConstraints(15, 102, 300, 29));
 
         jLabel3.setFont(new java.awt.Font("Arial", 1, 13)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
         jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jLabel3.setText("DESCRIPCIÓN: ");
+        jPanel3.add(jLabel3, new org.netbeans.lib.awtextra.AbsoluteConstraints(15, 83, 103, -1));
 
         jLabel4.setFont(new java.awt.Font("Arial", 1, 13)); // NOI18N
         jLabel4.setForeground(new java.awt.Color(255, 255, 255));
         jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jLabel4.setText("STOCK: ");
+        jPanel3.add(jLabel4, new org.netbeans.lib.awtextra.AbsoluteConstraints(15, 137, -1, -1));
 
         lblStock.setFont(new java.awt.Font("Arial", 0, 13)); // NOI18N
         lblStock.setForeground(new java.awt.Color(255, 255, 255));
         lblStock.setText("empty");
+        jPanel3.add(lblStock, new org.netbeans.lib.awtextra.AbsoluteConstraints(75, 137, 70, -1));
 
         jLabel5.setFont(new java.awt.Font("Arial", 1, 13)); // NOI18N
         jLabel5.setForeground(new java.awt.Color(255, 255, 255));
         jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jLabel5.setText("STOCK MÍN: ");
+        jPanel3.add(jLabel5, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 140, -1, -1));
 
         lblMinimunStock.setFont(new java.awt.Font("Arial", 0, 13)); // NOI18N
         lblMinimunStock.setForeground(new java.awt.Color(255, 255, 255));
         lblMinimunStock.setText("empty");
+        jPanel3.add(lblMinimunStock, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 140, 70, -1));
 
         jLabel6.setFont(new java.awt.Font("Arial", 1, 13)); // NOI18N
         jLabel6.setForeground(new java.awt.Color(255, 255, 255));
         jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
-        jLabel6.setText("COSTO: ");
+        jLabel6.setText("COSTO PR.: ");
+        jPanel3.add(jLabel6, new org.netbeans.lib.awtextra.AbsoluteConstraints(13, 170, -1, -1));
 
         lblCost.setFont(new java.awt.Font("Arial", 0, 13)); // NOI18N
         lblCost.setForeground(new java.awt.Color(255, 255, 255));
         lblCost.setText("empty");
+        jPanel3.add(lblCost, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 170, 55, -1));
 
         jLabel7.setFont(new java.awt.Font("Arial", 1, 13)); // NOI18N
         jLabel7.setForeground(new java.awt.Color(255, 255, 255));
         jLabel7.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jLabel7.setText("PRECIO DE VENTA: ");
+        jPanel3.add(jLabel7, new org.netbeans.lib.awtextra.AbsoluteConstraints(13, 203, -1, -1));
 
         lblSalePrice.setFont(new java.awt.Font("Arial", 0, 13)); // NOI18N
         lblSalePrice.setForeground(new java.awt.Color(255, 255, 255));
         lblSalePrice.setText("empty");
+        jPanel3.add(lblSalePrice, new org.netbeans.lib.awtextra.AbsoluteConstraints(145, 203, 59, -1));
 
         jLabel8.setFont(new java.awt.Font("Arial", 1, 13)); // NOI18N
         jLabel8.setForeground(new java.awt.Color(255, 255, 255));
         jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jLabel8.setText("UTILIDAD: ");
+        jPanel3.add(jLabel8, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 203, -1, -1));
 
         lblUtility.setFont(new java.awt.Font("Arial", 0, 13)); // NOI18N
         lblUtility.setForeground(new java.awt.Color(255, 255, 255));
         lblUtility.setText("empty");
+        jPanel3.add(lblUtility, new org.netbeans.lib.awtextra.AbsoluteConstraints(284, 203, 54, -1));
 
         jLabel9.setFont(new java.awt.Font("Arial", 1, 13)); // NOI18N
         jLabel9.setForeground(new java.awt.Color(255, 255, 255));
         jLabel9.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jLabel9.setText("ESTADO: ");
+        jPanel3.add(jLabel9, new org.netbeans.lib.awtextra.AbsoluteConstraints(13, 236, -1, -1));
 
         lblState.setFont(new java.awt.Font("Arial", 0, 13)); // NOI18N
         lblState.setForeground(new java.awt.Color(255, 255, 255));
         lblState.setText("empty");
+        jPanel3.add(lblState, new org.netbeans.lib.awtextra.AbsoluteConstraints(81, 236, 80, -1));
 
         jLabel1.setFont(new java.awt.Font("Arial", 1, 13)); // NOI18N
         jLabel1.setForeground(new java.awt.Color(255, 255, 255));
         jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
         jLabel1.setText("CATEGORÍA: ");
+        jPanel3.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(164, 236, 100, -1));
 
         lblCategory.setFont(new java.awt.Font("Arial", 0, 13)); // NOI18N
         lblCategory.setForeground(new java.awt.Color(255, 255, 255));
         lblCategory.setText("empty");
+        jPanel3.add(lblCategory, new org.netbeans.lib.awtextra.AbsoluteConstraints(248, 236, 90, -1));
 
-        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
-        jPanel3.setLayout(jPanel3Layout);
-        jPanel3Layout.setHorizontalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(jLabel10)
-                        .addGap(5, 5, 5)
-                        .addComponent(lblExpirationDate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addComponent(jLabel1)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lblCategory, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGap(2, 2, 2)
-                        .addComponent(jLabel4)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lblStock)
-                        .addGap(28, 28, 28)
-                        .addComponent(jLabel5)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(lblMinimunStock, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                    .addGroup(jPanel3Layout.createSequentialGroup()
-                        .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addGroup(jPanel3Layout.createSequentialGroup()
-                                        .addComponent(jLabel8)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(lblUtility, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(jPanel3Layout.createSequentialGroup()
-                                        .addComponent(jLabel6)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(lblCost, javax.swing.GroupLayout.PREFERRED_SIZE, 57, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
-                                        .addComponent(jLabel7)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(lblSalePrice, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(jPanel3Layout.createSequentialGroup()
-                                        .addComponent(jLabel9)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(lblState, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                            .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(lblBarcode, javax.swing.GroupLayout.PREFERRED_SIZE, 147, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, jPanel3Layout.createSequentialGroup()
-                                    .addGap(2, 2, 2)
-                                    .addComponent(jLabel11)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(lblId, javax.swing.GroupLayout.PREFERRED_SIZE, 260, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addGroup(jPanel3Layout.createSequentialGroup()
-                                .addGap(2, 2, 2)
-                                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(jPanel3Layout.createSequentialGroup()
-                                        .addComponent(jLabel2)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(lblName, javax.swing.GroupLayout.PREFERRED_SIZE, 211, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addComponent(jLabel13)
-                                    .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 103, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(lblDescription, javax.swing.GroupLayout.PREFERRED_SIZE, 284, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                        .addGap(0, 0, Short.MAX_VALUE)))
-                .addGap(19, 19, 19))
-        );
-        jPanel3Layout.setVerticalGroup(
-            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(jPanel3Layout.createSequentialGroup()
-                .addContainerGap()
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel11)
-                    .addComponent(lblId))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel13)
-                    .addComponent(lblBarcode))
-                .addGap(7, 7, 7)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel2)
-                    .addComponent(lblName))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(jLabel3)
-                .addGap(4, 4, 4)
-                .addComponent(lblDescription, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                        .addComponent(lblStock)
-                        .addComponent(jLabel4))
-                    .addComponent(jLabel5)
-                    .addComponent(lblMinimunStock))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblCost)
-                    .addComponent(jLabel7)
-                    .addComponent(lblSalePrice)
-                    .addComponent(jLabel6))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblUtility)
-                    .addComponent(jLabel9)
-                    .addComponent(lblState)
-                    .addComponent(jLabel8))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jLabel1)
-                    .addComponent(lblCategory))
-                .addGap(18, 18, 18)
-                .addGroup(jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jLabel10)
-                    .addComponent(lblExpirationDate))
-                .addContainerGap(25, Short.MAX_VALUE))
-        );
+        lblGirlCost.setFont(new java.awt.Font("Arial", 0, 13)); // NOI18N
+        lblGirlCost.setForeground(new java.awt.Color(255, 255, 255));
+        lblGirlCost.setText("empty");
+        jPanel3.add(lblGirlCost, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 170, 80, -1));
+
+        jLabel12.setFont(new java.awt.Font("Arial", 1, 13)); // NOI18N
+        jLabel12.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel12.setHorizontalAlignment(javax.swing.SwingConstants.LEFT);
+        jLabel12.setText("COSTO CH.: ");
+        jPanel3.add(jLabel12, new org.netbeans.lib.awtextra.AbsoluteConstraints(160, 170, -1, -1));
 
         getContentPane().add(jPanel3);
 
@@ -378,6 +298,7 @@ public class FrmProductInformation extends javax.swing.JInternalFrame {
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
@@ -395,6 +316,7 @@ public class FrmProductInformation extends javax.swing.JInternalFrame {
     private javax.swing.JLabel lblCost;
     private javax.swing.JLabel lblDescription;
     private javax.swing.JLabel lblExpirationDate;
+    private javax.swing.JLabel lblGirlCost;
     private javax.swing.JLabel lblId;
     private javax.swing.JLabel lblImage;
     private javax.swing.JLabel lblMinimunStock;

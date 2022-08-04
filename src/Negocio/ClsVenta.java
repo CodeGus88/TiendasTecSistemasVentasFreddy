@@ -21,10 +21,12 @@ public class ClsVenta {
 
     public boolean agregarVenta(ClsEntidadVenta venta) {
         try {
-            CallableStatement statement = connection.prepareCall("{call SP_I_Venta(?,?,?,?,?,?,?,?,?,?,?,?,?)}");
+            CallableStatement statement = connection.prepareCall("{call SP_I_Venta(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
             statement.setString("pidtipodocumento", venta.getStrIdTipoDocumento());
-            statement.setString("pidcliente", venta.getStrIdGarzon1());
-            statement.setString("pidcliente2", venta.getStrIdGarzon2());
+            statement.setString("pidcliente", venta.getStrIdGarzon());
+            statement.setString("pidcliente2", venta.getStrIdChica1());
+            statement.setString("pidcliente3", venta.getStrIdChica2());
+            statement.setString("pidcliente4", venta.getStrIdChica3());
             statement.setString("pidempleado", venta.getStrIdEmpleado());
             statement.setString("pserie", venta.getStrSerieVenta());
             statement.setString("pnumero", venta.getStrNumeroVenta());
@@ -45,11 +47,13 @@ public class ClsVenta {
 
     public boolean modificarVenta(String codigo, ClsEntidadVenta venta) {
         try {
-            CallableStatement statement = connection.prepareCall("{call SP_U_Venta(?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
+            CallableStatement statement = connection.prepareCall("{call SP_U_Venta(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)}");
             statement.setString("pidventa", codigo);
             statement.setString("pidtipodocumento", venta.getStrIdTipoDocumento());
-            statement.setString("pidcliente", venta.getStrIdGarzon1());
-            statement.setString("pidcliente2", venta.getStrIdGarzon2());
+            statement.setString("pidcliente", venta.getStrIdGarzon());
+            statement.setString("pidcliente2", venta.getStrIdChica1());
+            statement.setString("pidcliente3", venta.getStrIdChica2());
+            statement.setString("pidcliente4", venta.getStrIdChica3());
             statement.setString("pidempleado", venta.getStrIdEmpleado());
             statement.setString("pserie", venta.getStrSerieVenta());
             statement.setString("pnumero", venta.getStrNumeroVenta());
@@ -62,7 +66,7 @@ public class ClsVenta {
             statement.setString("pestado", venta.getStrEstadoVenta());
             statement.executeUpdate();
             return true;
-        } catch (SQLException ex) {
+        }catch (SQLException ex) {
             Message.LOGGER.log(Level.SEVERE, ex.getMessage());
             return false;
         }
@@ -73,13 +77,14 @@ public class ClsVenta {
         try {
             CallableStatement statement = connection.prepareCall("{call SP_S_Venta}");
             ResultSet resultSet = statement.executeQuery();
-
             while (resultSet.next()) {
                 ClsEntidadVenta venta = new ClsEntidadVenta();
                 venta.setStrIdVenta(resultSet.getString("IdVenta"));
                 venta.setStrTipoDocumento(resultSet.getString("TipoDocumento"));
-                venta.setStrIdGarzon1(resultSet.getString("Cliente"));
-                venta.setStrIdGarzon2(resultSet.getString("Cliente2"));
+                venta.setStrIdGarzon(resultSet.getString("Cliente"));
+                venta.setStrIdChica1(resultSet.getString("Cliente2"));
+                venta.setStrIdChica2(resultSet.getString("Cliente3"));
+                venta.setStrIdChica3(resultSet.getString("Cliente4"));
                 venta.setStrEmpleado(resultSet.getString("Empleado"));
                 venta.setStrSerieVenta(resultSet.getString("Serie"));
                 venta.setStrNumeroVenta(resultSet.getString("Numero"));
@@ -90,7 +95,6 @@ public class ClsVenta {
                 venta.setStrIgvVenta(resultSet.getString("Igv"));
                 venta.setStrTotalPagarVenta(resultSet.getString("TotalPagar"));
                 venta.setStrEstadoVenta(resultSet.getString("Estado"));
-
                 ventas.add(venta);
             }
             return ventas;

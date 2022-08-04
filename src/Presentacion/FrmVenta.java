@@ -66,21 +66,22 @@ public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterf
     static ResultSet rs = null;
     private DefaultTableModel dtmDetalle;
     
-    private final ClsEntidadCliente garzon1;
-    public static final byte GARZON_1 = 1;
-    private final ClsEntidadCliente garzon2;
-    public static final byte GARZON_2 = 2;
+    private final ClsEntidadCliente garzon;
+    public static final byte GARZON = 1;
+    private final ClsEntidadCliente chica1;
+    public static final byte CHICA_1 = 2;
+    private final ClsEntidadCliente chica2;
+    public static final byte CHICA_2 = 3;
+    private final ClsEntidadCliente chica3;
+    public static final byte CHICA_3 = 4;
     private final String titulos[] = {"ID", "CÓDIGO", "PRODUCTO", "DESCRIPCIÓN", "CANTIDAD", "COSTO", "PRECIO", "TOTAL"};
 
     public FrmVenta() {
         initComponents();
-        //---------------------FECHA ACTUAL-------------------------------
         Date date = new Date();
         txtFecha.setDate(date);
-        //---------------------GENERA NUMERO DE VENTA---------------------
         numVenta = generaNumVenta();
         txtNumero.setText(numVenta);
-        //---------------------ANCHO Y ALTO DEL FORM----------------------
         cargarComboTipoDocumento();
 
         lblIdProducto.setVisible(false);
@@ -88,7 +89,6 @@ public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterf
         txtDescripcionProducto.setVisible(false);
         txtCostoProducto.setVisible(false);
         mirar();
-        //--------------------JTABLE - DETALLEPRODUCTO--------------------
         dtmDetalle = new DefaultTableModel(null, titulos){
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -97,8 +97,10 @@ public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterf
         };
         
         // inicializar garzones
-        garzon1 = new ClsEntidadCliente();
-        garzon2 = new ClsEntidadCliente();
+        garzon = new ClsEntidadCliente();
+        chica1 = new ClsEntidadCliente();
+        chica2 = new ClsEntidadCliente();
+        chica3 = new ClsEntidadCliente();
         
         tblDetalleProducto.setModel(dtmDetalle);
         CrearTablaDetalleProducto();
@@ -110,6 +112,8 @@ public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterf
         readFrameRectanble();
         design();
         invisibleComponents();
+        
+        jPanelCamposOcultos.setVisible(false); // oculta campo fecha y tipo de documento a imprimir 
     }
     
     // por el momento no interesa que se muestren estos
@@ -118,6 +122,10 @@ public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterf
         jLabel9.setVisible(false);
         txtSubTotal.setVisible(false);
         txtIGV.setVisible(false);
+        txtImporte.setVisible(false);
+        txtCambio.setVisible(false);
+        jLabel8.setVisible(false);
+        jLabel11.setVisible(false);
     }
     
     private void design(){
@@ -150,8 +158,6 @@ public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterf
         jPanelMenu.setBorder(BorderFactory.createEmptyBorder(10,0,10,10));
         footer.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
         panelMenuAndTable.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
-        
-//        tblDetalleProducto.setDragEnabled(true);
     }
     
     /**
@@ -175,7 +181,7 @@ public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterf
         panelMenuAndTable.add(panelTable, BorderLayout.CENTER);
         panelTable.addComponentListener(new ComponentAdapter() {
             public void componentResized(ComponentEvent evt) {
-                Component c = (Component) evt.getSource(); //........ }
+                Component c = (Component) evt.getSource();
                 float[] columnSize = {0F, 8.333F, 28.667F, 39.668F, 7.778F, 0, 7.778F, 7.778F};
                 for (int i = 0; i < tblDetalleProducto.getColumnCount(); i++) {
                     tblDetalleProducto.getColumnModel().getColumn(i).setPreferredWidth(ScreenUses.getPinTotal(c.getWidth(), columnSize[i]));
@@ -185,10 +191,8 @@ public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterf
     }
     
     public String generaNumVenta() {
-
         ClsVenta oVenta = new ClsVenta();
         try {
-
             rs = oVenta.obtenerUltimoIdVenta();
             while (rs.next()) {
                 if (rs.getString(1) != null) {
@@ -238,10 +242,14 @@ public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterf
     }
     
     private void clearClients(){
-        garzon1.setStrIdCliente(null);
-        garzon1.setStrNombreCliente(null);
-        garzon2.setStrIdCliente(null);
-        garzon2.setStrNombreCliente(null);
+        garzon.setStrIdCliente(null);
+        garzon.setStrNombreCliente(null);
+        chica1.setStrIdCliente(null);
+        chica1.setStrNombreCliente(null);
+        chica2.setStrIdCliente(null);
+        chica2.setStrNombreCliente(null);
+        chica3.setStrIdCliente(null);
+        chica3.setStrNombreCliente(null);
     }
 
     void limpiarCampos() {
@@ -283,8 +291,10 @@ public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterf
         chkCambiarNumero.setEnabled(false);
         chkCambiarNumero.setSelected(false);
 
-        txtNombreGarzon1.setText(null);
-        txtNombreGarzon2.setText(null);
+        txtNombreGarzon.setText(null);
+        txtNombreChica1.setText(null);
+        txtNombreChica2.setText(null);
+        txtNombreChica3.setText(null);
         txtTotalVenta.setText("0.0");
         txtDescuento.setText("0.0");
         txtSubTotal.setText("0.0");
@@ -443,15 +453,22 @@ public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterf
         jLabel23 = new javax.swing.JLabel();
         txtCostoProducto = new javax.swing.JLabel();
         jPanel1 = new javax.swing.JPanel();
-        jLabel1 = new javax.swing.JLabel();
         btnBuscarCliente = new javax.swing.JButton();
-        txtNombreGarzon1 = new javax.swing.JTextField();
-        jLabel13 = new javax.swing.JLabel();
-        cboTipoDocumento = new javax.swing.JComboBox();
+        jPanel4 = new javax.swing.JPanel();
+        jLabel10 = new javax.swing.JLabel();
+        txtNombreGarzon = new javax.swing.JTextField();
+        jLabel14 = new javax.swing.JLabel();
+        txtNombreChica2 = new javax.swing.JTextField();
+        jLabel1 = new javax.swing.JLabel();
+        txtNombreChica1 = new javax.swing.JTextField();
+        jLabel16 = new javax.swing.JLabel();
+        txtNombreChica3 = new javax.swing.JTextField();
+        jPanelCamposOcultos = new javax.swing.JPanel();
         jLabel2 = new javax.swing.JLabel();
         txtFecha = new com.toedter.calendar.JDateChooser();
-        txtNombreGarzon2 = new javax.swing.JTextField();
-        jLabel10 = new javax.swing.JLabel();
+        jLabel13 = new javax.swing.JLabel();
+        cboTipoDocumento = new javax.swing.JComboBox();
+        btnImporte = new javax.swing.JButton();
         jPanel10 = new javax.swing.JPanel();
         jLabel4 = new javax.swing.JLabel();
         jLabel5 = new javax.swing.JLabel();
@@ -464,7 +481,6 @@ public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterf
         tblDetalleProducto = new javax.swing.JTable();
         jPanelMenu = new javax.swing.JPanel();
         btnNuevo = new javax.swing.JButton();
-        btnImporte = new javax.swing.JButton();
         btnImprimir = new javax.swing.JButton();
         btnCancelar = new javax.swing.JButton();
         btnSalir = new javax.swing.JButton();
@@ -689,13 +705,7 @@ public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterf
         jPanel1.setBorder(javax.swing.BorderFactory.createTitledBorder(null, "Datos de la venta", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Dialog", 0, 12), new java.awt.Color(255, 255, 255))); // NOI18N
         jPanel1.setForeground(new java.awt.Color(255, 255, 255));
         jPanel1.setOpaque(false);
-        jPanel1.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
-
-        jLabel1.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel1.setText("Garzón 2: ");
-        jPanel1.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 50, 90, 30));
+        jPanel1.setLayout(new java.awt.BorderLayout(5, 5));
 
         btnBuscarCliente.setForeground(new java.awt.Color(255, 255, 255));
         btnBuscarCliente.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/Buscar_p.png"))); // NOI18N
@@ -708,44 +718,107 @@ public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterf
                 btnBuscarClienteActionPerformed(evt);
             }
         });
-        jPanel1.add(btnBuscarCliente, new org.netbeans.lib.awtextra.AbsoluteConstraints(270, 20, 30, 60));
+        jPanel1.add(btnBuscarCliente, java.awt.BorderLayout.EAST);
 
-        txtNombreGarzon1.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        txtNombreGarzon1.setEnabled(false);
-        txtNombreGarzon1.setSelectionColor(new java.awt.Color(255, 0, 255));
-        jPanel1.add(txtNombreGarzon1, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 20, 170, 30));
+        jPanel4.setOpaque(false);
+        jPanel4.setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
 
-        jLabel13.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        jLabel13.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel13.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel13.setText("Documento: ");
-        jPanel1.add(jLabel13, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 20, 90, 30));
+        jLabel10.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        jLabel10.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel10.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel10.setText("Garzón: ");
+        jPanel4.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 60, 38));
 
-        cboTipoDocumento.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        cboTipoDocumento.setForeground(Design.CONTENT_TEXT);
-        cboTipoDocumento.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
-        cboTipoDocumento.setAutoscrolls(true);
-        jPanel1.add(cboTipoDocumento, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 20, 130, 30));
+        txtNombreGarzon.setEditable(false);
+        txtNombreGarzon.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        txtNombreGarzon.setSelectionColor(new java.awt.Color(255, 0, 255));
+        jPanel4.add(txtNombreGarzon, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 0, 190, 38));
+
+        jLabel14.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        jLabel14.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel14.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel14.setText("Chica 2: ");
+        jPanel4.add(jLabel14, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 0, 70, 38));
+
+        txtNombreChica2.setEditable(false);
+        txtNombreChica2.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        txtNombreChica2.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtNombreChica2ActionPerformed(evt);
+            }
+        });
+        jPanel4.add(txtNombreChica2, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 0, 190, 38));
+
+        jLabel1.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        jLabel1.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel1.setText("Chica 1: ");
+        jPanel4.add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 38, 60, 38));
+
+        txtNombreChica1.setEditable(false);
+        txtNombreChica1.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        txtNombreChica1.setSelectionColor(new java.awt.Color(255, 0, 255));
+        txtNombreChica1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtNombreChica1ActionPerformed(evt);
+            }
+        });
+        jPanel4.add(txtNombreChica1, new org.netbeans.lib.awtextra.AbsoluteConstraints(60, 38, 190, 38));
+
+        jLabel16.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        jLabel16.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel16.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel16.setText("Chica 3: ");
+        jPanel4.add(jLabel16, new org.netbeans.lib.awtextra.AbsoluteConstraints(250, 38, 70, 38));
+
+        txtNombreChica3.setEditable(false);
+        txtNombreChica3.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        txtNombreChica3.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                txtNombreChica3ActionPerformed(evt);
+            }
+        });
+        jPanel4.add(txtNombreChica3, new org.netbeans.lib.awtextra.AbsoluteConstraints(320, 38, 190, 38));
+
+        jPanel1.add(jPanel4, java.awt.BorderLayout.CENTER);
+
+        jPanelCamposOcultos.setPreferredSize(new java.awt.Dimension(0, 0));
 
         jLabel2.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jLabel2.setForeground(new java.awt.Color(255, 255, 255));
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         jLabel2.setText("Fecha: ");
-        jPanel1.add(jLabel2, new org.netbeans.lib.awtextra.AbsoluteConstraints(300, 50, 90, 30));
+        jPanelCamposOcultos.add(jLabel2);
 
         txtFecha.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        jPanel1.add(txtFecha, new org.netbeans.lib.awtextra.AbsoluteConstraints(390, 50, 130, 30));
+        jPanelCamposOcultos.add(txtFecha);
 
-        txtNombreGarzon2.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        txtNombreGarzon2.setEnabled(false);
-        txtNombreGarzon2.setSelectionColor(new java.awt.Color(255, 0, 255));
-        jPanel1.add(txtNombreGarzon2, new org.netbeans.lib.awtextra.AbsoluteConstraints(100, 50, 170, 30));
+        jLabel13.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        jLabel13.setForeground(new java.awt.Color(255, 255, 255));
+        jLabel13.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel13.setText("Documento: ");
+        jPanelCamposOcultos.add(jLabel13);
 
-        jLabel10.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
-        jLabel10.setForeground(new java.awt.Color(255, 255, 255));
-        jLabel10.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        jLabel10.setText("Garzón 1: ");
-        jPanel1.add(jLabel10, new org.netbeans.lib.awtextra.AbsoluteConstraints(10, 20, 90, 30));
+        cboTipoDocumento.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
+        cboTipoDocumento.setForeground(Design.CONTENT_TEXT);
+        cboTipoDocumento.setModel(new javax.swing.DefaultComboBoxModel(new String[] { "Item 1", "Item 2", "Item 3", "Item 4" }));
+        cboTipoDocumento.setAutoscrolls(true);
+        jPanelCamposOcultos.add(cboTipoDocumento);
+
+        btnImporte.setForeground(new java.awt.Color(255, 255, 255));
+        btnImporte.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/calculator_22175.png"))); // NOI18N
+        btnImporte.setText("IMPORTE");
+        btnImporte.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnImporte.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
+        btnImporte.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
+        btnImporte.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnImporteActionPerformed(evt);
+            }
+        });
+        jPanelCamposOcultos.add(btnImporte);
+
+        jPanel1.add(jPanelCamposOcultos, java.awt.BorderLayout.SOUTH);
 
         jPanel5.add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 530, 100));
 
@@ -832,19 +905,6 @@ public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterf
         });
         jPanelMenu.add(btnNuevo);
 
-        btnImporte.setForeground(new java.awt.Color(255, 255, 255));
-        btnImporte.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/calculator_22175.png"))); // NOI18N
-        btnImporte.setText("IMPORTE");
-        btnImporte.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        btnImporte.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        btnImporte.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        btnImporte.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnImporteActionPerformed(evt);
-            }
-        });
-        jPanelMenu.add(btnImporte);
-
         btnImprimir.setForeground(new java.awt.Color(255, 255, 255));
         btnImprimir.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/printer_print_22133.png"))); // NOI18N
         btnImprimir.setText("RECIBO");
@@ -903,6 +963,7 @@ public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterf
         jLabel8.setMinimumSize(new java.awt.Dimension(0, 30));
         jLabel8.setPreferredSize(new java.awt.Dimension(0, 30));
         footer.add(jLabel8);
+        jLabel8.getAccessibleContext().setAccessibleName("");
 
         txtImporte.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
         txtImporte.setForeground(java.awt.Color.darkGray);
@@ -911,7 +972,9 @@ public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterf
         txtImporte.setMaximumSize(new java.awt.Dimension(10000, 30));
         txtImporte.setMinimumSize(new java.awt.Dimension(0, 30));
         txtImporte.setPreferredSize(new java.awt.Dimension(0, 30));
+        txtImporte.setRequestFocusEnabled(false);
         footer.add(txtImporte);
+        txtImporte.getAccessibleContext().setAccessibleName("");
 
         jLabel3.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jLabel3.setForeground(new java.awt.Color(255, 255, 255));
@@ -985,6 +1048,7 @@ public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterf
         jLabel11.setMinimumSize(new java.awt.Dimension(0, 30));
         jLabel11.setPreferredSize(new java.awt.Dimension(0, 30));
         footer.add(jLabel11);
+        jLabel11.getAccessibleContext().setAccessibleName("");
 
         txtCambio.setFont(new java.awt.Font("Arial", 1, 18)); // NOI18N
         txtCambio.setForeground(java.awt.Color.darkGray);
@@ -994,6 +1058,7 @@ public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterf
         txtCambio.setMinimumSize(new java.awt.Dimension(0, 30));
         txtCambio.setPreferredSize(new java.awt.Dimension(0, 30));
         footer.add(txtCambio);
+        txtCambio.getAccessibleContext().setAccessibleName("");
 
         jLabel15.setFont(new java.awt.Font("Arial", 0, 14)); // NOI18N
         jLabel15.setForeground(new java.awt.Color(255, 255, 255));
@@ -1350,8 +1415,10 @@ public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterf
                 ClsVenta ventas = new ClsVenta();
                 ClsEntidadVenta venta = new ClsEntidadVenta();
                 venta.setStrIdTipoDocumento(id[cboTipoDocumento.getSelectedIndex()]);
-                venta.setStrIdGarzon1(garzon1.getStrIdCliente());
-                venta.setStrIdGarzon2(garzon2.getStrIdCliente());
+                venta.setStrIdGarzon(garzon.getStrIdCliente());
+                venta.setStrIdChica1(chica1.getStrIdCliente());
+                venta.setStrIdChica2(chica2.getStrIdCliente());
+                venta.setStrIdChica3(chica3.getStrIdCliente());
                 venta.setStrIdEmpleado(IdEmpleado);
                 venta.setStrSerieVenta(txtSerie.getText());
                 venta.setStrNumeroVenta(txtNumero.getText());
@@ -1368,7 +1435,6 @@ public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterf
                 }else
                     Toast.makeText(Toast.UNSUCCESS, Message.SUCCESS_MESSAGE, Toast.LENGTH_SHORT).show();
             }
-
             mirar();
             tipoDocumento = cboTipoDocumento.getSelectedItem().toString();
             limpiarTabla();
@@ -1381,29 +1447,23 @@ public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterf
                 //Dese imprimir el Comprobante?
                 int imprime = JOptionPane.showConfirmDialog(this, "¿Desea Imprimir el Ticket?", "Mensaje del Sistema", JOptionPane.YES_NO_OPTION);
                 if (imprime == JOptionPane.YES_OPTION) {
-
                     obtenerUltimoIdVenta_print();
                     Map p = new HashMap();
                     p.put("busqueda", idventa_print);
-
                     JasperReport report;
                     JasperPrint print;
                     try {
-
                         report = JasperCompileManager.compileReport(new File("").getAbsolutePath() + "/src/Reportes/RptVentaTicket.jrxml");
                         print = JasperFillManager.fillReport(report, p, connection);
                         JasperViewer view = new JasperViewer(print, false);
                         JasperPrintManager.printReport(print, false);
-
                     } catch (JRException e) {
                         e.printStackTrace();
                     }
                 }
             }
-            //fin imprimir            
-
+            //fin imprimir    
         }
-
         if (result == JOptionPane.NO_OPTION) {
             Toast.makeText("¡Venta anulada!", Toast.LENGTH_SHORT).show();
         }
@@ -1440,6 +1500,27 @@ public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterf
     private void txtTotalPagarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtTotalPagarActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_txtTotalPagarActionPerformed
+
+    private void txtNombreChica2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNombreChica2ActionPerformed
+        txtNombreChica2.setText("");
+        chica2.setStrIdCliente(null);
+        chica2.setStrNombreCliente(null);
+        System.out.println("Quitar chica 2");
+    }//GEN-LAST:event_txtNombreChica2ActionPerformed
+
+    private void txtNombreChica3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNombreChica3ActionPerformed
+        txtNombreChica3.setText("");
+        chica3.setStrIdCliente(null);
+        chica3.setStrNombreCliente(null);
+        System.out.println("Quitar chica 3");
+    }//GEN-LAST:event_txtNombreChica3ActionPerformed
+
+    private void txtNombreChica1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtNombreChica1ActionPerformed
+        txtNombreChica1.setText("");
+        chica1.setStrIdCliente(null);
+        chica1.setStrNombreCliente(null);
+        System.out.println("Quitar chica 1");
+    }//GEN-LAST:event_txtNombreChica1ActionPerformed
     void obtenerUltimoIdVenta() {
         try {
             ClsVenta oVenta = new ClsVenta();
@@ -1472,7 +1553,6 @@ public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterf
             detalleventa.setStrPrecioDet(String.valueOf(tblDetalleProducto.getModel().getValueAt(f, 6)));
             detalleventa.setStrTotalDet(String.valueOf(tblDetalleProducto.getModel().getValueAt(f, 7)));
             detalleventas.agregarDetalleVenta(detalleventa);
-
             try {
                 ClsProducto oProducto = new ClsProducto();
 
@@ -1488,7 +1568,7 @@ public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterf
             strId = ((String) tblDetalleProducto.getValueAt(f, 0));
             ncant = Double.parseDouble(String.valueOf(tblDetalleProducto.getModel().getValueAt(f, 4)));
             stock = cant - ncant;
-            producto.setStrStockProducto(String.valueOf(stock));
+            producto.setStockProducto(String.valueOf(stock));
             productos.actualizarProductoStock(strId, producto);
 
         }
@@ -1513,7 +1593,9 @@ public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterf
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
     private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
     private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel19;
     private javax.swing.JLabel jLabel2;
@@ -1533,8 +1615,10 @@ public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterf
     private javax.swing.JPanel jPanel12;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;
+    private javax.swing.JPanel jPanel4;
     private javax.swing.JPanel jPanel5;
     private javax.swing.JPanel jPanel6;
+    private javax.swing.JPanel jPanelCamposOcultos;
     private javax.swing.JPanel jPanelMenu;
     private javax.swing.JScrollPane jScrollPane3;
     public static javax.swing.JLabel lblIdProducto;
@@ -1551,8 +1635,10 @@ public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterf
     private com.toedter.calendar.JDateChooser txtFecha;
     private javax.swing.JTextField txtIGV;
     private javax.swing.JTextField txtImporte;
-    public static javax.swing.JTextField txtNombreGarzon1;
-    public static javax.swing.JTextField txtNombreGarzon2;
+    private javax.swing.JTextField txtNombreChica1;
+    private javax.swing.JTextField txtNombreChica2;
+    private javax.swing.JTextField txtNombreChica3;
+    private javax.swing.JTextField txtNombreGarzon;
     public static javax.swing.JTextField txtNombreProducto;
     private javax.swing.JTextField txtNumero;
     public static javax.swing.JTextField txtPrecioProducto;
@@ -1565,17 +1651,27 @@ public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterf
     // End of variables declaration//GEN-END:variables
 
     @Override
-    public void loadClient(ClsEntidadCliente client, final byte GARZON) {
-        if(GARZON == GARZON_1){
-            garzon1.setStrIdCliente(client.getStrIdCliente());
-            garzon1.setStrNombreCliente(client.getStrNombreCliente());
-            txtNombreGarzon1.setText(client.getStrNombreCliente());
+    public void loadClient(ClsEntidadCliente client, final byte CLIENT) {
+        if(CLIENT == GARZON){
+            garzon.setStrIdCliente(client.getStrIdCliente());
+            garzon.setStrNombreCliente(client.getStrNombreCliente());
+            txtNombreGarzon.setText(client.getStrNombreCliente());
             Toast.makeText(Toast.SUCCESS, "Se agregó el elemento en el primer campo", Toast.LENGTH_MICRO).show();
-        }else if(GARZON == GARZON_2){
-            garzon2.setStrIdCliente(client.getStrIdCliente());
-            garzon2.setStrNombreCliente(client.getStrNombreCliente());
-            txtNombreGarzon2.setText(client.getStrNombreCliente());
+        }else if(CLIENT == CHICA_1){
+            chica1.setStrIdCliente(client.getStrIdCliente());
+            chica1.setStrNombreCliente(client.getStrNombreCliente());
+            txtNombreChica1.setText(client.getStrNombreCliente());
             Toast.makeText(Toast.SUCCESS, "Se agregó el elemento, en el segundo campo", Toast.LENGTH_MICRO).show();
+        }else if(CLIENT == CHICA_2){
+            chica2.setStrIdCliente(client.getStrIdCliente());
+            chica2.setStrNombreCliente(client.getStrNombreCliente());
+            txtNombreChica2.setText(client.getStrNombreCliente());
+            Toast.makeText(Toast.SUCCESS, "Se agregó el elemento, en el tercer campo", Toast.LENGTH_MICRO).show();
+        }else if(CLIENT == CHICA_3){
+            chica3.setStrIdCliente(client.getStrIdCliente());
+            chica3.setStrNombreCliente(client.getStrNombreCliente());
+            txtNombreChica3.setText(client.getStrNombreCliente());
+            Toast.makeText(Toast.SUCCESS, "Se agregó el elemento, en el cuarto campo", Toast.LENGTH_MICRO).show();
         }else{
             Toast.makeText(Toast.SUCCESS, "¡Imcompatible!", Toast.LENGTH_MICRO).show();
         }
@@ -1584,16 +1680,28 @@ public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterf
     @Override
     public boolean loadClient(ClsEntidadCliente client) {
         if(eFormState.equals(EFormState.ENABLE)){
-            if(garzon1.getStrIdCliente() == null || garzon1.getStrIdCliente().isEmpty()){
-                garzon1.setStrIdCliente(client.getStrIdCliente());
-                garzon1.setStrNombreCliente(client.getStrNombreCliente());
-                txtNombreGarzon1.setText(client.getStrNombreCliente());
+            if(garzon.getStrIdCliente() == null || garzon.getStrIdCliente().isEmpty()){
+                garzon.setStrIdCliente(client.getStrIdCliente());
+                garzon.setStrNombreCliente(client.getStrNombreCliente());
+                txtNombreGarzon.setText(client.getStrNombreCliente());
                 Toast.makeText(Toast.SUCCESS, "Se agregó el elemento", Toast.LENGTH_MICRO).show();
                 return true;
-            }else if(garzon2.getStrIdCliente() == null || garzon2.getStrIdCliente().isEmpty()){
-                garzon2.setStrIdCliente(client.getStrIdCliente());
-                garzon2.setStrNombreCliente(client.getStrNombreCliente());
-                txtNombreGarzon2.setText(client.getStrNombreCliente());
+            }else if(chica1.getStrIdCliente() == null || chica1.getStrIdCliente().isEmpty()){
+                chica1.setStrIdCliente(client.getStrIdCliente());
+                chica1.setStrNombreCliente(client.getStrNombreCliente());
+                txtNombreChica1.setText(client.getStrNombreCliente());
+                Toast.makeText(Toast.SUCCESS, "Se agregó el elemento", Toast.LENGTH_MICRO).show();
+                return true;
+            }else if (chica2.getStrIdCliente() == null || chica2.getStrIdCliente().isEmpty()) {
+                chica2.setStrIdCliente(client.getStrIdCliente());
+                chica2.setStrNombreCliente(client.getStrNombreCliente());
+                txtNombreChica2.setText(client.getStrNombreCliente());
+                Toast.makeText(Toast.SUCCESS, "Se agregó el elemento", Toast.LENGTH_MICRO).show();
+                return true;
+            }else if (chica3.getStrIdCliente() == null || chica3.getStrIdCliente().isEmpty()) {
+                chica3.setStrIdCliente(client.getStrIdCliente());
+                chica3.setStrNombreCliente(client.getStrNombreCliente());
+                txtNombreChica3.setText(client.getStrNombreCliente());
                 Toast.makeText(Toast.SUCCESS, "Se agregó el elemento", Toast.LENGTH_MICRO).show();
                 return true;
             }else{
@@ -1608,16 +1716,17 @@ public class FrmVenta extends javax.swing.JInternalFrame implements ClientInterf
     @Override
     public void loadProduct(ClsEntidadProducto product) {
         if(eFormState.equals(EFormState.ENABLE)){
-            lblIdProducto.setText(product.getStrIdProducto());
-            txtCodigoProducto.setText(product.getStrCodigoProducto());
-            txtNombreProducto.setText(product.getStrNombreProducto());
-            txtDescripcionProducto.setText(product.getStrDescripcionProducto());
-            txtStockProducto.setText(product.getStrStockProducto());
-            txtCostoProducto.setText(product.getStrPrecioCostoProducto());  // producto.preciocosto 
-            txtPrecioProducto.setText(product.getStrPrecioVentaProducto()); // producto.precioVenta
+            lblIdProducto.setText(product.getIdProducto());
+            txtCodigoProducto.setText(product.getCodigoProducto());
+            txtNombreProducto.setText(product.getNombreProducto());
+            txtDescripcionProducto.setText(product.getDescripcionProducto());
+            txtStockProducto.setText(product.getStockProducto());
+            txtCostoProducto.setText(product.getPrecioCostoProducto());  // producto.preciocosto 
+            txtPrecioProducto.setText(product.getPrecioVentaProducto()); // producto.precioVenta
             Toast.makeText(Toast.SUCCESS, "Se agregó el producto", Toast.LENGTH_MICRO).show();
             txtCantidadProducto.setText("1");
             CalcularTotal();
+            btnAgregarProducto.doClick();
         }else{
             Toast.makeText(Toast.UNSUCCESS, "Fornulario inactivo, no se agregó el producto", Toast.LENGTH_MICRO).show();
         }

@@ -7,24 +7,18 @@ package Presentacion;
 import Consultas.FrmConsultaStock;
 import Consultas.FrmKardexValorizado;
 import Negocio.*;
-import interfaces.FrameState;
 import java.awt.Desktop;
-import java.awt.Rectangle;
 import java.io.File;
 import java.io.IOException;
 import java.sql.ResultSet;
 import javax.swing.JOptionPane;
 import java.util.Date;
 import java.text.*;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 import statics.Design;
 import statics.Message;
-import tools.ObjectDeserializer;
-import tools.ObjectSerializer;
-import statics.Paths;
 
-public class FrmPrincipal extends javax.swing.JFrame implements FrameState {
+public class FrmPrincipal extends javax.swing.JFrame {
 
     public int intEstado;
     public String strUsuario;
@@ -61,8 +55,6 @@ public class FrmPrincipal extends javax.swing.JFrame implements FrameState {
         lblUsuarioEmpleado.setVisible(false);
         lblEstado.setVisible(false);
         setDefaultCloseOperation(DISPOSE_ON_CLOSE);
-        readFrameRectanble();
-        
         design();
     }
     
@@ -1039,7 +1031,6 @@ public class FrmPrincipal extends javax.swing.JFrame implements FrameState {
         Escritorio.add(Cambiar);
         Cambiar.show();
         Cambiar.IdEmpleado = lblIdEmpleado.getText();
-
     }//GEN-LAST:event_mCambiarpassActionPerformed
 
     private void jMenuItem3ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem3ActionPerformed
@@ -1167,7 +1158,7 @@ public class FrmPrincipal extends javax.swing.JFrame implements FrameState {
 
         int salir = JOptionPane.showConfirmDialog(this, "¿Desea realmente cerrar la aplicación?", "Mensaje del Sistema", 0, 3);
         if (salir == JOptionPane.OK_OPTION) {
-            closeConfiguration();
+//            closeConfiguration();
             System.exit(0);
         }
 
@@ -1190,7 +1181,6 @@ public class FrmPrincipal extends javax.swing.JFrame implements FrameState {
         mbtnCaja.setEnabled(false);
         mbtnEstado.setEnabled(false);
         JMIniciarSesion.setEnabled(true);
-        closeConfiguration();
 
     }//GEN-LAST:event_JMCerrarSesionActionPerformed
 
@@ -1315,38 +1305,7 @@ public class FrmPrincipal extends javax.swing.JFrame implements FrameState {
                 0,
                 3)
                 == JOptionPane.OK_OPTION) {
-            closeConfiguration();
             super.dispose();
         }
-    }
-
-    /**
-     * Cierra correctamente el resto de las ventanas
-     */
-    private void closeConfiguration() {
-        try {
-            if (venta != null) {
-                venta.dispose();
-            }
-            writeFrameRectangle();
-            // Agregar dispose del resto de las ventanas
-        } catch (Exception e) {
-            logger.log(Level.SEVERE, e.getMessage());
-        }
-    }
-
-    @Override
-    public void readFrameRectanble() {
-        ObjectDeserializer<Rectangle> deserializer = new ObjectDeserializer<>(Paths.SERIAL_DIRECTORY_DATA, Paths.MAIN_RECTANGLE_NAME);
-        Rectangle rectangle = deserializer.deserialicer();
-        if (rectangle != null) {
-            setBounds(rectangle);
-        }
-    }
-
-    @Override
-    public void writeFrameRectangle() {
-        ObjectSerializer<Rectangle> serializer = new ObjectSerializer<>(Paths.SERIAL_DIRECTORY_DATA, Paths.MAIN_RECTANGLE_NAME);
-        serializer.serilizer(getBounds());
     }
 }

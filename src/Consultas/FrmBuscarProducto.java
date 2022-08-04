@@ -114,13 +114,13 @@ public class FrmBuscarProducto extends javax.swing.JInternalFrame implements Fra
        while(iterator.hasNext()){
            ClsEntidadProducto Producto=new ClsEntidadProducto();
            Producto=(ClsEntidadProducto) iterator.next();
-           fila[0]=Producto.getStrIdProducto();
-           fila[1]=Producto.getStrCodigoProducto();       
-           fila[2]=Producto.getStrNombreProducto();
-           fila[3]=Producto.getStrDescripcionProducto();
-           fila[4]=Producto.getStrStockProducto();
-           fila[5]=Producto.getStrPrecioCostoProducto();
-           fila[6]=Producto.getStrPrecioVentaProducto();
+           fila[0]=Producto.getIdProducto();
+           fila[1]=Producto.getCodigoProducto();       
+           fila[2]=Producto.getNombreProducto();
+           fila[3]=Producto.getDescripcionProducto();
+           fila[4]=Producto.getStockProducto();
+           fila[5]=Producto.getPrecioCostoProducto();
+           fila[6]=Producto.getPrecioVentaProducto();
 //           fila[7]=Producto.getStrImagen();
            defaultTableModel.addRow(fila);               
        }
@@ -426,13 +426,13 @@ public class FrmBuscarProducto extends javax.swing.JInternalFrame implements Fra
             } else {
                 defaultTableModel = (DefaultTableModel) tblProducto.getModel();
                 ClsEntidadProducto producto = new ClsEntidadProducto();
-                producto.setStrIdProducto((String) defaultTableModel.getValueAt(fila, 0));
-                producto.setStrCodigoProducto((String) defaultTableModel.getValueAt(fila, 1));
-                producto.setStrNombreProducto((String) defaultTableModel.getValueAt(fila, 2));
-                producto.setStrDescripcionProducto((String) defaultTableModel.getValueAt(fila, 3));
-                producto.setStrStockProducto((String) defaultTableModel.getValueAt(fila, 4));
-                producto.setStrPrecioCostoProducto((String) defaultTableModel.getValueAt(fila, 5));
-                producto.setStrPrecioVentaProducto((String) defaultTableModel.getValueAt(fila, 6));
+                producto.setIdProducto((String) defaultTableModel.getValueAt(fila, 0));
+                producto.setCodigoProducto((String) defaultTableModel.getValueAt(fila, 1));
+                producto.setNombreProducto((String) defaultTableModel.getValueAt(fila, 2));
+                producto.setDescripcionProducto((String) defaultTableModel.getValueAt(fila, 3));
+                producto.setStockProducto((String) defaultTableModel.getValueAt(fila, 4));
+                producto.setPrecioCostoProducto((String) defaultTableModel.getValueAt(fila, 5));
+                producto.setPrecioVentaProducto((String) defaultTableModel.getValueAt(fila, 6));
 //                producto.setStrImagen((String) defaultTableModel.getValueAt(fila, 7));
                 productoVentaInterface.loadProduct(producto);
             }

@@ -295,7 +295,7 @@ public class FrmAnularCredito extends javax.swing.JInternalFrame {
         strId = ((String) tblDetalleCredito.getValueAt(f, 1));
         ncant=Double.parseDouble(String.valueOf(tblDetalleCredito.getModel().getValueAt(f, 5)));
         stock=cant+ncant;
-        producto.setStrStockProducto(String.valueOf(stock));
+        producto.setStockProducto(String.valueOf(stock));
         productos.actualizarProductoStock(strId, producto);
 
     }

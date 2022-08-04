@@ -71,12 +71,12 @@ public class FrmBuscarProducto_Compra extends javax.swing.JInternalFrame {
        while(iterator.hasNext()){
            ClsEntidadProducto Producto=new ClsEntidadProducto();
            Producto=(ClsEntidadProducto) iterator.next();
-           fila[0]=Producto.getStrIdProducto();
-           fila[1]=Producto.getStrCodigoProducto();       
-           fila[2]=Producto.getStrNombreProducto();
-           fila[3]=Producto.getStrDescripcionProducto();
-           fila[4]=Producto.getStrStockProducto();
-           fila[5]=Producto.getStrPrecioCostoProducto();
+           fila[0]=Producto.getIdProducto();
+           fila[1]=Producto.getCodigoProducto();       
+           fila[2]=Producto.getNombreProducto();
+           fila[3]=Producto.getDescripcionProducto();
+           fila[4]=Producto.getStockProducto();
+           fila[5]=Producto.getPrecioCostoProducto();
            defaultTableModel.addRow(fila);               
        }
        tblProducto.setModel(defaultTableModel);
