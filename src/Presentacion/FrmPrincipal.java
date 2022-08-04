@@ -48,7 +48,6 @@ public class FrmPrincipal extends javax.swing.JFrame {
         String format = new String("dd/MM/yyyy");
         SimpleDateFormat formato = new SimpleDateFormat(format);
         lblFecha.setText(formato.format(date));
-        //---------------------ANCHO Y ALTO DEL FORM----------------------
         this.setExtendedState(MAXIMIZED_BOTH);
         //TODA LA PANTALLA 
         lblIdEmpleado.setVisible(false);
@@ -60,7 +59,7 @@ public class FrmPrincipal extends javax.swing.JFrame {
     
     private void design(){
         this.setBackground(Design.COLOR_PRIMARY_DARK); // no funciona con themas
-        TBPrincipal.setBackground(Design.COLOR_PRIMARY);
+//        TBPrincipal.setBackground(Design.COLOR_PRIMARY);
         Escritorio.setBackground(Design.COLOR_SECONDARY);
     }
 
@@ -132,20 +131,6 @@ public class FrmPrincipal extends javax.swing.JFrame {
         jLabel8 = new javax.swing.JLabel();
         jLabel9 = new javax.swing.JLabel();
         jLabel10 = new javax.swing.JLabel();
-        TBPrincipal = new javax.swing.JToolBar();
-        mbtnEmpleado = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
-        mbtnCliente = new javax.swing.JButton();
-        jLabel7 = new javax.swing.JLabel();
-        mbtnProducto = new javax.swing.JButton();
-        jLabel2 = new javax.swing.JLabel();
-        mbtnCompra = new javax.swing.JButton();
-        jLabel3 = new javax.swing.JLabel();
-        mbtnVenta = new javax.swing.JButton();
-        jLabel4 = new javax.swing.JLabel();
-        mbtnCaja = new javax.swing.JButton();
-        jLabel6 = new javax.swing.JLabel();
-        mbtnEstado = new javax.swing.JButton();
         Escritorio = new javax.swing.JDesktopPane();
         jMenuBar1 = new javax.swing.JMenuBar();
         jMenu1 = new javax.swing.JMenu();
@@ -183,6 +168,9 @@ public class FrmPrincipal extends javax.swing.JFrame {
         mEmpleado = new javax.swing.JMenuItem();
         mTipodoc = new javax.swing.JMenuItem();
         mTipouser = new javax.swing.JMenuItem();
+        jMenu2 = new javax.swing.JMenu();
+        jMenuItem10 = new javax.swing.JMenuItem();
+        jMenuItem11 = new javax.swing.JMenuItem();
         mnuAyuda = new javax.swing.JMenu();
         jMenuItem1 = new javax.swing.JMenuItem();
         jMenuItem5 = new javax.swing.JMenuItem();
@@ -220,119 +208,6 @@ public class FrmPrincipal extends javax.swing.JFrame {
         jLabel9.setText("Cargo: ");
 
         jLabel10.setText("Fecha:");
-
-        TBPrincipal.setBackground(new java.awt.Color(255, 255, 255));
-        TBPrincipal.setBorder(javax.swing.BorderFactory.createBevelBorder(javax.swing.border.BevelBorder.RAISED));
-        TBPrincipal.setFloatable(false);
-        TBPrincipal.setForeground(new java.awt.Color(255, 255, 255));
-        TBPrincipal.setOrientation(javax.swing.SwingConstants.VERTICAL);
-        TBPrincipal.setRollover(true);
-        TBPrincipal.setMaximumSize(new java.awt.Dimension(67, 647));
-        TBPrincipal.setOpaque(false);
-        TBPrincipal.setPreferredSize(new java.awt.Dimension(67, 633));
-
-        mbtnEmpleado.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/user_22110 (1).png"))); // NOI18N
-        mbtnEmpleado.setText("Personal");
-        mbtnEmpleado.setFocusable(false);
-        mbtnEmpleado.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        mbtnEmpleado.setPreferredSize(new java.awt.Dimension(55, 65));
-        mbtnEmpleado.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        mbtnEmpleado.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mbtnEmpleadoActionPerformed(evt);
-            }
-        });
-        TBPrincipal.add(mbtnEmpleado);
-
-        jLabel1.setText("   ");
-        TBPrincipal.add(jLabel1);
-
-        mbtnCliente.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/admin_user_man_22187.png"))); // NOI18N
-        mbtnCliente.setText("Clientes");
-        mbtnCliente.setFocusable(false);
-        mbtnCliente.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        mbtnCliente.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        mbtnCliente.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mbtnClienteActionPerformed(evt);
-            }
-        });
-        TBPrincipal.add(mbtnCliente);
-
-        jLabel7.setText("   ");
-        TBPrincipal.add(jLabel7);
-
-        mbtnProducto.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/shipping_products_22121.png"))); // NOI18N
-        mbtnProducto.setText("Productos");
-        mbtnProducto.setFocusable(false);
-        mbtnProducto.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        mbtnProducto.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        mbtnProducto.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mbtnProductoActionPerformed(evt);
-            }
-        });
-        TBPrincipal.add(mbtnProducto);
-
-        jLabel2.setText("   ");
-        TBPrincipal.add(jLabel2);
-
-        mbtnCompra.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/shopping_22120.png"))); // NOI18N
-        mbtnCompra.setText("Comprar");
-        mbtnCompra.setFocusable(false);
-        mbtnCompra.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        mbtnCompra.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        mbtnCompra.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mbtnCompraActionPerformed(evt);
-            }
-        });
-        TBPrincipal.add(mbtnCompra);
-
-        jLabel3.setText("   ");
-        TBPrincipal.add(jLabel3);
-
-        mbtnVenta.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/shopping_bag_22119.png"))); // NOI18N
-        mbtnVenta.setText("Vender");
-        mbtnVenta.setFocusable(false);
-        mbtnVenta.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        mbtnVenta.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        mbtnVenta.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mbtnVentaActionPerformed(evt);
-            }
-        });
-        TBPrincipal.add(mbtnVenta);
-
-        jLabel4.setText("   ");
-        TBPrincipal.add(jLabel4);
-
-        mbtnCaja.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/dollar_22165.png"))); // NOI18N
-        mbtnCaja.setText("Ver caja");
-        mbtnCaja.setFocusable(false);
-        mbtnCaja.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        mbtnCaja.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        mbtnCaja.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mbtnCajaActionPerformed(evt);
-            }
-        });
-        TBPrincipal.add(mbtnCaja);
-
-        jLabel6.setText("   ");
-        TBPrincipal.add(jLabel6);
-
-        mbtnEstado.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/project_plan_22131.png"))); // NOI18N
-        mbtnEstado.setText("Control P");
-        mbtnEstado.setFocusable(false);
-        mbtnEstado.setHorizontalTextPosition(javax.swing.SwingConstants.CENTER);
-        mbtnEstado.setVerticalTextPosition(javax.swing.SwingConstants.BOTTOM);
-        mbtnEstado.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                mbtnEstadoActionPerformed(evt);
-            }
-        });
-        TBPrincipal.add(mbtnEstado);
 
         Escritorio.setBackground(new java.awt.Color(204, 255, 153));
 
@@ -648,6 +523,30 @@ public class FrmPrincipal extends javax.swing.JFrame {
 
         jMenuBar1.add(mnuMantenimiento);
 
+        jMenu2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/Box.png"))); // NOI18N
+        jMenu2.setText("Otras opciones");
+
+        jMenuItem10.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/venta.png"))); // NOI18N
+        jMenuItem10.setText("Ver caja");
+        jMenuItem10.setActionCommand("");
+        jMenuItem10.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem10ActionPerformed(evt);
+            }
+        });
+        jMenu2.add(jMenuItem10);
+
+        jMenuItem11.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/User2.png"))); // NOI18N
+        jMenuItem11.setText("Cliente");
+        jMenuItem11.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jMenuItem11ActionPerformed(evt);
+            }
+        });
+        jMenu2.add(jMenuItem11);
+
+        jMenuBar1.add(jMenu2);
+
         mnuAyuda.setForeground(new java.awt.Color(255, 255, 255));
         mnuAyuda.setIcon(new javax.swing.ImageIcon(getClass().getResource("/Iconos/ayuda_1.png"))); // NOI18N
         mnuAyuda.setText("Soporte");
@@ -717,36 +616,31 @@ public class FrmPrincipal extends javax.swing.JFrame {
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addComponent(TBPrincipal, javax.swing.GroupLayout.PREFERRED_SIZE, 54, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(66, 66, 66)
+                .addComponent(lblIdEmpleado)
+                .addGap(66, 66, 66)
+                .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(layout.createSequentialGroup()
-                        .addComponent(lblIdEmpleado)
-                        .addGap(66, 66, 66)
-                        .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 98, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lblNombreEmpleado, javax.swing.GroupLayout.PREFERRED_SIZE, 418, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 9, Short.MAX_VALUE)
-                        .addComponent(lblUsuarioEmpleado, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lblTipo, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(29, 29, 29)
-                        .addComponent(lblEstado)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 213, Short.MAX_VALUE)
-                        .addComponent(jLabel10)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lblFecha, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addContainerGap())
-                    .addComponent(Escritorio)))
+                .addComponent(lblNombreEmpleado, javax.swing.GroupLayout.PREFERRED_SIZE, 418, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 9, Short.MAX_VALUE)
+                .addComponent(lblUsuarioEmpleado, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblTipo, javax.swing.GroupLayout.PREFERRED_SIZE, 137, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(29, 29, 29)
+                .addComponent(lblEstado)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 213, Short.MAX_VALUE)
+                .addComponent(jLabel10)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblFecha, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+            .addComponent(Escritorio, javax.swing.GroupLayout.Alignment.TRAILING)
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(Escritorio)
-                    .addComponent(TBPrincipal, javax.swing.GroupLayout.DEFAULT_SIZE, 778, Short.MAX_VALUE))
+                .addComponent(Escritorio, javax.swing.GroupLayout.DEFAULT_SIZE, 778, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE, false)
                     .addComponent(lblTipo, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -775,11 +669,11 @@ public class FrmPrincipal extends javax.swing.JFrame {
             lblTipo.setText(strTipo);
             lblEstado.setText("Conectado");
         }
-        if (lblEstado.getText().equals("Desconectado")) {
-            mnuArchivo.setVisible(false);
-            mnuMantenimiento.setVisible(false);
-            TBPrincipal.setVisible(false);
-        }
+//        if (lblEstado.getText().equals("Desconectado")) {
+//            mnuArchivo.setVisible(false);
+//            mnuMantenimiento.setVisible(false);
+//            TBPrincipal.setVisible(false);
+//        }
         if (lblUsuarioEmpleado.getText().equals("Coordinador")) {
             mnuRegistro.setVisible(false);
             mnuMantenimiento.setVisible(false);
@@ -787,46 +681,46 @@ public class FrmPrincipal extends javax.swing.JFrame {
         }
 
         //-------------------BLOQUEAR SERVICIOS DEL SISTEMA----------------
-        if (p_venta.equals("1")) {
-            mVenta.setEnabled(true);
-            mbtnVenta.setEnabled(true);
-        } else {
-            mVenta.setEnabled(false);
-            mbtnVenta.setEnabled(false);
-        }
-        if (p_compra.equals("1")) {
-            mCompra.setEnabled(true);
-            mbtnCompra.setEnabled(true);
-        } else {
-            mCompra.setEnabled(false);
-            mbtnCompra.setEnabled(false);
-        }
-        if (p_producto.equals("1")) {
-            mProducto.setEnabled(true);
-            mbtnProducto.setEnabled(true);
-        } else {
-            mProducto.setEnabled(false);
-            mbtnProducto.setEnabled(false);
-        }
+//        if (p_venta.equals("1")) {
+//            mVenta.setEnabled(true);
+//            mbtnVenta.setEnabled(true);
+//        } else {
+//            mVenta.setEnabled(false);
+//            mbtnVenta.setEnabled(false);
+//        }
+//        if (p_compra.equals("1")) {
+//            mCompra.setEnabled(true);
+//            mbtnCompra.setEnabled(true);
+//        } else {
+//            mCompra.setEnabled(false);
+//            mbtnCompra.setEnabled(false);
+//        }
+//        if (p_producto.equals("1")) {
+//            mProducto.setEnabled(true);
+//            mbtnProducto.setEnabled(true);
+//        } else {
+//            mProducto.setEnabled(false);
+//            mbtnProducto.setEnabled(false);
+//        }
         if (p_proveedor.equals("1")) {
             mProveedor.setEnabled(true);
         } else {
             mProveedor.setEnabled(false);
         }
-        if (p_empleado.equals("1")) {
-            mEmpleado.setEnabled(true);
-            mbtnEmpleado.setEnabled(true);
-        } else {
-            mEmpleado.setEnabled(false);
-            mbtnEmpleado.setEnabled(false);
-        }
-        if (p_cliente.equals("1")) {
-            mCliente.setEnabled(true);
-            mbtnCliente.setEnabled(true);
-        } else {
-            mCliente.setEnabled(false);
-            mbtnCliente.setEnabled(false);
-        }
+//        if (p_empleado.equals("1")) {
+//            mEmpleado.setEnabled(true);
+//            mbtnEmpleado.setEnabled(true);
+//        } else {
+//            mEmpleado.setEnabled(false);
+//            mbtnEmpleado.setEnabled(false);
+//        }
+//        if (p_cliente.equals("1")) {
+//            mCliente.setEnabled(true);
+//            mbtnCliente.setEnabled(true);
+//        } else {
+//            mCliente.setEnabled(false);
+//            mbtnCliente.setEnabled(false);
+//        }
         if (p_categoria.equals("1")) {
             mCategoria.setEnabled(true);
         } else {
@@ -852,13 +746,13 @@ public class FrmPrincipal extends javax.swing.JFrame {
         } else {
             mAnularc.setEnabled(false);
         }
-        if (p_estadoprod.equals("1")) {
-            mEstado.setEnabled(true);
-            mbtnEstado.setEnabled(true);
-        } else {
-            mEstado.setEnabled(false);
-            mbtnEstado.setEnabled(false);
-        }
+//        if (p_estadoprod.equals("1")) {
+//            mEstado.setEnabled(true);
+//            mbtnEstado.setEnabled(true);
+//        } else {
+//            mEstado.setEnabled(false);
+//            mbtnEstado.setEnabled(false);
+//        }
         if (p_ventare.equals("1")) {
             mVentare.setEnabled(true);
         } else {
@@ -899,58 +793,12 @@ public class FrmPrincipal extends javax.swing.JFrame {
         } else {
             mRestaurar.setEnabled(false);
         }
-        if (p_caja.equals("1")) {
-            mbtnCaja.setEnabled(true);
-        } else {
-            mbtnCaja.setEnabled(false);
-        }
+//        if (p_caja.equals("1")) {
+//            mbtnCaja.setEnabled(true);
+//        } else {
+//            mbtnCaja.setEnabled(false);
+//        }
     }//GEN-LAST:event_formComponentShown
-
-    private void mbtnProductoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mbtnProductoActionPerformed
-        Presentacion.FrmProducto Producto = new Presentacion.FrmProducto();
-        Escritorio.add(Producto);
-        Producto.show();
-    }//GEN-LAST:event_mbtnProductoActionPerformed
-
-    private void mbtnClienteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mbtnClienteActionPerformed
-        Presentacion.FrmCliente Cliente = new Presentacion.FrmCliente();
-        Escritorio.add(Cliente);
-        Cliente.show();
-    }//GEN-LAST:event_mbtnClienteActionPerformed
-
-    private void mbtnEmpleadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mbtnEmpleadoActionPerformed
-        Presentacion.FrmEmpleado Empleado = new Presentacion.FrmEmpleado();
-        Escritorio.add(Empleado);
-        Empleado.show();
-    }//GEN-LAST:event_mbtnEmpleadoActionPerformed
-
-    private void mbtnVentaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mbtnVentaActionPerformed
-        Presentacion.FrmVenta venta = new Presentacion.FrmVenta();
-        Escritorio.add(venta);
-        venta.show();
-        venta.IdEmpleado = lblIdEmpleado.getText();
-        venta.NombreEmpleado = lblNombreEmpleado.getText();
-    }//GEN-LAST:event_mbtnVentaActionPerformed
-
-    private void mbtnCompraActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mbtnCompraActionPerformed
-        Presentacion.FrmCompra compra = new Presentacion.FrmCompra();
-        Escritorio.add(compra);
-        compra.show();
-        compra.IdEmpleado = lblIdEmpleado.getText();
-        compra.NombreEmpleado = lblNombreEmpleado.getText();
-    }//GEN-LAST:event_mbtnCompraActionPerformed
-
-    private void mbtnEstadoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mbtnEstadoActionPerformed
-        Consultas.FrmProductoEstado ProductoEstado = new Consultas.FrmProductoEstado();
-        Escritorio.add(ProductoEstado);
-        ProductoEstado.show();
-    }//GEN-LAST:event_mbtnEstadoActionPerformed
-
-    private void mbtnCajaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mbtnCajaActionPerformed
-        Presentacion.FrmCaja Caja = new Presentacion.FrmCaja();
-        Escritorio.add(Caja);
-        Caja.show();
-    }//GEN-LAST:event_mbtnCajaActionPerformed
 
     private void jMenuItem5ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem5ActionPerformed
         // TODO add your handling code here:
@@ -1172,14 +1020,14 @@ public class FrmPrincipal extends javax.swing.JFrame {
         mnuInformes.setEnabled(false);
         mnuHerramientas.setEnabled(false);
         mnuAnulaciones.setEnabled(false);
-        TBPrincipal.setEnabled(false);
-        mbtnEmpleado.setEnabled(false);
-        mbtnCliente.setEnabled(false);
-        mbtnProducto.setEnabled(false);
-        mbtnCompra.setEnabled(false);
-        mbtnVenta.setEnabled(false);
-        mbtnCaja.setEnabled(false);
-        mbtnEstado.setEnabled(false);
+//        TBPrincipal.setEnabled(false);
+//        mbtnEmpleado.setEnabled(false);
+//        mbtnCliente.setEnabled(false);
+//        mbtnProducto.setEnabled(false);
+//        mbtnCompra.setEnabled(false);
+//        mbtnVenta.setEnabled(false);
+//        mbtnCaja.setEnabled(false);
+//        mbtnEstado.setEnabled(false);
         JMIniciarSesion.setEnabled(true);
 
     }//GEN-LAST:event_JMCerrarSesionActionPerformed
@@ -1191,6 +1039,18 @@ public class FrmPrincipal extends javax.swing.JFrame {
         Login.show();
 
     }//GEN-LAST:event_JMIniciarSesionActionPerformed
+
+    private void jMenuItem10ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem10ActionPerformed
+        Presentacion.FrmCaja Caja = new Presentacion.FrmCaja();
+        Escritorio.add(Caja);
+        Caja.show();
+    }//GEN-LAST:event_jMenuItem10ActionPerformed
+
+    private void jMenuItem11ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem11ActionPerformed
+        Presentacion.FrmCliente Cliente = new Presentacion.FrmCliente();
+        Escritorio.add(Cliente);
+        Cliente.show();
+    }//GEN-LAST:event_jMenuItem11ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -1231,19 +1091,15 @@ public class FrmPrincipal extends javax.swing.JFrame {
     private javax.swing.JMenuItem JMCerrarSesion;
     private javax.swing.JMenuItem JMIniciarSesion;
     private javax.swing.JMenuItem JMSalir;
-    private javax.swing.JToolBar TBPrincipal;
-    private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
-    private javax.swing.JLabel jLabel6;
-    private javax.swing.JLabel jLabel7;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
     private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenu jMenu2;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuItem jMenuItem1;
+    private javax.swing.JMenuItem jMenuItem10;
+    private javax.swing.JMenuItem jMenuItem11;
     private javax.swing.JMenuItem jMenuItem2;
     private javax.swing.JMenuItem jMenuItem3;
     private javax.swing.JMenuItem jMenuItem4;
@@ -1279,13 +1135,6 @@ public class FrmPrincipal extends javax.swing.JFrame {
     private javax.swing.JMenuItem mVenta;
     private javax.swing.JMenuItem mVentade;
     private javax.swing.JMenuItem mVentare;
-    private javax.swing.JButton mbtnCaja;
-    private javax.swing.JButton mbtnCliente;
-    private javax.swing.JButton mbtnCompra;
-    private javax.swing.JButton mbtnEmpleado;
-    private javax.swing.JButton mbtnEstado;
-    private javax.swing.JButton mbtnProducto;
-    private javax.swing.JButton mbtnVenta;
     private javax.swing.JMenu mnuAnulaciones;
     private javax.swing.JMenu mnuArchivo;
     private javax.swing.JMenu mnuAyuda;
